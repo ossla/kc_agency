@@ -1,0 +1,13 @@
+*.pgpass
+*.pg_service.conf
+
+**/.env
+
+*.sqlite3
+__pycache__/
+*.pyc
+
+.vscode/
+.idea/
+
+myenv/
