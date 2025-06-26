@@ -13,3 +13,5 @@ __pycache__/
 myenv/
 
 accept.sh
+migrate.sh
+run.sh
