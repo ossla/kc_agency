@@ -4,8 +4,8 @@ import agentController from "../controller/agentController";
 
 
 const agentRouter: Express = express();
-const controller: agentController = new agentController();
 
+agentRouter.post("/create", agentController.create)
 agentRouter.get("/:id", agentController.getOne)
 agentRouter.get("/", agentController.getAll)
 

@@ -27,13 +27,16 @@ export class Agent {
     email: string           // email
     
     @Column()
-    password: string        // пароль (шифр)
+    hashPassword: string        // пароль (шифр)
     
     @Column()
     phone: string           // телефон
 
     @Column()
-    photoPath: string       // путь к фото на сервере
+    description: string     // *описание (на утверждении)
+
+    @Column()
+    photoName: string      // путь к фото на сервере
 
     @Column()
     telegram: string        // ссылка на телегу

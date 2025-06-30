@@ -1,10 +1,14 @@
 import express, { Request, Response } from "express"
 import dotenv from "dotenv"
 
-import { AppDataSource } from "./data-source"
+import { appDataSource } from "./data-source"
 import { processDefaultError } from "./error/processError"
 import router from "./route/router"
 import path from "path"
+import cors from "cors"
+import bodyParser from "body-parser"
+import fileUpload from "express-fileupload"
+
 
 /* Configuration */
 const app = express()
@@ -14,8 +18,13 @@ const PORT = process.env.PORT || 3000
 /* Using */
 app.use(express.json())
 app.use(express.text())
-app.use("/api", router)
-app.use(express.static(path.join(__dirname, "..", "public")))
+app.use(cors())         // обход браузерных блокировок http запросов                 
+app.use(bodyParser.urlencoded({extended: false}))   // Для парсинга 
+                    // application/xwww-form-urlencoded|multipart/form-data:
+app.use(fileUpload())        // парсинг файлов
+app.use(express.static(path.join(__dirname, "..", "public"))) // папка для хранения данных
+
+app.use("/api", router)         // роутинг
 
 async function start() {
     try {
@@ -23,7 +32,7 @@ async function start() {
             throw new Error("Missing DBPASS in .env")
         }
 
-        await AppDataSource
+        await appDataSource
             .initialize()
             .then(() => {
                 console.log("Data Source has been initialized!")

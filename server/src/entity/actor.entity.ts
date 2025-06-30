@@ -50,10 +50,10 @@ export class Actor {
     linkToKinoTeatr: string     // ссылка на www.kino-teatr.ru
 
     @Column()
-    linkToKinopoisk: string     // *ссылка на кинопоиск (на утверждении)
+    linkToFilmTools: string     // ссылка на filmtools (надо)
 
     @Column()
-    linkToIMDb: string          // *ссылка на IMDb (на утверждении)
+    linkToKinopoisk: string     // *ссылка на кинопоиск (на утверждении)
 
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
