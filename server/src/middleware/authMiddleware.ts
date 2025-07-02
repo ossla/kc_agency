@@ -13,12 +13,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
         if (!token) { res.status(401).json({message: 'не авторизован'}) }
         else {
-            const secretKey = process.env.SECRET_KEY as string | undefined
+            const secretKey = process.env.SECRETKEY as string | undefined
             if (!secretKey) {
-                throw new Error('SECRET_KEY не найден')
+                throw new Error('SECRET KEY не найден')
             }
             const decoded: string | JwtPayload = jwt.verify(token, secretKey as Secret);
 
+            
             (req as ICustomRequest).user = decoded
             next()
         }

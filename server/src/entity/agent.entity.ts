@@ -43,6 +43,9 @@ export class Agent {
 
     @Column()
     VK: string              // ссылка на телегу
+    
+    @Column()
+    creator: string
 
     @OneToMany(() => Actor, (actor) => actor.agent)
     actors: Actor[]
