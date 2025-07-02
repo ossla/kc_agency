@@ -1,20 +1,21 @@
 import { NextFunction, Request, Response } from "express"
 import * as bcrypt from "bcrypt"
 
-import processApiError from "../error/processError";
-import { CreateAgentSchema, createToken, CustomFileType, savePhoto, removePhoto, makeAgentPhotoName, CreateAgentType } from "./services"
+import processApiError from "../error/processError"
+import { CustomFileType, savePhoto, removePhoto, makeAgentPhotoName } from "./controllerServices/photoService"
+import { createToken } from "./controllerServices/securityService"
+import { CreateAgentSchema, CreateAgentType } from "./types"
 import { Agent } from "../entity/agent.entity"
-import { DataSource } from "typeorm";
-import { appDataSource } from "../data-source";
-import { ICustomRequest } from "../middleware/authMiddleware";
-import { JwtPayload } from "jsonwebtoken";
+import { appDataSource } from "../data-source"
+import { ICustomRequest } from "../middleware/checkMiddleware"
+import { getAgent } from "./controllerServices/detail"
 
 
 class agentController {
     static async create(req: ICustomRequest, res: Response, next: NextFunction) 
                                                                 : Promise<void> {
         try {
-            const creator: string = (req.user as JwtPayload).name
+            // const creator: string = (req.user as JwtPayload).name
 
             console.log("create agent controller starts...")
             const body: CreateAgentType = CreateAgentSchema.parse(req.body);
@@ -26,7 +27,7 @@ class agentController {
             const photo: CustomFileType = req.files?.photo
             const photoName: string = makeAgentPhotoName(body)
             await savePhoto(photo, photoName)
-            
+
             const agent: Agent = new Agent()
             agent.firstName = body.firstName
             agent.lastName = body.lastName
@@ -38,7 +39,7 @@ class agentController {
             agent.description = body.description ?? agent.description
             agent.telegram = body.telegram ?? agent.telegram
             agent.VK = body.VK ?? agent.VK
-            agent.creator = creator         
+            agent.creator = "admin" // creator
             
             agent.hashPassword = await bcrypt.hash(body.password, 5)
 
@@ -46,7 +47,7 @@ class agentController {
 
             const token: string = await createToken(agent.id.toString()
                                     , agent.firstName, agent.lastName, true)
-            res.json(token)
+            res.status(200).json(token)
 
         } catch (error: any) {
             processApiError(404, error, next)
@@ -56,18 +57,13 @@ class agentController {
     static async delete(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {
         try {
-            const agentId: string = req.body.id
-            if (!agentId)
-                throw new Error("Ошибка при получении id")
-            const id: number = Number(agentId)
-            
-            const agent: Agent | null = await appDataSource
-                                                    .getRepository(Agent)
-                                                    .findOne({where: {id}})
-            if (!agent)
-                throw new Error("агента с таким id нет")
-            removePhoto(agent.photoName);
+            const { id } = req.body
+            const agent = await getAgent(id) // внутри проверит валидность id
+            await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
+            removePhoto(agent.photoName)
+
+            res.status(200).json({message: 'удалён успешно'})
 
         } catch (error: unknown) {
             processApiError(404, error, next)
@@ -77,8 +73,10 @@ class agentController {
     static async getOne(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {
         try {
-            const request = req.body
-
+            const { id } = req.params
+            const agent = await getAgent(id)
+            
+            res.status(200).json(agent)
             
         } catch (error: unknown) {
             processApiError(404, error, next)
@@ -88,7 +86,8 @@ class agentController {
     static async getAll(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {
         try {
-
+            const agents: Agent[] = await appDataSource.getRepository(Agent).find()
+            res.status(200).json(agents)
             
         } catch (error: unknown) {
             processApiError(404, error, next)

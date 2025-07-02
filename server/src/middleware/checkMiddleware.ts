@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import { ICustomRequest } from "./authMiddleware";
 
+
+export interface ICustomRequest extends Request {
+    user: string | JwtPayload;
+}
 
 export const check = (req: Request, res: Response, next: NextFunction) => {
     if (req.method === 'OPTIONS') next()
