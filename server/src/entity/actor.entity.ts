@@ -1,64 +1,63 @@
-import { Agent } from "./agent.entity"
+import { Agent } from "./agent.entity";
 import { 
     Entity,
     PrimaryGeneratedColumn,
     Column,
     ManyToOne,
     JoinColumn
-} from "typeorm"
+} from "typeorm";
 
 @Entity()
 export class Actor {
-
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @Column()
-    firstName: string           // имя
+    @Column({ type: "varchar", length: 40, default: "" })
+    first_name: string;           // имя
 
-    @Column()
-    lastName: string            // фамилия
+    @Column({ type: "varchar", length: 40, default: "" })
+    last_name: string;            // фамилия
 
-    @Column()
-    middleName: string          // отчество
+    @Column({ type: "varchar", length: 40, default: "" })
+    middle_name: string;          // отчество
 
-    @Column({ type: 'date' })
-    date_of_birth: string;      // дата рождения
-    
-    @Column()
-    height: number              // рост (в см)
-    
-    @Column()
-    clothesSize: number         // размер одежды
+    @Column({ type: "date" })
+    date_of_birth: string;       // дата рождения
 
-    @Column()
-    eye_color: string           // цвет глаз
+    @Column({ type: "int", default: 0 })
+    height: number;              // рост в см
 
-    @Column()
-    city: string                // город
+    @Column({ type: "varchar", length: 30, default: 0 })
+    clothes_size: string;         // размер одежды
 
-    @Column()
-    languages: string           // иностранные языки
+    @Column({ type: "varchar", length: 30, default: "" })
+    eye_color: string;           // цвет глаз
 
-    @Column("text")
-    description: string         // *описание (на утверждении)
+    @Column({ type: "varchar", length: 100, default: "" })
+    city: string;                // город
 
-    @Column()
-    pathToFolder: string        // путь к папке с фото, видео на сервере
+    @Column({ type: "varchar", length: 255, default: "" })
+    languages: string;           // иностранные языки
 
-    @Column()
-    linkToKinoTeatr: string     // ссылка на www.kino-teatr.ru
+    @Column({ type: "text", default: "" })
+    description: string;         // описание
 
-    @Column()
-    linkToFilmTools: string     // ссылка на filmtools (надо)
+    @Column({ type: "varchar", length: 255, default: "" })
+    path_to_folder: string;        // путь к папке с фото, видео
 
-    @Column()
-    linkToKinopoisk: string     // *ссылка на кинопоиск (на утверждении)
+    @Column({ type: "varchar", length: 255, default: "" })
+    link_to_kino_teatr: string;     // www.kino-teatr.ru
+
+    @Column({ type: "varchar", length: 255, default: "" })
+    link_to_film_tools: string;     // filmtools
+
+    @Column({ type: "varchar", length: 255, default: "" })
+    link_to_kinopoisk: string;     // кинопоиск
 
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
         nullable: true
     })
     @JoinColumn({ name: "agentId" })
-    agent: Agent
+    agent: Agent;
 }

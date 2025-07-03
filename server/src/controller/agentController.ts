@@ -9,14 +9,13 @@ import { Agent } from "../entity/agent.entity"
 import { appDataSource } from "../data-source"
 import { ICustomRequest } from "../middleware/checkMiddleware"
 import { getAgent } from "./controllerServices/detail"
+import { JwtPayload } from "jsonwebtoken"
 
 
 class agentController {
     static async create(req: ICustomRequest, res: Response, next: NextFunction) 
                                                                 : Promise<void> {
         try {
-            // const creator: string = (req.user as JwtPayload).name
-
             console.log("create agent controller starts...")
             const body: CreateAgentType = CreateAgentSchema.parse(req.body);
             
@@ -29,9 +28,9 @@ class agentController {
             await savePhoto(photo, photoName)
 
             const agent: Agent = new Agent()
-            agent.firstName = body.firstName
-            agent.lastName = body.lastName
-            agent.middleName = body.middleName
+            agent.first_name = body.first_name
+            agent.last_name = body.last_name
+            agent.middle_name = body.middle_name
             agent.email = body.email
             agent.phone = body.phone
             agent.description = body.description
@@ -39,14 +38,18 @@ class agentController {
             agent.description = body.description ?? agent.description
             agent.telegram = body.telegram ?? agent.telegram
             agent.VK = body.VK ?? agent.VK
-            agent.creator = "admin" // creator
-            
-            agent.hashPassword = await bcrypt.hash(body.password, 5)
+            try {
+                agent.creator= (req.user as JwtPayload).name
+            } catch(e: any) {
+                console.error("не удалось обнаружить создателя");
+            }
+
+            agent.hash_password = await bcrypt.hash(body.password, 5)
 
             await appDataSource.getRepository(Agent).save(agent)
 
             const token: string = await createToken(agent.id.toString()
-                                    , agent.firstName, agent.lastName, true)
+                                    , agent.first_name, agent.last_name, true)
             res.status(200).json(token)
 
         } catch (error: any) {
@@ -61,7 +64,7 @@ class agentController {
             const agent = await getAgent(id) // внутри проверит валидность id
             await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
-            removePhoto(agent.photoName)
+            await removePhoto(agent.photoName)
 
             res.status(200).json({message: 'удалён успешно'})
 

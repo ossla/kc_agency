@@ -9,7 +9,7 @@ const agentRouter: Express = express();
 agentRouter.post("/create", check, agentController.create)
 agentRouter.post("/delete", check, agentController.delete)
 agentRouter.get("/auth", check, (req, res) => {
-    res.status(200).json("авторизован");
+    res.status(200).json({message: true});
 });
 agentRouter.get("/:id", agentController.getOne)
 agentRouter.get("/", agentController.getAll)

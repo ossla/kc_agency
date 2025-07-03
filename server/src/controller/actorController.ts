@@ -4,7 +4,7 @@ import processApiError from "../error/processError";
 
 
 class actorController {
-    async create(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async create(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
             
 
@@ -13,7 +13,7 @@ class actorController {
         }
     } // create
 
-    async delete(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async delete(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try { // journalId
             
 
@@ -22,7 +22,7 @@ class actorController {
         }
     } // delete
 
-    async getOne(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async getOne(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
 
             
@@ -31,7 +31,7 @@ class actorController {
         }
     } // getOne
 
-    async getAll(req: Request, res: Response, next: NextFunction) : Promise<void> {
+    static async getAll(req: Request, res: Response, next: NextFunction) : Promise<void> {
         try {
 
             

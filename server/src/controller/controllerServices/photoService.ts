@@ -16,7 +16,7 @@ function returnStaticPath(): string {
 export type CustomFileType = fileUpload.UploadedFile 
                             | fileUpload.UploadedFile[]
                             | undefined
-                            
+                      
 export async function savePhoto(photo: CustomFileType
                     , photoName: string, folderName: string = "") {
     if (folderName === "") { folderName = returnStaticPath(); }
@@ -36,23 +36,24 @@ export async function savePhoto(photo: CustomFileType
     }
 }
 
-export async function removePhoto(photoName: string, folderName: string = "") {
+export async function removePhoto(photoName: string, folderName: string = "")
+                                                            : Promise<void> {
     if (folderName === "") { folderName = returnStaticPath(); }
     console.log(photoName);
 
     const filePath: string = path.join(folderName, photoName);
     if (!fs.existsSync(filePath)) {
-        throw new Error("Фото с таким именем нет: " + photoName);
+        console.error("Фото с таким именем нет: " + photoName);
     }
     fs.rmSync(filePath)
 }
 
 export function makeAgentPhotoName(body: CreateAgentType): string {
-    return  (body.firstName 
+    return  (body.first_name 
             + 
-            body.lastName
+            body.last_name
             + 
-            body.middleName
+            body.middle_name
             +
-            ".jpeg").replace(/\s/, '_')
+            ".jpg").replace(/\s/, '_')
 }
