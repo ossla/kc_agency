@@ -2,7 +2,7 @@ import fileUpload from "express-fileupload"
 import * as path from "path"
 import * as fs from "fs"
 
-import { CreateAgentType } from "../types";
+import { CreateActorType, CreateAgentType } from "../types";
 
 
 function returnStaticPath(): string {
@@ -56,4 +56,8 @@ export function makeAgentPhotoName(body: CreateAgentType): string {
             body.middle_name
             +
             ".jpg").replace(/\s/, '_')
+}
+
+export function makeActorFolderName(body: CreateActorType): string {
+    return body.first_name + body.last_name + body.date_of_birth
 }

@@ -53,6 +53,7 @@ class agentController {
             res.status(200).json(token)
 
         } catch (error: any) {
+            await removeAgentPhoto()
             processApiError(404, error, next)
         }
     } // create

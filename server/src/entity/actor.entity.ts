@@ -4,8 +4,16 @@ import {
     PrimaryGeneratedColumn,
     Column,
     ManyToOne,
-    JoinColumn
+    JoinColumn,
+    ManyToMany,
+    JoinTable,
+    CreateDateColumn,
+    UpdateDateColumn
 } from "typeorm";
+import { EyeColor } from "./eyeColor.entity";
+import { City } from "./city.entity";
+import { Language } from "./language.entity";
+
 
 @Entity()
 export class Actor {
@@ -30,20 +38,11 @@ export class Actor {
     @Column({ type: "varchar", length: 30, default: 0 })
     clothes_size: string;         // размер одежды
 
-    @Column({ type: "varchar", length: 30, default: "" })
-    eye_color: string;           // цвет глаз
-
-    @Column({ type: "varchar", length: 100, default: "" })
-    city: string;                // город
-
-    @Column({ type: "varchar", length: 255, default: "" })
-    languages: string;           // иностранные языки
-
     @Column({ type: "text", default: "" })
     description: string;         // описание
 
     @Column({ type: "varchar", length: 255, default: "" })
-    path_to_folder: string;        // путь к папке с фото, видео
+    folder: string;               // путь к папке с файлами
 
     @Column({ type: "varchar", length: 255, default: "" })
     link_to_kino_teatr: string;     // www.kino-teatr.ru
@@ -54,10 +53,32 @@ export class Actor {
     @Column({ type: "varchar", length: 255, default: "" })
     link_to_kinopoisk: string;     // кинопоиск
 
+    @Column({type: "text", default: "" })
+    video: string;                  // видеовизитка (код вставки?) 
+
+    @Column({type: "varchar", length: 40})
+    creator: string                // кто создавал запись
+
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
         nullable: true
     })
     @JoinColumn({ name: "agentId" })
-    agent: Agent;
-}
+    agent: Agent                   // к какому агенту относятся
+
+    @ManyToOne(() => EyeColor, { eager: true })
+    eye_color: EyeColor             // цвет глаз
+
+    @ManyToOne(() => City, { eager: true })
+    city: City                     // город проживания
+
+    @ManyToMany(() => Language, { eager: true })
+    @JoinTable()
+    languages: Language[]          // доп. языки
+    
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+}       
