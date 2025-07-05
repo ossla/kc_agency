@@ -58,6 +58,27 @@ export function makeAgentPhotoName(body: CreateAgentType): string {
             ".jpg").replace(/\s/, '_')
 }
 
-export function makeActorFolderName(body: CreateActorType): string {
+export function makeActorDirname(body: CreateActorType): string {
     return body.first_name + body.last_name + body.date_of_birth
+}
+
+export async function makeActorDirectory(body: CreateActorType): Promise<string> {
+    const dirname: string = makeActorDirname(body)
+    const dirPath: string = path.join(returnStaticPath(), dirname)
+    if (fs.existsSync(dirPath)) {
+        throw new Error("папка с таким именем существует: " + dirPath)
+    }
+
+    fs.mkdirSync(dirPath)
+
+    return dirname
+}
+
+export async function removeActorFolder(dirname: string): Promise<void> {
+    const dirPath: string = path.join(returnStaticPath(), dirname)
+    if (!fs.existsSync(dirPath)) {
+        console.error("нет такой папки: ", dirPath);
+    } else {
+        fs.rmSync(dirPath)
+    }
 }

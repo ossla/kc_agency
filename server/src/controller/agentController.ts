@@ -15,6 +15,7 @@ import { JwtPayload } from "jsonwebtoken"
 class agentController {
     static async create(req: ICustomRequest, res: Response, next: NextFunction) 
                                                                 : Promise<void> {
+        let photoName: string = ""
         try {
             console.log("create agent controller starts...")
             const body: CreateAgentType = CreateAgentSchema.parse(req.body);
@@ -24,7 +25,7 @@ class agentController {
             if (is_exist) throw new Error('Пользователь с таким email уже существует')
 
             const photo: CustomFileType = req.files?.photo
-            const photoName: string = makeAgentPhotoName(body)
+            photoName = makeAgentPhotoName(body)
             await savePhoto(photo, photoName)
 
             const agent: Agent = new Agent()
@@ -34,7 +35,7 @@ class agentController {
             agent.email = body.email
             agent.phone = body.phone
             agent.description = body.description
-            agent.photoName = photoName
+            agent.photo_name = photoName
             agent.description = body.description ?? agent.description
             agent.telegram = body.telegram ?? agent.telegram
             agent.VK = body.VK ?? agent.VK
@@ -53,7 +54,7 @@ class agentController {
             res.status(200).json(token)
 
         } catch (error: any) {
-            await removeAgentPhoto()
+            await removePhoto(photoName)
             processApiError(404, error, next)
         }
     } // create
@@ -65,7 +66,7 @@ class agentController {
             const agent = await getAgent(id) // внутри проверит валидность id
             await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
-            await removePhoto(agent.photoName)
+            await removePhoto(agent.photo_name)
 
             res.status(200).json({message: 'удалён успешно'})
 
