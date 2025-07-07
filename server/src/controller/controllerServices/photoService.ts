@@ -19,8 +19,7 @@ export type CustomFileType = fileUpload.UploadedFile
                       
 export async function savePhoto(photo: CustomFileType
                     , photoName: string, folderName: string = "") {
-    if (folderName === "") { folderName = returnStaticPath(); }
-    console.log(photoName);
+    folderName = path.join(returnStaticPath(), folderName)
 
     const filePath: string = path.join(folderName, photoName);
     if (fs.existsSync(filePath)) {
@@ -45,6 +44,7 @@ export async function removePhoto(photoName: string, folderName: string = "")
     if (!fs.existsSync(filePath)) {
         console.error("Фото с таким именем нет: " + photoName);
     }
+    console.log(filePath);
     fs.rmSync(filePath)
 }
 
@@ -59,12 +59,13 @@ export function makeAgentPhotoName(body: CreateAgentType): string {
 }
 
 export function makeActorDirname(body: CreateActorType): string {
-    return body.first_name + body.last_name + body.date_of_birth
+    return body.first_name + body.last_name
 }
 
 export async function makeActorDirectory(body: CreateActorType): Promise<string> {
     const dirname: string = makeActorDirname(body)
     const dirPath: string = path.join(returnStaticPath(), dirname)
+    
     if (fs.existsSync(dirPath)) {
         throw new Error("папка с таким именем существует: " + dirPath)
     }
@@ -79,6 +80,22 @@ export async function removeActorFolder(dirname: string): Promise<void> {
     if (!fs.existsSync(dirPath)) {
         console.error("нет такой папки: ", dirPath);
     } else {
-        fs.rmSync(dirPath)
+        try {
+            fs.rmSync(dirPath)
+        } catch (error: any) {
+            console.error(error);            
+        }
+    }
+}
+
+export async function savePhotos(photos: CustomFileType, dirname: string) {
+    const dirPath: string = path.join(returnStaticPath(), dirname)
+                                                                
+    if (!Array.isArray(photos)) {
+        photos.mv(path.join(dirPath, '1.jpg'))
+    } else {
+        photos.forEach((page, index) => {
+            page.mv(path.join(dirPath, `${index + 1}.jpg`))
+        })
     }
 }

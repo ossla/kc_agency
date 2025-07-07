@@ -3,12 +3,7 @@ import { Agent } from "../../entity/agent.entity";
 import { appDataSource } from "../../data-source";
 
 
-export async function getAgent(agentId: string | number): Promise<Agent> {
-    const id: number = Number(agentId)
-    if (isNaN(id)) {
-        throw new Error("Ошибка при получении id")
-    }
-
+export async function getAgent(id: string): Promise<Agent> {
     const agent: Agent | null = await appDataSource
                                             .getRepository(Agent)
                                             .findOne({where: { id }})

@@ -5,6 +5,9 @@ import dotenv from "dotenv"
 import { Agent } from "./entity/agent.entity"
 import { Actor } from "./entity/actor.entity"
 import { processDefaultError } from "./error/processError"
+import { EyeColor } from "./entity/eyeColor.entity"
+import { City } from "./entity/city.entity"
+import { Language } from "./entity/language.entity"
 
 
 dotenv.config()
@@ -22,7 +25,7 @@ export const appDataSource = new DataSource({
     database: process.env.DBNAME,
     synchronize: true,
     logging: false,
-    entities: [Agent, Actor],
+    entities: [Agent, Actor, EyeColor, City, Language],
     migrations: [],
     subscribers: [],
 })

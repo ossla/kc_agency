@@ -4,7 +4,7 @@ import processApiError from "../error/processError";
 import { CreateActorSchema, CreateActorType } from "./types";
 import { appDataSource } from "../data-source";
 import { Actor } from "../entity/actor.entity";
-import { CustomFileType, makeActorDirectory, removeActorFolder } from "./controllerServices/photoService";
+import { CustomFileType, makeActorDirectory, removeActorFolder, savePhoto, savePhotos } from "./controllerServices/photoService";
 import { JwtPayload } from "jsonwebtoken";
 import { ICustomRequest } from "../middleware/checkMiddleware";
 import { Agent } from "../entity/agent.entity";
@@ -18,22 +18,20 @@ class actorController {
             console.log("create actor controller starts...")
             const body: CreateActorType = CreateActorSchema.parse(req.body);
 
+            const avatar: CustomFileType = req.files?.avatar
+            if (!avatar) throw new Error('Нужно добавить аватарку актера')
             const photos: CustomFileType = req.files?.photos
-            if (!photos) throw new Error('Нужно добавить хотя бы одно фото.')
+            if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
             dirName = await makeActorDirectory(body)
+            await savePhoto(avatar, "avatar.jpg", dirName)
+            await savePhotos(photos, dirName)
 
             const actor: Actor = new Actor()
             actor.directory = dirName
-
-            // await updateActor(actor)
-
             await generateActor(actor, body)
-
-            // создать функцию изменения, где поля на клиенте будут автоматически заполняться,
-            // если актер/агент уже был создан при изменении полей будет посылаться новый запрос 
-            // на полное изменение полей у actor/agent так же через zod
             
             await appDataSource.getRepository(Actor).save(actor)
+
             res.status(200).json(actor)
 
         } catch (error: unknown) {

@@ -4,13 +4,12 @@ import * as bcrypt from "bcrypt"
 import processApiError from "../error/processError"
 import { CustomFileType, savePhoto, removePhoto, makeAgentPhotoName } from "./controllerServices/photoService"
 import { createToken } from "./controllerServices/securityService"
-import { CreateAgentSchema, CreateAgentType } from "./types"
+import { CreateAgentSchema, CreateAgentType, IJwtPayload } from "./types"
 import { Agent } from "../entity/agent.entity"
 import { appDataSource } from "../data-source"
 import { ICustomRequest } from "../middleware/checkMiddleware"
 import { getAgent } from "./controllerServices/detail"
 import { JwtPayload } from "jsonwebtoken"
-
 
 class agentController {
     static async create(req: ICustomRequest, res: Response, next: NextFunction) 
@@ -31,33 +30,63 @@ class agentController {
             const agent: Agent = new Agent()
             agent.first_name = body.first_name
             agent.last_name = body.last_name
-            agent.middle_name = body.middle_name
+            agent.middle_name = body.middle_name ?? null
             agent.email = body.email
-            agent.phone = body.phone
-            agent.description = body.description
+            agent.phone = body.phone 
+            agent.description = body.description ?? null
             agent.photo_name = photoName
-            agent.description = body.description ?? agent.description
-            agent.telegram = body.telegram ?? agent.telegram
-            agent.VK = body.VK ?? agent.VK
-            try {
-                agent.creator= (req.user as JwtPayload).name
-            } catch(e: any) {
-                console.error("не удалось обнаружить создателя");
-            }
+            agent.telegram = body.telegram ?? null
+            agent.VK = body.VK ?? null
+            agent.is_admin = true
 
             agent.hash_password = await bcrypt.hash(body.password, 5)
 
             await appDataSource.getRepository(Agent).save(agent)
 
             const token: string = await createToken(agent.id.toString()
-                                    , agent.first_name, agent.last_name, true)
+                                    , agent.first_name, agent.last_name, agent.is_admin)
             res.status(200).json(token)
 
         } catch (error: any) {
-            await removePhoto(photoName)
+            if (photoName != "") {
+                await removePhoto(photoName)
+            }
             processApiError(404, error, next)
         }
     } // create
+    
+    async login(req: Request, res: Response, next: NextFunction) : Promise<void> {
+        try {
+            // получение данных
+            const { email, password } = req.body
+            if (!email || !password) throw new Error('Нужно заполнить все поля')
+            // идентификация
+            const agent = await appDataSource.getRepository(Agent).findOneBy({
+                email: email
+            })
+            if (!agent) throw new Error('Пользователя с таким email не существует')
+            // проверка пароля на валидность
+            const valid: boolean = bcrypt.compareSync(password, agent.hash_password)
+            if (!valid) throw new Error('Неверный пароль')
+            // создание токена
+            const token = await createToken(agent.id, agent.first_name, agent.email, true)
+            res.json(token)
+
+        } catch (error: unknown) {
+            processApiError(404, error, next)
+        }
+    }
+
+    // Метод отвечает за создание нового токена, продление жизни пользователя
+    async check(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+        const agent = req.agent as IJwtPayload;
+        const agentId = agent.id;
+        const agentName = agent.name;
+        const agentEmail = agent.email;
+        const agentIsAdmin = agent.is_admin;
+        const token = await createToken(agentId, agentName, agentEmail, agentIsAdmin)
+        res.json(token)
+    }
 
     static async delete(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {

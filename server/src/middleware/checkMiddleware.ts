@@ -3,7 +3,7 @@ import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 
 
 export interface ICustomRequest extends Request {
-    user: string | JwtPayload;
+    agent: string | JwtPayload;
 }
 
 export const check = (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +23,7 @@ export const check = (req: Request, res: Response, next: NextFunction) => {
                 if (!decoded.is_admin) throw new Error('user не имеет достаточно прав')
             }
 
-            (req as ICustomRequest).user = decoded
+            (req as ICustomRequest).agent = decoded
             next()
         }
 

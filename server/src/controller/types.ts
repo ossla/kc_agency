@@ -2,12 +2,12 @@ import { z } from "zod"
 
 
 export const CreateAgentSchema = z.object({
-    first_name: z.string().min(1, "введите Имя"),
-    last_name: z.string().min(1, "введите фамилию"),
+    first_name: z.string().min(1),
+    last_name: z.string().min(1),
     middle_name: z.string().optional(),
     email: z.string().email(),
-    password: z.string().min(1, "введите пароль"),
-    phone: z.string().min(1, "введите номер телефона"),
+    password: z.string().min(1),
+    phone: z.string().min(1),
     description: z.string().optional(),
     telegram: z.string().optional(),
     VK: z.string().optional()
@@ -16,20 +16,28 @@ export type CreateAgentType = z.infer<typeof CreateAgentSchema>;
 
 
 export const CreateActorSchema = z.object({
-    first_name: z.string().min(1, "введите Имя"),
-    last_name: z.string().min(1, "введите фамилию"),
+    date_of_birth: z.preprocess((val) => new Date(val as string), z.date()), // 1947-05-20
+    agentId: z.string().min(1),
+    first_name: z.string().min(1),
+    last_name: z.string().min(1),
+    
     middle_name: z.string().optional(),
-    date_of_birth: z.date(),
-    height: z.number(),
-    clothes_size: z.string().min(1),
+    city: z.string().optional(),
+    eye_color: z.string().optional(),
+    height: z.preprocess((val) => parseInt(val as string, 10), z.number()).optional(),
+    clothes_size: z.preprocess((val) => parseInt(val as string, 10), z.number()).optional(),
+    video: z.string().optional(),
+    languages: z.string().optional(),
     description: z.string().optional(),
     kino_teatr: z.string().optional(),
     film_tools: z.string().optional(),
-    kinopoisk: z.string().min(1),
-    video: z.string().optional(),
-    agent: z.number(),
-    eye_color: z.string().min(1),
-    city: z.string().min(1),
-    languages: z.string().optional(),
+    kinopoisk: z.string().optional(),
 });
 export type CreateActorType = z.infer<typeof CreateActorSchema>;
+
+export interface IJwtPayload {
+    id: string;
+    name: string;
+    email: string;
+    is_admin: boolean;
+}

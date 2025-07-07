@@ -1,4 +1,4 @@
-import { Actor } from "./actor.entity";
+import { Actor } from "./actor.entity"
 import { 
     Entity,
     PrimaryGeneratedColumn,
@@ -6,52 +6,52 @@ import {
     OneToMany,
     CreateDateColumn,
     UpdateDateColumn
-} from "typeorm";
+} from "typeorm"
 
 @Entity()
 export class Agent {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string
 
-    @Column({ type: "varchar", length: 40, default: "" })
-    first_name: string;       // имя
+    @Column({ type: "varchar", length: 40, nullable: false })
+    first_name: string       // имя
 
-    @Column({ type: "varchar", length: 40, default: "" })
-    last_name: string;        // фамилия
+    @Column({ type: "varchar", length: 40, nullable: false })
+    last_name: string        // фамилия
 
-    @Column({ type: "varchar", length: 40, default: "" })
-    middle_name: string;      // отчество
+    @Column({ type: "varchar", length: 40, nullable: true })
+    middle_name?: string      // отчество
 
-    @Column({ type: "varchar", length: 100, default: "" })
-    email: string;           // email
+    @Column({ type: "varchar", length: 100, nullable: false, unique: true})
+    email: string           // email
 
-    @Column({ type: "varchar", length: 255, default: "" })
-    hash_password: string;    // пароль (шифр)
+    @Column({ type: "varchar", length: 255, nullable: false })
+    hash_password: string    // пароль (шифр)
 
-    @Column({ type: "varchar", length: 20, default: "" })
-    phone: string;           // телефон
+    @Column({ type: "varchar", length: 20, nullable: false })
+    phone: string           // телефон
 
-    @Column({ type: "varchar", length: 255, default: "" })
-    description: string;     // *описание (на утверждении)
+    @Column({ type: "varchar", length: 255, nullable: true })
+    description?: string     // описание (на утверждении)
 
-    @Column({ type: "varchar", length: 255, default: "" })
-    photo_name: string;       // путь к фото на сервере
+    @Column({ type: "varchar", length: 255, nullable: false })
+    photo_name: string       // путь к фото на сервере
 
-    @Column({ type: "varchar", length: 100, default: "" })
-    telegram: string;        // ссылка на телегу
+    @Column({ type: "varchar", length: 100, nullable: true })
+    telegram?: string        // ссылка на телегу
 
-    @Column({ type: "varchar", length: 100, default: "" })
-    VK: string;              // ссылка на VK
-
-    @Column({ type: "varchar", length: 100, default: "" })
-    creator: string;
+    @Column({ type: "varchar", length: 100, nullable: true })
+    VK?: string                // ссылка на VK
 
     @OneToMany(() => Actor, (actor) => actor.agent)
-    actors: Actor[];
+    actors: Actor[]         // пул актеров
+
+    @Column({type: "bool", nullable: false})
+    is_admin: boolean       // права доступа
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: Date
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt: Date
 }

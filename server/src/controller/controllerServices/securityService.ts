@@ -14,6 +14,6 @@ export async function createToken(id: string, name: string, email: string, is_ad
             is_admin
         },
         secretKey,
-        {expiresIn: '1 days'}
+        {expiresIn: '10 days'}
     )
 }

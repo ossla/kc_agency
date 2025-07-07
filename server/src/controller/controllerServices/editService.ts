@@ -5,32 +5,31 @@ import { City } from "../../entity/city.entity";
 import { EyeColor } from "../../entity/eyeColor.entity";
 import { Language } from "../../entity/language.entity";
 import { CreateActorType } from "../types";
+import { getAgent } from "./detail";
 
 
 async function saveCity(actor: Actor, body: CreateActorType) {
     let city: City | null = await appDataSource.getRepository(City)
                                         .findOne({where: {name: body.city}})
-    if (city) {
-        actor.city = city
-    } else {
-        const newCity = new City()
-        newCity.name = body.city
-        await appDataSource.getRepository(City).save(newCity)
-        actor.city = newCity
+    if (!city) {
+        city = new City();
+        city.name = body.city;
+        await appDataSource.getRepository(City).save(city);
     }
+
+    actor.city = city
 }
 
 async function saveColor(actor: Actor, body: CreateActorType) {
     let eyeColor: EyeColor | null = await appDataSource.getRepository(EyeColor)
                                         .findOne({where: {name: body.eye_color}})
-    if (eyeColor) {
-        actor.eye_color = eyeColor
-    } else {
-        const newEyeColor = new EyeColor()
-        newEyeColor.name = body.eye_color
-        await appDataSource.getRepository(EyeColor).save(newEyeColor)
-        actor.eye_color = newEyeColor
+    if (!eyeColor) {     
+        eyeColor = new EyeColor()
+        eyeColor.name = body.eye_color
+        await appDataSource.getRepository(EyeColor).save(eyeColor)
     }
+    
+    actor.eye_color = eyeColor
 }
 
 async function saveLanguages(actor: Actor, body: CreateActorType) {
@@ -43,34 +42,28 @@ async function saveLanguages(actor: Actor, body: CreateActorType) {
         for (let i = 0; i < languages.length; i++) {
             let lang: Language | null = await appDataSource.getRepository(Language)
                                                             .findOneBy({name: languages[i]})
-            if (lang) {
-                langsArr.push(lang)
-            } else {
-                const newLang = new Language()
-                newLang.name = languages[i]
-                await appDataSource.manager.save(newLang)
-                langsArr.push(newLang)
+            if (!lang) {
+                lang = new Language()
+                lang.name = languages[i]
+                await appDataSource.manager.save(lang)
             }
+            
+            langsArr.push(lang)
         }
     }
 
     actor.languages = langsArr
 }
 
-
 export async function generateActor(actor: Actor, body: CreateActorType)
                                                             : Promise<void> {
-                                                                
-    const agent: Agent = await appDataSource.getRepository(Agent)
-                                                    .findOne({where: {id: body.agent}})
-    if (!agent) {
-        throw new Error("Такого агента нет!")
-    }                                                            
+                                                
+    actor.agent = await getAgent(body.agentId)                                                  
     actor.first_name = body.first_name
     actor.last_name  = body.last_name
     actor.middle_name = body.middle_name ?? null
-    actor.date_of_birth = body.date_of_birth.toISOString().split('T')[0];
-    actor.height = body.height ?? null
+    actor.date_of_birth = body.date_of_birth;
+    actor.height = body.height ? Number(body.height) : null
     actor.clothes_size = body.clothes_size ?? null
     actor.description = body.description ?? null
     actor.link_to_kino_teatr = body.kino_teatr ?? null
@@ -78,9 +71,9 @@ export async function generateActor(actor: Actor, body: CreateActorType)
     actor.link_to_kinopoisk = body.kinopoisk ?? null
     actor.video = body.video ?? null
 
-    saveCity(actor, body)
-    saveColor(actor, body)
-    saveLanguages(actor, body)
+    await saveCity(actor, body)
+    await saveColor(actor, body)
+    await saveLanguages(actor, body)
 }
 
 // export async function updateActor(actor: Actor, body: CreateActorType)
