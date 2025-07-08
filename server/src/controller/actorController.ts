@@ -14,7 +14,6 @@ import { getActor } from "./services/getService"
 class actorController {
     static async create(req: ICustomRequest, res: Response, next: NextFunction) : Promise<void> {
         let dirName: string = ""
-        let otherActorExists: boolean = true
         try {
             console.log("create actor controller starts...")
             const body: CreateActorType = CreateActorSchema.parse(req.body)
@@ -24,7 +23,6 @@ class actorController {
             const photos: CustomFileType = req.files?.photos
             if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
             dirName = await makeActorDirectory(body)
-            otherActorExists = false
             await savePhoto(avatar, "avatar.jpg", dirName)
             await savePhotos(photos, dirName)
 
@@ -37,7 +35,7 @@ class actorController {
             res.status(200).json(actor)
 
         } catch (error: unknown) {
-            if (!otherActorExists) {
+            if (dirName != "") {
                 await removeActorFolder(dirName)
             }
             processApiError(404, error, next)
