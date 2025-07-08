@@ -1,8 +1,8 @@
 import fileUpload from "express-fileupload"
 import * as path from "path"
 import * as fs from "fs"
-
-import { CreateActorType, CreateAgentType } from "../types";
+import { CreateAgentType } from "../agentController/services/types"
+import { CreateActorType } from "../actorController/services/types"
 
 
 function returnStaticPath(): string {

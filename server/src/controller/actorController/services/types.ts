@@ -1,20 +1,6 @@
 import { z } from "zod"
 
 
-export const CreateAgentSchema = z.object({
-    first_name: z.string().min(1),
-    last_name: z.string().min(1),
-    middle_name: z.string().optional(),
-    email: z.string().email(),
-    password: z.string().min(1),
-    phone: z.string().min(1),
-    description: z.string().optional(),
-    telegram: z.string().optional(),
-    VK: z.string().optional()
-});
-export type CreateAgentType = z.infer<typeof CreateAgentSchema>;
-
-
 export const CreateActorSchema = z.object({
     date_of_birth: z.preprocess((val) => new Date(val as string), z.date()), // 1947-05-20
     agentId: z.string().min(1),
@@ -35,10 +21,3 @@ export const CreateActorSchema = z.object({
     kinopoisk: z.string().optional(),
 });
 export type CreateActorType = z.infer<typeof CreateActorSchema>;
-
-export interface IJwtPayload {
-    id: string;
-    name: string;
-    email: string;
-    is_admin: boolean;
-}
