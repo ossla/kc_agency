@@ -1,4 +1,4 @@
-import { Agent } from "./agent.entity";
+import { Agent } from "./agent.entity"
 import { 
     Entity,
     PrimaryGeneratedColumn,
@@ -9,52 +9,55 @@ import {
     JoinTable,
     CreateDateColumn,
     UpdateDateColumn
-} from "typeorm";
-import { EyeColor } from "./eyeColor.entity";
-import { City } from "./city.entity";
-import { Language } from "./language.entity";
+} from "typeorm"
+import { EyeColor } from "./eyeColor.entity"
+import { City } from "./city.entity"
+import { Language } from "./language.entity"
 
 
 @Entity()
 export class Actor {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: string
 
     @Column({ type: "varchar", length: 40, nullable: false})
-    first_name: string;           // имя
+    first_name: string           // имя
 
     @Column({ type: "varchar", length: 40, nullable: false})
-    last_name: string;            // фамилия
+    last_name: string            // фамилия
 
     @Column({ type: "varchar", length: 40, nullable: true })
-    middle_name?: string;          // отчество
+    middle_name?: string          // отчество
+
+    @Column({ type: "character" })
+    gender: string
 
     @Column({ type: "date", nullable: false })
-    date_of_birth: Date;       // дата рождения
+    date_of_birth: Date       // дата рождения
 
     @Column({ type: "int", default: 0, nullable: true })
-    height?: number;              // рост в см
+    height?: number              // рост в см
 
     @Column({ type: "varchar", length: 30, nullable: true })
-    clothes_size?: number;         // размер одежды
+    clothes_size?: number         // размер одежды
 
     @Column({ type: "text", nullable: true })
-    description?: string;         // описание
+    description?: string         // описание
 
     @Column({ type: "varchar", length: 255, nullable: false })
-    directory: string;               // путь к папке с файлами
+    directory: string               // путь к папке с файлами
 
     @Column({ type: "varchar", length: 255, nullable: true })
-    link_to_kino_teatr?: string;     // kino-teatr.ru
+    link_to_kino_teatr?: string     // kino-teatr.ru
 
     @Column({ type: "varchar", length: 255, nullable: true })
-    link_to_film_tools?: string;     // filmtools
+    link_to_film_tools?: string     // filmtools
 
     @Column({ type: "varchar", length: 255, nullable: true })
-    link_to_kinopoisk?: string;     // кинопоиск
+    link_to_kinopoisk?: string     // кинопоиск
 
     @Column({type: "text", default: "", nullable: true })
-    video?: string;                  // видеовизитка (код вставки?) 
+    video?: string                  // видеовизитка (код вставки?) 
 
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
@@ -76,8 +79,8 @@ export class Actor {
     languages?: Language[]          // доп. языки
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: Date
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt: Date
 }       

@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express"
 import * as bcrypt from "bcrypt"
 
 import processApiError from "../error/processError"
-import { CustomFileType, savePhoto, removePhoto, makeAgentPhotoName } from "./controllerServices/photoService"
-import { createToken } from "./controllerServices/securityService"
+import { CustomFileType, savePhoto, removePhoto, makeAgentPhotoName } from "./services/photoService"
+import { createToken } from "./services/securityService"
 import { CreateAgentSchema, CreateAgentType, IJwtPayload } from "./types"
 import { Agent } from "../entity/agent.entity"
 import { appDataSource } from "../data-source"
 import { ICustomRequest } from "../middleware/checkMiddleware"
-import { getAgent } from "./controllerServices/detail"
+import { getAgent } from "./services/getService"
 import { JwtPayload } from "jsonwebtoken"
 
 class agentController {
@@ -93,9 +93,8 @@ class agentController {
         try {
             const { id } = req.body
             const agent = await getAgent(id) // внутри проверит валидность id
-            await appDataSource.getRepository(Agent).delete({ id: agent.id })
-
             await removePhoto(agent.photo_name)
+            await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
             res.status(200).json({message: 'удалён успешно'})
 

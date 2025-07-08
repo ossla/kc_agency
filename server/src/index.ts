@@ -22,7 +22,7 @@ app.use(cors())         // обход браузерных блокировок 
 app.use(bodyParser.urlencoded({extended: false}))   // Для парсинга 
                     // application/xwww-form-urlencoded|multipart/form-data:
 app.use(fileUpload())        // парсинг файлов
-app.use(express.static(path.join(__dirname, "..", "public"))) // папка для хранения данных
+app.use(express.static(path.join(__dirname, "..", "static"))) // папка для хранения данных
 
 app.use("/api", router)         // роутинг
 

@@ -20,7 +20,8 @@ export const CreateActorSchema = z.object({
     agentId: z.string().min(1),
     first_name: z.string().min(1),
     last_name: z.string().min(1),
-    
+    gender: z.string().min(1),
+
     middle_name: z.string().optional(),
     city: z.string().optional(),
     eye_color: z.string().optional(),
