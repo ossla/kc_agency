@@ -16,7 +16,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction) : 
     } catch (error: unknown) {
         processApiError(404, error, next)
     }
-} // getOne
+}
 
 export async function getAll(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {
@@ -26,4 +26,4 @@ export async function getAll(req: Request, res: Response, next: NextFunction) : 
     } catch (error: unknown) {
         processApiError(404, error, next)
     }
-} // getAll
+}

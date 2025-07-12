@@ -5,9 +5,9 @@ import { ICustomRequest } from "../../middleware/checkMiddleware";
 import { CreateAgentSchema, CreateAgentType } from "./services/types";
 import { appDataSource } from "../../data-source";
 import { Agent } from "../../entity/agent.entity";
-import { createToken } from "./services/jwtserv";
 import processApiError from "../../error/processError";
 import { CustomFileType, makeAgentPhotoName, removePhoto, savePhoto } from "../fs_functions/fileSystemService";
+import { createToken } from "./loginAgent";
 
 
 export async function create(req: ICustomRequest, res: Response, next: NextFunction) 

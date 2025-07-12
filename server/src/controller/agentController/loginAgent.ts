@@ -1,13 +1,30 @@
 import { Request, Response, NextFunction } from "express"
 import * as bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
 import { Agent } from "../../entity/agent.entity"
 import { appDataSource } from "../../data-source"
-import { createToken } from "./services/jwtserv"
 import processApiError from "../../error/processError"
 import { IJwtPayload } from "./services/types"
 import { ICustomRequest } from "../../middleware/checkMiddleware"
 
+
+export async function createToken(id: string, name: string, email: string, is_admin: boolean): Promise<string> {
+    const secretKey = process.env.SECRETKEY as string | undefined;
+    if (!secretKey) {
+        throw new Error('Secret key is not defined');
+    }
+    return jwt.sign(
+        {
+            id,
+            name,
+            email,
+            is_admin
+        },
+        secretKey,
+        {expiresIn: '10 days'}
+    )
+}
 
 export async function login(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {

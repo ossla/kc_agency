@@ -43,9 +43,9 @@ export async function removePhoto(photoName: string, folderName: string = "")
     const filePath: string = path.join(folderName, photoName);
     if (!fs.existsSync(filePath)) {
         console.error("Фото с таким именем нет: " + photoName);
+    } else {
+        fs.rmSync(filePath)
     }
-    console.log(filePath);
-    fs.rmSync(filePath)
 }
 
 export function makeAgentPhotoName(body: CreateAgentType): string {
