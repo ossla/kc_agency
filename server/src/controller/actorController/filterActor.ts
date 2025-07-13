@@ -11,23 +11,25 @@ export async function filter(req: Request, res: Response): Promise<void> {
     qb
       .leftJoinAndSelect("actor.city", "city")
       .leftJoinAndSelect("actor.eye_color", "eye_color")
-      .leftJoinAndSelect("actor.languages", "languages")
+      .leftJoinAndSelect("actor.agent", "agent")
+      .leftJoinAndSelect("actor.languages", "language")
 
     const {
         agent,
-        ageBottom,
-        ageTop,
+        minAge,
+        maxAge,
         cities,
         clothes_size,
         eye_colors,
         gender,
         languages,
-        height,
-    } = req.query
+        minHeight,
+        maxHeight
+    } = req.body
 
-    if (agent) {
+    if (agent) {        
         const agentId: number = Number(agent)
-        qb.andWhere("actor.agentId == :agentId", { agentId })
+        qb.andWhere("actor.agent.id = :agentId", { agentId })
     }
 
     if (cities) {
@@ -42,7 +44,6 @@ export async function filter(req: Request, res: Response): Promise<void> {
 
     if (languages) {
         const languageIds = (Array.isArray(languages) ? languages : (languages as string).split(",")).map(Number)
-        qb.leftJoin("actor.languages", "language")
         qb.andWhere("language.id IN (:...languageIds)", { languageIds })
     }
 
@@ -54,29 +55,39 @@ export async function filter(req: Request, res: Response): Promise<void> {
         qb.andWhere("actor.clothes_size = :clothes_size", { clothes_size })
     }
 
-    if (height) {
-        qb.andWhere("actor.height = :height", { height: Number(height) })
+    if (minHeight || maxHeight) {
+        if (minHeight && maxHeight) {
+            qb.andWhere("actor.height BETWEEN :heightMin AND :heightMax", { heightMin: Number(minHeight), heightMax: Number(maxHeight) })
+        } else if (minHeight) {
+            qb.andWhere("actor.height >= :heightMin", { heightMin: Number(minHeight) })
+        } else if (maxHeight) {
+            qb.andWhere("actor.height <= :heightMax", { heightMax: Number(maxHeight) })
+        }
     }
 
-    if (ageBottom || ageTop) {
+    if (minAge || maxAge) {
         const now = new Date()
-        const minBirthDate = ageTop ? new Date(now.getFullYear() - Number(ageTop), now.getMonth(), now.getDate()) : null
-        const maxBirthDate = ageBottom ? new Date(now.getFullYear() - Number(ageBottom), now.getMonth(), now.getDate()) : null
+        const minBirthDate = maxAge ? new Date(now.getFullYear() - Number(maxAge), now.getMonth(), now.getDate()) : null
+        const maxBirthDate = minAge ? new Date(now.getFullYear() - Number(minAge), now.getMonth(), now.getDate()) : null
 
         if (minBirthDate && maxBirthDate) {
-        qb.andWhere("actor.date_of_birth BETWEEN :minBirth AND :maxBirth", {
-            minBirth: minBirthDate.toISOString().split('T')[0],
-            maxBirth: maxBirthDate.toISOString().split('T')[0],
-        })
+            qb.andWhere("actor.date_of_birth BETWEEN :minBirth AND :maxBirth", {
+                minBirth: minBirthDate.toISOString().split('T')[0],
+                maxBirth: maxBirthDate.toISOString().split('T')[0],
+            })
         } else if (minBirthDate) {
-        qb.andWhere("actor.date_of_birth >= :minBirth", { minBirth: minBirthDate.toISOString().split('T')[0] })
+            qb.andWhere("actor.date_of_birth >= :minBirth", { minBirth: minBirthDate.toISOString().split('T')[0] })
         } else if (maxBirthDate) {
-        qb.andWhere("actor.date_of_birth <= :maxBirth", { maxBirth: maxBirthDate.toISOString().split('T')[0] })
+            qb.andWhere("actor.date_of_birth <= :maxBirth", { maxBirth: maxBirthDate.toISOString().split('T')[0] })
         }
     }
 
     if (languages) {
         qb.groupBy("actor.id")
+          .addGroupBy("city.id")
+          .addGroupBy("eye_color.id")
+          .addGroupBy("agent.id")
+          .addGroupBy("language.id")
     }
 
     const actors = await qb.getMany()

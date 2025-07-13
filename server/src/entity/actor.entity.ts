@@ -38,7 +38,7 @@ export class Actor {
     @Column({ type: "int", default: 0, nullable: true })
     height?: number              // рост в см
 
-    @Column({ type: "varchar", length: 30, nullable: true })
+    @Column({ type: "int", default: 0, nullable: true })
     clothes_size?: number         // размер одежды
 
     @Column({ type: "text", nullable: true })
@@ -61,7 +61,8 @@ export class Actor {
 
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
-        nullable: true
+        eager: true,
+        nullable: false
     })
     @JoinColumn({ name: "agent_id" })
     agent: Agent                   // к какому агенту относятся

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Actor } from './component/Actor';
-import { actor } from './data/actors';
 
 
 function App() {
@@ -8,7 +7,7 @@ function App() {
 
   return (
     <div className="App">
-      <Actor actor={ actor[0] } title = "actor"/>
+      <Actor />
     </div>
   );
 }

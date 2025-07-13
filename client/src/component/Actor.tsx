@@ -14,7 +14,6 @@ export function Actor(props: any) {
         fetchData()
     })
 
-
     return (
         <div
             className='border py-2 px-4 rounded flex flex-col items-center'>
