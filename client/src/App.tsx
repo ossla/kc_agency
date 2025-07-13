@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-
-import logo from './logo.svg';
+import { Actor } from './component/Actor';
+import { actor } from './data/actors';
 
 
 function App() {
-  const [count, setCount] = useState()
+  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <h1>hello world!</h1>
+      <Actor actor={ actor[0] } title = "actor"/>
     </div>
   );
 }
