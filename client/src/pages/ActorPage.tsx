@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import fetchActors from "../data/fetchActors"
-import { IActor } from "../model/IActor"
-import { Actor } from "../component/Actor"
+import { IActor } from "../models/IActor"
+import { ActorCard } from "../elements/ActorCard"
 
 
 export function ActorPage(props: any) {
@@ -20,7 +20,7 @@ export function ActorPage(props: any) {
         <div>
             {actorData ? (
                 actorData.map(actor => 
-                    <Actor key={actor.id} actor={actor} />
+                    <ActorCard key={actor.id} actor={actor} />
             )) : (
                 <p>Loading...</p>
             )}

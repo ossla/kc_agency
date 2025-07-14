@@ -1,4 +1,4 @@
-import { IActor, toIActor } from "../model/IActor"
+import { IActor, toIActor } from "../models/IActor"
 
 class fetchActors {
     static async getActors(): Promise<IActor[]> {

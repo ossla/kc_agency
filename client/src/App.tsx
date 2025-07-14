@@ -1,13 +1,15 @@
-import { ActorPage } from './page/ActorPage';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { ActorPage } from "./pages/ActorPage"
+import { Actor } from "./components/Actor"
 
 
-function App() {
-
-  return (
-    <div className="App">
-      <ActorPage />
-    </div>
-  );
+export default function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/actor/" element={<ActorPage />} />
+                {/* <Route path="/actor/:id" element={<Actor />} /> */}
+            </Routes>
+        </Router>
+    )
 }
-
-export default App;
