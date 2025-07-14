@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import { Actor } from './component/Actor';
+import { ActorPage } from './page/ActorPage';
 
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <Actor />
+      <ActorPage />
     </div>
   );
 }

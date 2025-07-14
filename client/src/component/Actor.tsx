@@ -1,27 +1,14 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+import { IActor } from "../model/IActor";
+import { IActorProps } from "./interfaces/IActorProps";
 
-
-export function Actor(props: any) {
-    
-    const [actorData, setActorData] = useState(null)
-
-    useEffect(() => {
-        async function fetchData() {
-            const response = await fetch('http://localhost:3001/api/actor/')
-            const data = await response.json()
-            setActorData(data)
-        }
-        fetchData()
-    })
+export function Actor(props: IActorProps) {
+    const [actor, setActor] = useState<IActor>(props.actor) 
 
     return (
-        <div
-            className='border py-2 px-4 rounded flex flex-col items-center'>
-            {actorData ? (
-                <pre>{JSON.stringify(actorData, null, 2)}</pre>
-            ) : (
-                <p>Loading...</p>
-            )}
+        <div>
+            
+            <h1>{actor.first_name} {actor.last_name}</h1>
         </div>
     )
 }
