@@ -1,12 +1,32 @@
 import { z } from "zod"
 
 
+export const CreateAgentSchema = z.object({
+    first_name: z.string().min(1),
+    last_name: z.string().min(1),
+    middle_name: z.string().optional(),
+    email: z.string().email(),
+    password: z.string().min(1),
+    phone: z.string().min(1),
+    description: z.string().optional(),
+    telegram: z.string().optional(),
+    VK: z.string().optional()
+});
+export type CreateAgentType = z.infer<typeof CreateAgentSchema>;
+
+export interface IJwtPayload {
+    id: number;
+    name: string;
+    email: string;
+    is_admin: boolean;
+}
+
 export const CreateActorSchema = z.object({
     date_of_birth: z.preprocess((val) => new Date(val as string), z.date()), // 1947-05-20
     agentId: z.string().min(1),
     first_name: z.string().min(1),
     last_name: z.string().min(1),
-    gender: z.string().min(1),
+    gender: z.string(),
 
     middle_name: z.string().optional(),
     city: z.string().optional(),
@@ -21,3 +41,8 @@ export const CreateActorSchema = z.object({
     kinopoisk: z.string().optional(),
 });
 export type CreateActorType = z.infer<typeof CreateActorSchema>;
+
+export enum genderEnum {
+    Man   = 'M',
+    Woman = 'W'
+}

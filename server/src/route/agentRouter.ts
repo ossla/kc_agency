@@ -9,7 +9,7 @@ import { auth } from "../controller/agentController/loginAgent";
 
 const agentRouter: Express = express();
 
-agentRouter.post("/create", create)
+agentRouter.post("/create", /**check,*/ create)
 agentRouter.post("/delete", check, remove)
 agentRouter.get("/auth", check, (req, res) => {
     res.status(200).json({message: true});

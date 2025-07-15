@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import { Agent } from "../../entity/agent.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { IJwtPayload } from "./services/types"
+import { IJwtPayload } from "../services/types"
 import { ICustomRequest } from "../../middleware/checkMiddleware"
 
 

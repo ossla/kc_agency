@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express"
 import * as bcrypt from "bcrypt"
 
 import { ICustomRequest } from "../../middleware/checkMiddleware";
-import { CreateAgentSchema, CreateAgentType } from "./services/types";
+import { CreateAgentSchema, CreateAgentType } from "../services/types";
 import { appDataSource } from "../../data-source";
 import { Agent } from "../../entity/agent.entity";
 import processApiError from "../../error/processError";
-import { CustomFileType, makeAgentPhotoName, removePhoto, savePhoto } from "../fs_functions/fileSystemService";
+import { CustomFileType, makeAgentPhotoName, removePhoto, savePhoto } from "../services/fileSystemService";
 import { createToken } from "./loginAgent";
 
 

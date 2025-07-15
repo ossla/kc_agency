@@ -23,7 +23,6 @@ export async function getOne(req: Request, res: Response, next: NextFunction)
         const { id } = req.params
         const agent = await getAgent(Number(id))
         
-        res.status(200).json(agent)
         res.status(200).json(instanceToPlain(agent)) // @exclude hash password поле
     } catch (error: unknown) {
         processApiError(404, error, next)

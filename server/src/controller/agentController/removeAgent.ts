@@ -1,10 +1,10 @@
 import { NextFunction, Response, Request } from "express"
 
-import { getAgent } from "./services/getService"
+import { getAgent } from "./getAgent"
 import { appDataSource } from "../../data-source"
 import { Agent } from "../../entity/agent.entity"
 import processApiError from "../../error/processError"
-import { removePhoto } from "../fs_functions/fileSystemService"
+import { removePhoto } from "../services/fileSystemService"
 
 
 export async function remove(req: Request, res: Response, next: NextFunction) 

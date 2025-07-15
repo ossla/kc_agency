@@ -78,7 +78,6 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
     }
 }
 
-
 export async function filter(req: Request, res: Response): Promise<void> {
     const actorRepo = appDataSource.getRepository(Actor)
     const qb = actorRepo.createQueryBuilder("actor")

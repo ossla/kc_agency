@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import processApiError from "../../error/processError"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
+import { genderEnum } from "../services/types"
 
 
 export async function getActor(id: number): Promise<Actor> {
@@ -28,6 +29,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction) : 
     }
 }
 
+// для тестов
 export async function getAllFull(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {
         const actors: Actor[] = await appDataSource.getRepository(Actor).find()
@@ -38,11 +40,20 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
     }
 }
 
-export async function getAllShort(req: Request, res: Response) {
+async function getShortByGender(res: Response, gender: genderEnum) {
     const actors = await appDataSource.getRepository(Actor)
         .createQueryBuilder("actor")
         .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
-        .getMany();
+        .where("actor.gender = :gender", { gender })
+        .getMany()
 
     res.json(actors);
+}
+
+export async function getShortMen(req: Request, res: Response) {
+    getShortByGender(res, genderEnum.Man)
+}
+
+export async function getShortWomen(req: Request, res: Response) {
+    getShortByGender(res, genderEnum.Woman)
 }
