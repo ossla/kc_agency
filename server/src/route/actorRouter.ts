@@ -10,10 +10,12 @@ const actorRouter: Express = express();
 
 actorRouter.post("/create", check, create)
 actorRouter.post("/delete", check, remove)
-actorRouter.get("/:id", getOne)
-actorRouter.get("/men", getShortMen)
-actorRouter.get("/women", getShortWomen)
+
 actorRouter.post("/filter", filter)
-actorRouter.get("/", getAllFull) // для тестов...
+actorRouter.get("/:id", getOne)
+actorRouter.get("/get/men", getShortMen)
+actorRouter.get("/get/women", getShortWomen)
+actorRouter.get("/", getAllFull)
+
 
 export default actorRouter;

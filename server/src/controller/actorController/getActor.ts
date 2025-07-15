@@ -40,20 +40,26 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
     }
 }
 
-async function getShortByGender(res: Response, gender: genderEnum) {
-    const actors = await appDataSource.getRepository(Actor)
-        .createQueryBuilder("actor")
-        .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
-        .where("actor.gender = :gender", { gender })
-        .getMany()
+async function getShortByGender(res: Response, gender: genderEnum, next: NextFunction) {
+    console.log(gender);
+    try {
+        const actors = await appDataSource.getRepository(Actor)
+            .createQueryBuilder("actor")
+            .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
+            .where("actor.gender = :gender", { gender })
+            .getMany()
 
-    res.json(actors);
+        res.json(actors);
+        
+    } catch (error: unknown) {
+        processApiError(404, error, next)
+    }
 }
 
-export async function getShortMen(req: Request, res: Response) {
-    getShortByGender(res, genderEnum.Man)
+export async function getShortMen(req: Request, res: Response, next: NextFunction) {
+    getShortByGender(res, genderEnum.Man, next)
 }
 
-export async function getShortWomen(req: Request, res: Response) {
-    getShortByGender(res, genderEnum.Woman)
+export async function getShortWomen(req: Request, res: Response, next: NextFunction) {
+    getShortByGender(res, genderEnum.Woman, next)
 }
