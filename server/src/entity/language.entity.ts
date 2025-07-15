@@ -1,15 +1,15 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Actor } from "./actor.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Actor } from "./actor.entity"
 
 
 @Entity()
 export class Language {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column({ unique: true })
-  name: string;
+  name: string
 
   @ManyToMany(() => Actor, actor => actor.languages)
-  actors: Actor[];
+  actors: Actor[]
 }

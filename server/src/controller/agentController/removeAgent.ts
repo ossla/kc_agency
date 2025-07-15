@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express"
 
-import { getAgent } from "../fs_functions/getService"
+import { getAgent } from "./services/getService"
 import { appDataSource } from "../../data-source"
 import { Agent } from "../../entity/agent.entity"
 import processApiError from "../../error/processError"

@@ -7,11 +7,13 @@ import {
     CreateDateColumn,
     UpdateDateColumn
 } from "typeorm"
+import { Exclude } from "class-transformer"
+
 
 @Entity()
 export class Agent {
     @PrimaryGeneratedColumn()
-    id: string
+    id: number
 
     @Column({ type: "varchar", length: 40, nullable: false })
     first_name: string       // имя
@@ -26,6 +28,7 @@ export class Agent {
     email: string           // email
 
     @Column({ type: "varchar", length: 255, nullable: false })
+    @Exclude()
     hash_password: string    // пароль (шифр)
 
     @Column({ type: "varchar", length: 20, nullable: false })

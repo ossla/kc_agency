@@ -15,7 +15,7 @@ export const CreateAgentSchema = z.object({
 export type CreateAgentType = z.infer<typeof CreateAgentSchema>;
 
 export interface IJwtPayload {
-    id: string;
+    id: number;
     name: string;
     email: string;
     is_admin: boolean;

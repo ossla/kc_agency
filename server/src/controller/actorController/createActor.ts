@@ -9,7 +9,7 @@ import { CreateActorSchema, CreateActorType } from "./services/types"
 import { Language } from "../../entity/language.entity"
 import { EyeColor } from "../../entity/eyeColor.entity"
 import { City } from "../../entity/city.entity"
-import { getAgent } from "../fs_functions/getService"
+import { getAgent } from "../agentController/services/getService"
 
 
 export async function create(req: ICustomRequest, res: Response, next: NextFunction) : Promise<void> {
@@ -45,7 +45,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
 export async function generateActor(actor: Actor, body: CreateActorType)
                                                             : Promise<void> {
                                                                                                                             
-    actor.agent = await getAgent(body.agentId)                                                  
+    actor.agent = await getAgent(Number(body.agentId))                                                  
     actor.first_name = body.first_name
     actor.last_name  = body.last_name
     actor.gender = body.gender

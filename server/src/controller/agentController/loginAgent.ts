@@ -9,7 +9,7 @@ import { IJwtPayload } from "./services/types"
 import { ICustomRequest } from "../../middleware/checkMiddleware"
 
 
-export async function createToken(id: string, name: string, email: string, is_admin: boolean): Promise<string> {
+export async function createToken(id: number, name: string, email: string, is_admin: boolean): Promise<string> {
     const secretKey = process.env.SECRETKEY as string | undefined;
     if (!secretKey) {
         throw new Error('Secret key is not defined');

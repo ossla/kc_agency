@@ -18,7 +18,7 @@ import { Language } from "./language.entity"
 @Entity()
 export class Actor {
     @PrimaryGeneratedColumn()
-    id: string
+    id: number
 
     @Column({ type: "varchar", length: 40, nullable: false})
     first_name: string           // имя

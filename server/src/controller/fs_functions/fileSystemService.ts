@@ -5,6 +5,8 @@ import { CreateAgentType } from "../agentController/services/types"
 import { CreateActorType } from "../actorController/services/types"
 
 
+// код для работы с файлами на сервере
+
 function returnStaticPath(): string {
     const pathToStatic: string = path.join(__dirname, "..", "..", "..", "static")
     if (!fs.existsSync(pathToStatic)) {

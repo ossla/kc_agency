@@ -3,7 +3,7 @@ import { NextFunction, Response, Request } from "express"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { getActor } from "../fs_functions/getService"
+import { getActor } from "../agentController/services/getService"
 import { removeActorFolder } from "../fs_functions/fileSystemService"
 
 

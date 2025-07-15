@@ -41,7 +41,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
 
         await appDataSource.getRepository(Agent).save(agent)
 
-        const token: string = await createToken(agent.id.toString()
+        const token: string = await createToken(agent.id
                                 , agent.first_name, agent.last_name, agent.is_admin)
         res.status(200).json(token)
 
