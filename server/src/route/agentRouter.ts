@@ -11,11 +11,8 @@ const agentRouter: Express = express();
 
 agentRouter.post("/create", /**check,*/ create)
 agentRouter.post("/delete", check, remove)
-agentRouter.get("/auth", check, (req, res) => {
-    res.status(200).json({message: true});
-});
+agentRouter.get("/auth", check, auth);
 agentRouter.get("/:id", getOne)
 agentRouter.get("/", getAll)
-agentRouter.get("/auth", check, auth)
 
 export default agentRouter;

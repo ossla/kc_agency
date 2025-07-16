@@ -21,7 +21,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction)
                                                         : Promise<void> {
     try {
         const { id } = req.params
-        const agent = await getAgent(Number(id))
+        const agent: Agent = await getAgent(Number(id))
         
         res.status(200).json(instanceToPlain(agent)) // @exclude hash password поле
     } catch (error: unknown) {

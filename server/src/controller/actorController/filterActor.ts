@@ -1,8 +1,9 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 
 import { appDataSource } from "../../data-source"
 import { Actor } from "../../entity/actor.entity"
 import { SelectQueryBuilder } from "typeorm"
+import processApiError from "../../error/processError"
 
 
 function filterByAgent(qb: SelectQueryBuilder<Actor>, agent: any) {
@@ -78,38 +79,42 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
     }
 }
 
-export async function filter(req: Request, res: Response): Promise<void> {
-    const actorRepo = appDataSource.getRepository(Actor)
-    const qb = actorRepo.createQueryBuilder("actor")
-        .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
-        .leftJoin("actor.languages", "language")
+export async function filter(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+        const actorRepo = appDataSource.getRepository(Actor)
+        const qb = actorRepo.createQueryBuilder("actor")
+            .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
+            .leftJoin("actor.languages", "language")
 
-    const {
-        agent,
-        minAge,
-        maxAge,
-        cities,
-        clothes_size,
-        eye_colors,
-        gender,
-        languages,
-        minHeight,
-        maxHeight
-    } = req.body
+        const {
+            agent,
+            minAge,
+            maxAge,
+            cities,
+            clothesSize,
+            eyeColors,
+            gender,
+            languages,
+            minHeight,
+            maxHeight
+        } = req.body
 
-    filterByAgent(qb, agent)
-    filterByCities(qb, cities)
-    filterByEyeColors(qb, eye_colors)
-    filterByLanguages(qb, languages)
-    filterByGender(qb, gender)
-    filterByClothesSize(qb, clothes_size)
-    filterByHeight(qb, minHeight, maxHeight)
-    filterByAge(qb, minAge, maxAge)
+        filterByAgent(qb, agent)
+        filterByCities(qb, cities)
+        filterByEyeColors(qb, eyeColors)
+        filterByLanguages(qb, languages)
+        filterByGender(qb, gender)
+        filterByClothesSize(qb, clothesSize)
+        filterByHeight(qb, minHeight, maxHeight)
+        filterByAge(qb, minAge, maxAge)
 
-    if (languages) {
-        qb.groupBy("actor.id")
+        if (languages) {
+            qb.groupBy("actor.id")
+        }
+
+        const actors = await qb.getMany()
+        res.json(actors)
+    } catch (error: unknown) {
+        processApiError(404, error, next)
     }
-
-    const actors = await qb.getMany()
-    res.json(actors)
 }

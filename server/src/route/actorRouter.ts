@@ -4,12 +4,14 @@ import { create } from "../controller/actorController/createActor";
 import { remove } from "../controller/actorController/removeActor";
 import { getAllFull, getOne, getShortMen, getShortWomen } from "../controller/actorController/getActor";
 import { filter } from "../controller/actorController/filterActor";
+import { edit } from "../controller/actorController/editActor";
 
 
 const actorRouter: Express = express();
 
 actorRouter.post("/create", check, create)
 actorRouter.post("/delete", check, remove)
+actorRouter.post("/edit", check, edit)
 
 actorRouter.post("/filter", filter)
 actorRouter.get("/:id", getOne)

@@ -35,7 +35,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
         res.status(200).json(actor)
 
     } catch (error: unknown) {
-        if (dirName != "") {
+        if (dirName != "") { // если папка с таким названием существует, dirName == ""
             await removeActorFolder(dirName)
         }
         processApiError(404, error, next)
@@ -63,56 +63,93 @@ export async function generateActor(actor: Actor, body: CreateActorType)
     actor.link_to_kinopoisk = body.kinopoisk ?? null
     actor.video = body.video ?? null
 
-    await saveCity(actor, body)
-    await saveColor(actor, body)
-    await saveLanguages(actor, body)
+    await saveCity(actor, body.city)
+    await saveColor(actor, body.eye_color)
+    await saveLanguages(actor, body.languages)
 }
 
-async function saveCity(actor: Actor, body: CreateActorType) {
-    let city: City | null = await appDataSource.getRepository(City)
-                                        .findOne({where: {name: body.city}})
-    if (!city) {
-        city = new City();
-        city.name = body.city;
-        await appDataSource.getRepository(City).save(city);
-    }
-
-    actor.city = city
-}
-
-async function saveColor(actor: Actor, body: CreateActorType) {
-    let eyeColor: EyeColor | null = await appDataSource.getRepository(EyeColor)
-                                        .findOne({where: {name: body.eye_color}})
-    if (!eyeColor) {     
-        eyeColor = new EyeColor()
-        eyeColor.name = body.eye_color
-        await appDataSource.getRepository(EyeColor).save(eyeColor)
-    }
+// экспорты для editActor
+export async function saveCity(actor: Actor, rawCity: string | undefined) {
+    if (typeof rawCity === 'string' && rawCity.length) {
+        let city: City | null = await appDataSource.getRepository(City)
+                                            .findOne({where: {name: rawCity}})
+        if (!city) {
+            city = new City();
+            city.name = rawCity;
+            await appDataSource.getRepository(City).save(city);
+        }
     
-    actor.eye_color = eyeColor
+        actor.city = city
+    }
 }
 
-async function saveLanguages(actor: Actor, body: CreateActorType) {
+export async function saveColor(actor: Actor, rawColor: string | undefined) {
+    if (typeof rawColor === 'string' && rawColor.length) {
+        let eyeColor: EyeColor | null = await appDataSource.getRepository(EyeColor)
+        .findOne({where: {name: rawColor}})
+        if (!eyeColor) {     
+            eyeColor = new EyeColor()
+            eyeColor.name = rawColor
+            await appDataSource.getRepository(EyeColor).save(eyeColor)
+        }
+
+        actor.eye_color = eyeColor
+    }
+}
+
+// export async function saveLanguages(actor: Actor, rawLanguages: string | undefined) {
+//     if (typeof rawLanguages === 'string' && rawLanguages.length) {
+        
+//         actor.languages = []
+
+//         let langsArr: Array<Language> = new Array<Language>()
+//         const languages: string[] = JSON.parse(rawLanguages)
+
+//         for (let i = 0; i < languages.length; i++) {
+//             let lang: Language | null = await appDataSource.getRepository(Language)
+//                                                             .findOneBy({name: languages[i]})
+//             if (!lang) {
+//                 lang = new Language()
+//                 lang.name = languages[i]
+//                 await appDataSource.manager.save(lang)
+//             }
+            
+//             langsArr.push(lang)
+//         }
+//         actor.languages = langsArr
+//     }
+
+// }
+
+export async function saveLanguages(actor: Actor, rawLanguages: string[] | string | undefined) {
+    if (!rawLanguages) {
+        return;
+    }
+
+    let rawLangsArr: string[]
+    if (typeof rawLanguages === 'string' && rawLanguages.length) {
+        rawLangsArr = JSON.parse(rawLanguages)
+    } else if (Array.isArray(rawLanguages)) {
+        rawLangsArr = rawLanguages
+    } else {
+        throw new Error("languages должен быть или string или string[]")
+    }
+        
     actor.languages = []
 
     let langsArr: Array<Language> = new Array<Language>()
-    if (typeof body.languages === 'string' && body.languages.length) {
-        const languages: string = JSON.parse(body.languages)
 
-        for (let i = 0; i < languages.length; i++) {
-            let lang: Language | null = await appDataSource.getRepository(Language)
-                                                            .findOneBy({name: languages[i]})
-            if (!lang) {
-                lang = new Language()
-                lang.name = languages[i]
-                await appDataSource.manager.save(lang)
-            }
-            
-            langsArr.push(lang)
+    for (let i = 0; i < rawLangsArr.length; i++) {
+        let lang: Language | null = await appDataSource.getRepository(Language)
+                                                        .findOneBy({name: rawLangsArr[i]})
+        if (!lang) {
+            lang = new Language()
+            lang.name = rawLangsArr[i]
+            await appDataSource.manager.save(lang)
         }
+        
+        langsArr.push(lang)
     }
-
     actor.languages = langsArr
+
 }
-
-
