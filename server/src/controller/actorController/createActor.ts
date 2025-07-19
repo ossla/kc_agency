@@ -1,7 +1,8 @@
 import { NextFunction, Response } from "express"
+import path from "path"
 
 import { ICustomRequest } from "../../middleware/checkMiddleware"
-import { CustomFileType, makeActorDirectory, removeActorFolder, savePhoto, savePhotos } from "../services/fileSystemService"
+import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath, saveActorPhotos, savePhoto } from "../services/fileSystemService"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
@@ -12,46 +13,58 @@ import { City } from "../../entity/city.entity"
 import { getAgent } from "../agentController/getAgent"
 
 
-export async function create(req: ICustomRequest, res: Response, next: NextFunction) : Promise<void> {
-    let dirName: string = ""
+export async function create(req: ICustomRequest, res: Response, next: NextFunction) {
+    let dirname: string = ""
     try {
         console.log("create actor controller starts...")
+        const actor: Actor = new Actor()
         const body: CreateActorType = CreateActorSchema.parse(req.body)
 
-        const avatar: CustomFileType = req.files?.avatar
-        if (!avatar) throw new Error('Нужно добавить аватарку актера')
-        const photos: CustomFileType = req.files?.photos
-        if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
-        dirName = await makeActorDirectory(body)
-        await savePhoto(avatar, "avatar.jpg", dirName)
-        await savePhotos(photos, dirName)
-
-        const actor: Actor = new Actor()
-        actor.directory = dirName
-        await generateActor(actor, body)
+        dirname = await processActorFiles(req, body, actor)
+        await fillActor(actor, body)
 
         await appDataSource.getRepository(Actor).save(actor)
 
         res.status(200).json(actor)
 
     } catch (error: unknown) {
-        if (dirName != "") { // если папка с таким названием существует, dirName == ""
-            await removeActorFolder(dirName)
+        // если папка другого актера существует, dirname == "", удалять ее не надо
+        if (dirname != "") {
+            await removeActorFolder(dirname)
         }
         processApiError(404, error, next)
     }
 } // create
 
-export async function generateActor(actor: Actor, body: CreateActorType)
-                                                            : Promise<void> {
-                                                                                                                            
-    actor.agent = await getAgent(Number(body.agentId))                                             
+// получение avatar.jpg и фотографий для альбома актера.
+async function processActorFiles(req: ICustomRequest, body: CreateActorType, actor: Actor)
+                                                            : Promise<string> {
+    let dirname: string;
+    console.log("check if files received...");
+    const avatar: CustomFileType = req.files?.avatar
+    if (!avatar) throw new Error('Нужно добавить аватарку актера')
+    const photos: CustomFileType = req.files?.photos
+    if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
+
+    console.log("making directory");
+    dirname = await makeActorDirectory(body)
+    actor.directory = dirname
+    await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
+    console.log("avatar.jpg saved")
+    actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
+    console.log("actor photos saved");
+    return dirname
+}
+
+// заполнение полей (помимо photos) и связей с другими таблицами
+async function fillActor(actor: Actor, body: CreateActorType) {                         
+    actor.agent = await getAgent(Number(body.agentId))
     actor.first_name = body.first_name
     actor.last_name  = body.last_name
     if (body.gender === genderEnum.Man || body.gender === genderEnum.Woman) {
         actor.gender = body.gender
     } else {
-        throw new Error(`Неверно указан пол актера: ${body.gender}`)
+        throw new Error(`create: Неверно указан пол актера: ${body.gender}`)
     }
     actor.middle_name = body.middle_name ?? null
     actor.date_of_birth = body.date_of_birth;
@@ -61,14 +74,15 @@ export async function generateActor(actor: Actor, body: CreateActorType)
     actor.link_to_kino_teatr = body.kino_teatr ?? null
     actor.link_to_film_tools = body.film_tools ?? null
     actor.link_to_kinopoisk = body.kinopoisk ?? null
-    actor.video = body.video ?? null
+    actor.video_code = body.video ?? null
 
     await saveCity(actor, body.city)
     await saveColor(actor, body.eye_color)
     await saveLanguages(actor, body.languages)
 }
 
-// экспорты для editActor
+
+// экспорт для editActor
 export async function saveCity(actor: Actor, rawCity: string | undefined) {
     if (typeof rawCity === 'string' && rawCity.length) {
         let city: City | null = await appDataSource.getRepository(City)
@@ -78,11 +92,12 @@ export async function saveCity(actor: Actor, rawCity: string | undefined) {
             city.name = rawCity;
             await appDataSource.getRepository(City).save(city);
         }
-    
+
         actor.city = city
     }
 }
 
+// экспорт для editActor
 export async function saveColor(actor: Actor, rawColor: string | undefined) {
     if (typeof rawColor === 'string' && rawColor.length) {
         let eyeColor: EyeColor | null = await appDataSource.getRepository(EyeColor)
@@ -97,30 +112,7 @@ export async function saveColor(actor: Actor, rawColor: string | undefined) {
     }
 }
 
-// export async function saveLanguages(actor: Actor, rawLanguages: string | undefined) {
-//     if (typeof rawLanguages === 'string' && rawLanguages.length) {
-        
-//         actor.languages = []
-
-//         let langsArr: Array<Language> = new Array<Language>()
-//         const languages: string[] = JSON.parse(rawLanguages)
-
-//         for (let i = 0; i < languages.length; i++) {
-//             let lang: Language | null = await appDataSource.getRepository(Language)
-//                                                             .findOneBy({name: languages[i]})
-//             if (!lang) {
-//                 lang = new Language()
-//                 lang.name = languages[i]
-//                 await appDataSource.manager.save(lang)
-//             }
-            
-//             langsArr.push(lang)
-//         }
-//         actor.languages = langsArr
-//     }
-
-// }
-
+// экспорт для editActor
 export async function saveLanguages(actor: Actor, rawLanguages: string[] | string | undefined) {
     if (!rawLanguages) {
         return;
@@ -128,14 +120,18 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
 
     let rawLangsArr: string[]
     if (typeof rawLanguages === 'string' && rawLanguages.length) {
-        rawLangsArr = JSON.parse(rawLanguages)
+        try {
+            rawLangsArr = JSON.parse(rawLanguages)
+            if (!Array.isArray(rawLangsArr)) throw new Error()
+        } catch {
+            throw new Error("Некорректный JSON в поле languages")
+        }
+
     } else if (Array.isArray(rawLanguages)) {
         rawLangsArr = rawLanguages
     } else {
         throw new Error("languages должен быть или string или string[]")
     }
-        
-    actor.languages = []
 
     let langsArr: Array<Language> = new Array<Language>()
 

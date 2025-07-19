@@ -8,7 +8,8 @@ import {
     ManyToMany,
     JoinTable,
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    OneToMany
 } from "typeorm"
 import { EyeColor } from "./eyeColor.entity"
 import { City } from "./city.entity"
@@ -57,7 +58,10 @@ export class Actor {
     link_to_kinopoisk?: string     // кинопоиск
 
     @Column({type: "text", default: "", nullable: true })
-    video?: string                  // видеовизитка (код вставки?) 
+    video_code?: string            // видеовизитка (код вставки?) 
+
+    @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
+    photos: string[]                // фото помимо аватарки
 
     @ManyToOne(() => Agent, agent => agent.actors, { 
         onDelete: "SET NULL",
@@ -77,11 +81,11 @@ export class Actor {
 
     @ManyToMany(() => Language, { eager: true, nullable: true })
     @JoinTable()
-    languages?: Language[]          // доп. языки
+    languages?: Array<Language>          // доп. языки
 
     @CreateDateColumn()
     createdAt: Date
 
     @UpdateDateColumn()
     updatedAt: Date
-}       
+}

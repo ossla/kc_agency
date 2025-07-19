@@ -7,6 +7,7 @@ import { getAgent } from "../agentController/getAgent"
 import { Agent } from "../../entity/agent.entity"
 import { genderEnum } from "../services/types"
 import { saveCity, saveColor, saveLanguages } from "./createActor"
+import { CustomFileType } from "../services/fileSystemService"
 
 
 interface IName {
@@ -23,6 +24,23 @@ function setName(actor: Actor, name: IName) {
     }
     if (name.middle) {
         actor.middle_name = name.middle
+    }
+}
+
+interface ILinks {
+    kinopoisk?: string,
+    filmTools?: string,
+    kinoTeatr?: string
+}
+function setLinks(actor: Actor, links: ILinks) {
+    if (links.kinopoisk) {
+        actor.link_to_kinopoisk = links.kinopoisk
+    }
+    if (links.filmTools) {
+        actor.link_to_film_tools = links.filmTools
+    }
+    if (links.kinoTeatr) { 
+        actor.link_to_kino_teatr = links.kinoTeatr
     }
 }
 
@@ -61,6 +79,11 @@ function setGender(actor: Actor, gender: any) {
     }
 }
 
+function setVideo(actor: Actor, videoCode?: string) {
+    if (videoCode) {
+        actor.video_code = videoCode
+    }
+}
 
 export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
@@ -70,30 +93,43 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
             last_name,
             middle_name,
             agentId,
-            date_of_birth,
+            dateOfBirth,
             clothes_size,
             height,
             gender,
             city,
             eye_color,
             languages,
+            linkToKinopoisk,
+            linkToFilmTools,
+            linkToKinoTeatr,
+            videoCode,  
         } = req.body
-
+        
         let actor: Actor = await getActor(Number(id))
-
         setName(actor, {first: first_name, last: last_name, middle: middle_name})        
-        await setAgent(actor, agentId)
-        setAge(actor, date_of_birth)
+        setLinks(actor, {kinopoisk: linkToKinopoisk, filmTools: linkToFilmTools, kinoTeatr: linkToKinoTeatr})
+        setAge(actor, dateOfBirth)
         setClothesSize(actor, clothes_size)
         setHeight(actor, height)
         setGender(actor, gender)
+        setVideo(actor, videoCode)
+
+        await setAgent(actor, agentId)
         await saveCity(actor, city)
         await saveColor(actor, eye_color)
         await saveLanguages(actor, languages)
+
+        await editPhotos(req)
         
         await appDataSource.getRepository(Actor).save(actor)
         res.json(actor)
     } catch (error: unknown) {
         processApiError(404, error, next)
     }
+}
+
+async function editPhotos(req: Request) {
+    const avatar: CustomFileType = req.files?.avatar
+
 }

@@ -7,7 +7,7 @@ import { CreateActorType } from "./types"
 
 // код для работы с файлами на сервере
 
-function returnStaticPath(): string {
+export function returnStaticPath(): string {
     const pathToStatic: string = path.join(__dirname, "..", "..", "..", "static")
     if (!fs.existsSync(pathToStatic)) {
         fs.mkdirSync(pathToStatic)
@@ -90,14 +90,24 @@ export async function removeActorFolder(dirname: string): Promise<void> {
     }
 }
 
-export async function savePhotos(photos: CustomFileType, dirname: string) {
-    const dirPath: string = path.join(returnStaticPath(), dirname)
-                                                                
+export async function saveActorPhotos(photos: CustomFileType, dirname: string): Promise<string[]> {
+    const dirPath = path.join(returnStaticPath(), dirname)
+    const filenames: string[] = []
+
     if (!Array.isArray(photos)) {
-        photos.mv(path.join(dirPath, '1.jpg'))
+        const filename = '1.jpg'
+        await photos.mv(path.join(dirPath, filename))
+        filenames.push(filename)
     } else {
-        photos.forEach((page, index) => {
-            page.mv(path.join(dirPath, `${index + 1}.jpg`))
-        })
+        if (photos.length > 20) {
+            throw new Error("saveActorPhotos: Загружено более 20 фото")
+        }
+
+        for (let i = 0; i < photos.length; i++) {
+            const filename = `${i + 1}.jpg`
+            await photos[i].mv(path.join(dirPath, filename))
+            filenames.push(filename)
+        }
     }
+    return filenames
 }
