@@ -23,45 +23,44 @@ export async function savePhoto(photo: CustomFileType
                     , photoName: string, folderName: string = "") {
     folderName = path.join(returnStaticPath(), folderName)
 
-    const filePath: string = path.join(folderName, photoName);
-    if (fs.existsSync(filePath)) {
-        throw new Error("Фото с таким именем уже существует: " + photoName);
+    const filepath: string = path.join(folderName, photoName);
+    if (fs.existsSync(filepath)) {
+        throw new Error("savePhoto: Фото с таким именем уже существует: " + photoName);
     }
     if (photo) {
         if (Array.isArray(photo)) {
-            throw new Error("загрузите только 1 файл")
+            throw new Error("savePhoto: загрузите только 1 файл")
         }
-        photo.mv(filePath)
+        photo.mv(filepath)
     } else {
-        throw new Error("загрузите фото")
+        throw new Error("savePhoto: загрузите фото")
     }
 }
 
-export async function removePhoto(photoName: string, folderName: string = "")
-                                                            : Promise<void> {
+export async function removePhoto(photoName: string, folderName: string = "") {
     if (folderName === "") { folderName = returnStaticPath(); }
     console.log(photoName);
 
-    const filePath: string = path.join(folderName, photoName);
-    if (!fs.existsSync(filePath)) {
-        console.error("Фото с таким именем нет: " + photoName);
+    const filepath: string = path.join(folderName, photoName);
+    if (!fs.existsSync(filepath)) {
+        console.error("removePhoto: Фото с таким именем нет: " + photoName);
     } else {
-        fs.rmSync(filePath)
+        fs.rmSync(filepath)
     }
 }
 
 export function makeAgentPhotoName(body: CreateAgentType): string {
-    return  (body.first_name 
+    return  (body.firstName 
             + 
-            body.last_name
+            body.lastName
             + 
-            body.middle_name
+            body.middleName
             +
             ".jpg").replace(/\s/, '_')
 }
 
 export function makeActorDirname(body: CreateActorType): string {
-    return body.first_name + body.last_name
+    return body.firstName + body.lastName
 }
 
 export async function makeActorDirectory(body: CreateActorType): Promise<string> {
@@ -69,7 +68,7 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
     const dirPath: string = path.join(returnStaticPath(), dirname)
     
     if (fs.existsSync(dirPath)) {
-        throw new Error("папка с таким именем существует: " + dirPath)
+        throw new Error("makeActorDirectory: папка с таким именем существует: " + dirPath)
     }
 
     fs.mkdirSync(dirPath)
@@ -80,7 +79,7 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
 export async function removeActorFolder(dirname: string): Promise<void> {
     const dirPath: string = path.join(returnStaticPath(), dirname)
     if (!fs.existsSync(dirPath)) {
-        console.error("нет такой папки: ", dirPath);
+        console.error("removeActorFolder: нет такой папки: ", dirPath);
     } else {
         try {
             fs.rmSync(dirPath, { recursive: true, force: true })
@@ -93,7 +92,7 @@ export async function removeActorFolder(dirname: string): Promise<void> {
 export async function saveActorPhotos(photos: CustomFileType, dirname: string): Promise<string[]> {
     const dirPath = path.join(returnStaticPath(), dirname)
     const filenames: string[] = []
-
+    
     if (!Array.isArray(photos)) {
         const filename = '1.jpg'
         await photos.mv(path.join(dirPath, filename))
@@ -104,10 +103,27 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
         }
 
         for (let i = 0; i < photos.length; i++) {
-            const filename = `${i + 1}.jpg`
-            await photos[i].mv(path.join(dirPath, filename))
-            filenames.push(filename)
+            const uuid: string = crypto.randomUUID() + ".jpg"
+            await photos[i].mv(path.join(dirPath, uuid))
+            filenames.push(uuid)
         }
     }
     return filenames
+}
+
+export async function changePhoto(newPhoto: CustomFileType, filename: string, directory?: string,) {
+    const filepath = directory
+        ? path.join(returnStaticPath(), directory, filename)
+        : path.join(returnStaticPath(), filename);
+
+    if (!fs.existsSync(filepath)) {
+        throw new Error(`changePhoto: Файл ${filepath} не существует`)
+    }
+
+    if (!Array.isArray(newPhoto)) {
+        fs.rmSync(filepath)
+        await newPhoto.mv(filepath)
+    } else {
+        throw new Error("changePhoto: ожидался одиночный файл")
+    }
 }

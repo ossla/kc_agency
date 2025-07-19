@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import processApiError from "../../error/processError"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
-import { genderEnum } from "../services/types"
+import { GenderEnum } from "../services/types"
 
 
 export async function getActor(id: number): Promise<Actor> {
@@ -40,7 +40,7 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
     }
 }
 
-async function getShortByGender(res: Response, gender: genderEnum, next: NextFunction) {
+async function getShortByGender(res: Response, gender: GenderEnum, next: NextFunction) {
     console.log(gender);
     try {
         const actors = await appDataSource.getRepository(Actor)
@@ -57,9 +57,9 @@ async function getShortByGender(res: Response, gender: genderEnum, next: NextFun
 }
 
 export async function getShortMen(req: Request, res: Response, next: NextFunction) {
-    getShortByGender(res, genderEnum.Man, next)
+    getShortByGender(res, GenderEnum.Man, next)
 }
 
 export async function getShortWomen(req: Request, res: Response, next: NextFunction) {
-    getShortByGender(res, genderEnum.Woman, next)
+    getShortByGender(res, GenderEnum.Woman, next)
 }

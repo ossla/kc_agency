@@ -20,7 +20,7 @@ export const check = (req: Request, res: Response, next: NextFunction) => {
             if (typeof decoded === 'string') {
                 throw new Error(decoded)
             } else {
-                if (!decoded.is_admin) throw new Error('user не имеет достаточно прав')
+                if (!decoded.isAdmin) throw new Error('user не имеет достаточно прав')
             }
 
             (req as ICustomRequest).agent = decoded

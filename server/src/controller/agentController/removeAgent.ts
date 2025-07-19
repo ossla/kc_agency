@@ -12,7 +12,7 @@ export async function remove(req: Request, res: Response, next: NextFunction)
     try {
         const { id } = req.body
         const agent = await getAgent(id) // внутри проверит валидность id
-        await removePhoto(agent.photo_name)
+        await removePhoto(agent.photoName)
         await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
         res.status(200).json({message: 'удалён успешно'})

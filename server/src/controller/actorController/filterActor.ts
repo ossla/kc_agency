@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
+import { SelectQueryBuilder } from "typeorm"
 
 import { appDataSource } from "../../data-source"
 import { Actor } from "../../entity/actor.entity"
-import { SelectQueryBuilder } from "typeorm"
 import processApiError from "../../error/processError"
+import { GenderEnum } from "../services/types"
 
 
 function filterByAgent(qb: SelectQueryBuilder<Actor>, agent: any) {
@@ -35,7 +36,11 @@ function filterByLanguages(qb: SelectQueryBuilder<Actor>, languages: any) {
 
 function filterByGender(qb: SelectQueryBuilder<Actor>, gender: any) {
     if (gender) {
-        qb.andWhere("actor.gender = :gender", { gender })
+        if (gender === GenderEnum.Man || gender === GenderEnum.Woman) {
+            qb.andWhere("actor.gender = :gender", { gender })
+        } else {
+            throw new Error("filterByGender: Под актера: 'M' или 'W'")
+        }
     }
 }
 
@@ -48,10 +53,10 @@ function filterByClothesSize(qb: SelectQueryBuilder<Actor>, clothes_size: any) {
 function filterByHeight(qb: SelectQueryBuilder<Actor>, minHeight: any, maxHeight: any) {
     if (minHeight || maxHeight) {
         if (minHeight && maxHeight) {
-            qb.andWhere("actor.height BETWEEN :heightMin AND :heightMax", {
-                heightMin: Number(minHeight),
-                heightMax: Number(maxHeight)
-            })
+            qb.andWhere("actor.height BETWEEN :heightMin AND :heightMax", { 
+                                                        heightMin: Number(minHeight),
+                                                        heightMax: Number(maxHeight)
+                                                    })
         } else if (minHeight) {
             qb.andWhere("actor.height >= :heightMin", { heightMin: Number(minHeight) })
         } else if (maxHeight) {
@@ -63,8 +68,14 @@ function filterByHeight(qb: SelectQueryBuilder<Actor>, minHeight: any, maxHeight
 function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
     if (minAge || maxAge) {
         const now = new Date()
-        const minBirthDate = maxAge ? new Date(now.getFullYear() - Number(maxAge), now.getMonth(), now.getDate()) : null
-        const maxBirthDate = minAge ? new Date(now.getFullYear() - Number(minAge), now.getMonth(), now.getDate()) : null
+        let minBirthDate: Date | null = null
+        let maxBirthDate: Date | null = null
+        if (maxAge) {
+            maxBirthDate = new Date(now.getFullYear() - Number(maxAge), now.getMonth(), now.getDate())
+        }
+        if (minAge) {
+            minBirthDate = new Date(now.getFullYear() - Number(minAge), now.getMonth(), now.getDate())
+        }
 
         if (minBirthDate && maxBirthDate) {
             qb.andWhere("actor.date_of_birth BETWEEN :minBirth AND :maxBirth", {

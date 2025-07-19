@@ -1,48 +1,47 @@
-import { z } from "zod"
+import { z } from "zod";
 
-
-export const CreateAgentSchema = z.object({
-    first_name: z.string().min(1),
-    last_name: z.string().min(1),
-    middle_name: z.string().optional(),
+export const createAgentSchema = z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    middleName: z.string().optional(),
     email: z.string().email(),
     password: z.string().min(1),
     phone: z.string().min(1),
     description: z.string().optional(),
     telegram: z.string().optional(),
-    VK: z.string().optional()
+    vk: z.string().optional(),
 });
-export type CreateAgentType = z.infer<typeof CreateAgentSchema>;
+export type CreateAgentType = z.infer<typeof createAgentSchema>;
 
 export interface IJwtPayload {
     id: number;
     name: string;
     email: string;
-    is_admin: boolean;
+    isAdmin: boolean;
 }
 
-export const CreateActorSchema = z.object({
-    date_of_birth: z.preprocess((val) => new Date(val as string), z.date()), // 1947-05-20
+export const createActorSchema = z.object({
+    dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
     agentId: z.string().min(1),
-    first_name: z.string().min(1),
-    last_name: z.string().min(1),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
     gender: z.string(),
 
-    middle_name: z.string().optional(),
+    middleName: z.string().optional(),
     city: z.string().optional(),
-    eye_color: z.string().optional(),
+    eyeColor: z.string().optional(),
     height: z.preprocess((val) => parseInt(val as string, 10), z.number()).optional(),
-    clothes_size: z.preprocess((val) => parseInt(val as string, 10), z.number()).optional(),
+    clothesSize: z.preprocess((val) => parseInt(val as string, 10), z.number()).optional(),
     video: z.string().optional(),
     languages: z.string().optional(),
     description: z.string().optional(),
-    kino_teatr: z.string().optional(),
-    film_tools: z.string().optional(),
+    kinoTeatr: z.string().optional(),
+    filmTools: z.string().optional(),
     kinopoisk: z.string().optional(),
 });
-export type CreateActorType = z.infer<typeof CreateActorSchema>;
+export type CreateActorType = z.infer<typeof createActorSchema>;
 
-export enum genderEnum {
-    Man   = 'M',
+export enum GenderEnum {
+    Man = 'M',
     Woman = 'W'
 }

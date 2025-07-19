@@ -6,7 +6,7 @@ import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { CreateActorSchema, CreateActorType, genderEnum } from "../services/types"
+import { createActorSchema, CreateActorType, GenderEnum } from "../services/types"
 import { Language } from "../../entity/language.entity"
 import { EyeColor } from "../../entity/eyeColor.entity"
 import { City } from "../../entity/city.entity"
@@ -18,7 +18,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
     try {
         console.log("create actor controller starts...")
         const actor: Actor = new Actor()
-        const body: CreateActorType = CreateActorSchema.parse(req.body)
+        const body: CreateActorType = createActorSchema.parse(req.body)
 
         dirname = await processActorFiles(req, body, actor)
         await fillActor(actor, body)
@@ -32,7 +32,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
         if (dirname != "") {
             await removeActorFolder(dirname)
         }
-        processApiError(404, error, next)
+        processApiError(500, error, next)
     }
 } // create
 
@@ -59,25 +59,25 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
 // заполнение полей (помимо photos) и связей с другими таблицами
 async function fillActor(actor: Actor, body: CreateActorType) {                         
     actor.agent = await getAgent(Number(body.agentId))
-    actor.first_name = body.first_name
-    actor.last_name  = body.last_name
-    if (body.gender === genderEnum.Man || body.gender === genderEnum.Woman) {
+    actor.firstName = body.firstName
+    actor.lastName  = body.lastName
+    if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
         throw new Error(`create: Неверно указан пол актера: ${body.gender}`)
     }
-    actor.middle_name = body.middle_name ?? null
-    actor.date_of_birth = body.date_of_birth;
+    actor.middleName = body.middleName ?? null
+    actor.dateOfBirth = body.dateOfBirth;
     actor.height = body.height ? Number(body.height) : null
-    actor.clothes_size = body.clothes_size ?? null
+    actor.clothesSize = body.clothesSize ?? null
     actor.description = body.description ?? null
-    actor.link_to_kino_teatr = body.kino_teatr ?? null
-    actor.link_to_film_tools = body.film_tools ?? null
-    actor.link_to_kinopoisk = body.kinopoisk ?? null
-    actor.video_code = body.video ?? null
+    actor.linkToKinoTeatr = body.kinoTeatr ?? null
+    actor.linkToFilmTools = body.filmTools ?? null
+    actor.linkToKinopoisk = body.kinopoisk ?? null
+    actor.videoCode = body.video ?? null
 
     await saveCity(actor, body.city)
-    await saveColor(actor, body.eye_color)
+    await saveColor(actor, body.eyeColor)
     await saveLanguages(actor, body.languages)
 }
 
@@ -108,7 +108,7 @@ export async function saveColor(actor: Actor, rawColor: string | undefined) {
             await appDataSource.getRepository(EyeColor).save(eyeColor)
         }
 
-        actor.eye_color = eyeColor
+        actor.eyeColor = eyeColor
     }
 }
 

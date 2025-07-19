@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express"
+import * as fs from "fs"
+
 import { appDataSource } from "../../data-source"
 import { getActor } from "./getActor"
 import { Actor } from "../../entity/actor.entity"
 import processApiError from "../../error/processError"
 import { getAgent } from "../agentController/getAgent"
 import { Agent } from "../../entity/agent.entity"
-import { genderEnum } from "../services/types"
+import { GenderEnum } from "../services/types"
 import { saveCity, saveColor, saveLanguages } from "./createActor"
-import { CustomFileType } from "../services/fileSystemService"
+import { changePhoto, CustomFileType } from "../services/fileSystemService"
 
 
 interface IName {
@@ -17,13 +19,13 @@ interface IName {
 }
 function setName(actor: Actor, name: IName) {
     if (name.first) {
-        actor.first_name = name.first
+        actor.firstName = name.first
     }
     if (name.last) {
-        actor.last_name = name.last
+        actor.lastName = name.last
     }
     if (name.middle) {
-        actor.middle_name = name.middle
+        actor.middleName = name.middle
     }
 }
 
@@ -34,13 +36,13 @@ interface ILinks {
 }
 function setLinks(actor: Actor, links: ILinks) {
     if (links.kinopoisk) {
-        actor.link_to_kinopoisk = links.kinopoisk
+        actor.linkToKinopoisk = links.kinopoisk
     }
     if (links.filmTools) {
-        actor.link_to_film_tools = links.filmTools
+        actor.linkToFilmTools = links.filmTools
     }
     if (links.kinoTeatr) { 
-        actor.link_to_kino_teatr = links.kinoTeatr
+        actor.linkToKinoTeatr = links.kinoTeatr
     }
 }
 
@@ -53,13 +55,13 @@ async function setAgent(actor: Actor, agentId: any) {
 
 function setAge(actor: Actor, dateOfBirth: any) {
     if (dateOfBirth) {
-        actor.date_of_birth = new Date(dateOfBirth)
+        actor.dateOfBirth = new Date(dateOfBirth)
     }
 }
 
 function setClothesSize(actor: Actor, clothesSize: any) {
     if (clothesSize) {
-        actor.clothes_size = Number(clothesSize)
+        actor.clothesSize = Number(clothesSize)
     }
 }
 
@@ -71,17 +73,17 @@ function setHeight(actor: Actor, height: any) {
 
 function setGender(actor: Actor, gender: any) {
     if (gender) {
-        if (gender === genderEnum.Man || gender === genderEnum.Woman) {
+        if (gender === GenderEnum.Man || gender === GenderEnum.Woman) {
             actor.gender = gender
         } else {
-            throw new Error("Под актера: 'M' или 'W'")
+            throw new Error("setGender: Под актера: 'M' или 'W'")
         }
     }
 }
 
 function setVideo(actor: Actor, videoCode?: string) {
     if (videoCode) {
-        actor.video_code = videoCode
+        actor.videoCode = videoCode
     }
 }
 
@@ -89,16 +91,16 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
         const { id } = req.body
         const {
-            first_name,
-            last_name,
-            middle_name,
+            firstName,
+            lastName,
+            middleName,
             agentId,
             dateOfBirth,
-            clothes_size,
+            clothesSize,
             height,
             gender,
             city,
-            eye_color,
+            eyeColor,
             languages,
             linkToKinopoisk,
             linkToFilmTools,
@@ -107,29 +109,86 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
         } = req.body
         
         let actor: Actor = await getActor(Number(id))
-        setName(actor, {first: first_name, last: last_name, middle: middle_name})        
+        setName(actor, {first: firstName, last: lastName, middle: middleName})        
         setLinks(actor, {kinopoisk: linkToKinopoisk, filmTools: linkToFilmTools, kinoTeatr: linkToKinoTeatr})
         setAge(actor, dateOfBirth)
-        setClothesSize(actor, clothes_size)
+        setClothesSize(actor, clothesSize)
         setHeight(actor, height)
         setGender(actor, gender)
         setVideo(actor, videoCode)
 
         await setAgent(actor, agentId)
         await saveCity(actor, city)
-        await saveColor(actor, eye_color)
+        await saveColor(actor, eyeColor)
         await saveLanguages(actor, languages)
-
-        await editPhotos(req)
         
         await appDataSource.getRepository(Actor).save(actor)
         res.json(actor)
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(500, error, next)
     }
 }
 
-async function editPhotos(req: Request) {
-    const avatar: CustomFileType = req.files?.avatar
+export async function changeAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { actorId } = req.body 
+        const newAvatar: CustomFileType = req.files?.newAvatar
+        if (!newAvatar) throw new Error("changeAvatar: не найдено поле newAvatar")
+    
+        const actor: Actor = await getActor(Number(actorId))
+    
+        await changePhoto(newAvatar, "avatar.jpg", actor.directory)
+        res.json(true)
 
+    } catch (error) {
+        processApiError(500, error, next)
+    }
+}
+
+// при запросе change order нужно поменять порядок фото в поле actor.photos 
+// порядок задается индексами в массиве, элементы массива string -- наименования файлов
+// {"1.jpg", "5.jpg", "3.jpg"}
+export async function changeOrder(req: Request, res: Response, next: NextFunction) {
+    try {
+        const {currIdx, putAfterIdx, actorId} = req.body
+        if (currIdx === undefined || putAfterIdx === undefined) {
+            throw new Error("changeOrder: не найдено поле currPos или putAfterIdx")
+        }
+        if (!actorId) {
+            throw new Error("changeOrder: не найдено поле actorId")
+        }
+
+        let actor: Actor = await getActor(Number(actorId))
+        if (!actor.photos || actor.photos.length <= 0) {
+            throw new Error("changeOrder: у актера нет фото")
+        }
+
+        const curr: number = Number(currIdx)
+        const after: number = Number(putAfterIdx)
+        const arrLength: number = actor.photos.length
+        if (arrLength === 1) {
+            return;
+        }
+        if (curr >= arrLength || after >= arrLength || curr < 0 || after < -1) { // after может быть -1, чтобы переставить объект на 0
+            throw new Error(`changeOrder: неверная позиция. currIdx = ${curr}, putAfterIdx = ${after}, последний индекс = ${arrLength - 1}`)
+        }
+        const currEl: string = actor.photos[curr]
+        if (curr < after) {
+            for (let i = curr + 1; i <= after; ++i) {
+                actor.photos[i-1] = actor.photos[i]
+            }
+            actor.photos[after] = currEl
+        } else {
+            for (let i = curr - 1; i > after; --i) {
+                actor.photos[i+1] = actor.photos[i]
+            }
+            actor.photos[after + 1] = currEl
+        }
+
+        await appDataSource.getRepository(Actor).save(actor)
+        res.json(actor)
+
+    } catch (error) {
+        processApiError(500, error, next)
+    }
 }
