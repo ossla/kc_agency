@@ -40,19 +40,15 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
 async function processActorFiles(req: ICustomRequest, body: CreateActorType, actor: Actor)
                                                             : Promise<string> {
     let dirname: string;
-    console.log("check if files received...");
     const avatar: CustomFileType = req.files?.avatar
     if (!avatar) throw new Error('Нужно добавить аватарку актера')
     const photos: CustomFileType = req.files?.photos
     if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
 
-    console.log("making directory");
     dirname = await makeActorDirectory(body)
     actor.directory = dirname
     await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
-    console.log("avatar.jpg saved")
     actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
-    console.log("actor photos saved");
     return dirname
 }
 

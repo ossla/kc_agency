@@ -12,20 +12,20 @@ export function returnStaticPath(): string {
     if (!fs.existsSync(pathToStatic)) {
         fs.mkdirSync(pathToStatic)
     }
-    return pathToStatic;
+    return pathToStatic
 }
 
 export type CustomFileType = fileUpload.UploadedFile 
                             | fileUpload.UploadedFile[]
                             | undefined
-                      
+
 export async function savePhoto(photo: CustomFileType
                     , photoName: string, folderName: string = "") {
     folderName = path.join(returnStaticPath(), folderName)
 
-    const filepath: string = path.join(folderName, photoName);
+    const filepath: string = path.join(folderName, photoName)
     if (fs.existsSync(filepath)) {
-        throw new Error("savePhoto: Фото с таким именем уже существует: " + photoName);
+        throw new Error("savePhoto: Фото с таким именем уже существует: " + photoName)
     }
     if (photo) {
         if (Array.isArray(photo)) {
@@ -38,26 +38,26 @@ export async function savePhoto(photo: CustomFileType
 }
 
 export async function removePhoto(photoName: string, folderName: string = "") {
-    if (folderName === "") { folderName = returnStaticPath(); }
-    console.log(photoName);
+    if (folderName === "") { folderName = returnStaticPath() }
+    console.log(photoName)
 
-    const filepath: string = path.join(folderName, photoName);
+    const filepath: string = path.join(folderName, photoName)
     if (!fs.existsSync(filepath)) {
-        console.error("removePhoto: Фото с таким именем нет: " + photoName);
+        console.error("removePhoto: Фото с таким именем нет: " + photoName)
     } else {
         fs.rmSync(filepath)
     }
 }
 
-export function makeAgentPhotoName(body: CreateAgentType): string {
-    return  (body.firstName 
-            + 
-            body.lastName
-            + 
-            body.middleName
-            +
-            ".jpg").replace(/\s/, '_')
-}
+// export function makeAgentPhotoName(body: CreateAgentType): string {
+//     return  (body.firstName 
+//             + 
+//             body.lastName
+//             + 
+//             body.middleName
+//             +
+//             ".jpg").replace(/\s/, '_')
+// }
 
 export function makeActorDirname(body: CreateActorType): string {
     return body.firstName + body.lastName
@@ -79,12 +79,12 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
 export async function removeActorFolder(dirname: string): Promise<void> {
     const dirPath: string = path.join(returnStaticPath(), dirname)
     if (!fs.existsSync(dirPath)) {
-        console.error("removeActorFolder: нет такой папки: ", dirPath);
+        console.error("removeActorFolder: нет такой папки: ", dirPath)
     } else {
         try {
             fs.rmSync(dirPath, { recursive: true, force: true })
         } catch (error: any) {
-            console.error(error);
+            console.error(error)
         }
     }
 }
@@ -114,7 +114,7 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
 export async function changePhoto(newPhoto: CustomFileType, filename: string, directory?: string,) {
     const filepath = directory
         ? path.join(returnStaticPath(), directory, filename)
-        : path.join(returnStaticPath(), filename);
+        : path.join(returnStaticPath(), filename)
 
     if (!fs.existsSync(filepath)) {
         throw new Error(`changePhoto: Файл ${filepath} не существует`)

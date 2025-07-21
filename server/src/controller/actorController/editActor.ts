@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express"
-import * as fs from "fs"
 
 import { appDataSource } from "../../data-source"
 import { getActor } from "./getActor"

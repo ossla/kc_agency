@@ -41,11 +41,10 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
 }
 
 async function getShortByGender(res: Response, gender: GenderEnum, next: NextFunction) {
-    console.log(gender);
     try {
         const actors = await appDataSource.getRepository(Actor)
             .createQueryBuilder("actor")
-            .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
+            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
             .where("actor.gender = :gender", { gender })
             .getMany()
 

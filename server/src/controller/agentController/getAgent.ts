@@ -24,6 +24,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction)
         const agent: Agent = await getAgent(Number(id))
         
         res.status(200).json(instanceToPlain(agent)) // @exclude hash password поле
+
     } catch (error: unknown) {
         processApiError(404, error, next)
     }
@@ -33,8 +34,23 @@ export async function getAll(req: Request, res: Response, next: NextFunction)
                                                     : Promise<void> {
     try {
         const agents: Agent[] = await appDataSource.getRepository(Agent).find()
-        res.status(200).json(instanceToPlain(agents)) // @exclude hash password поле
-        
+        res.status(200).json(instanceToPlain(agents))
+
+    } catch (error: unknown) {
+        processApiError(404, error, next)
+    }
+}
+
+export async function getShort(req: Request, res: Response, next: NextFunction) 
+                                                    : Promise<void> {
+    try {
+        const actors = await appDataSource.getRepository(Agent)
+            .createQueryBuilder("agent")
+            .select(["agent.id", "agent.firstName", "agent.lastName", "agent.photo"])
+            .getMany()
+
+        res.json(actors);
+
     } catch (error: unknown) {
         processApiError(404, error, next)
     }

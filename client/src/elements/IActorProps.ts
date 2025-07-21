@@ -1,5 +1,5 @@
-import { IActor } from "../models/IActor";
+import { IShortActor } from "../models/IShortActor";
 
 export interface IActorCardProps {
-    actor: IActor,
+    shortActor: IShortActor
 }

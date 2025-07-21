@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { IActor } from "../models/IActor";
 import { IActorCardProps } from "./IActorProps";
 import { useNavigate } from "react-router-dom"
+import { IShortActor } from "../models/IShortActor";
+import { useState } from "react";
 
 
 export function ActorCard(props: IActorCardProps) {
-    const [actor] = useState<IActor>(props.actor) 
+    const [actor] = useState<IShortActor>(props.shortActor) 
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -15,12 +15,11 @@ export function ActorCard(props: IActorCardProps) {
     return (
         <div onClick={handleClick} style={{cursor: 'pointer'}}>
             <img 
-                src={actor.avatarUrl} 
-                alt={`${actor.first_name} ${actor.last_name}`} 
+                src={actor.avatarUrl}              
+                alt={`${actor.firstName} ${actor.lastName}`} 
                 style={{ width: "200px", borderRadius: "8px" }}
-                
             />
-            <h1>{actor.first_name} {actor.last_name}</h1>
+            <h1>{actor.firstName} {actor.lastName}</h1>
         </div>
     )
 }

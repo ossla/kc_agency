@@ -1,26 +1,30 @@
 import { useEffect, useState } from "react"
 import fetchActors from "../data/fetchActors"
-import { IActor } from "../models/IActor"
 import { ActorCard } from "../elements/ActorCard"
+import { GenderEnum } from "../types/enums";
+import { IShortActor } from "../models/IShortActor";
 
 
-export function ActorPage(props: any) {
+interface IActorPage {
+    gender: GenderEnum;
+}
 
-    const [actorData, setActorData] = useState<IActor[]>([])
+export function ActorPage(props: IActorPage) {
+
+    const [actors, setActors] = useState<IShortActor[]>([])
 
     useEffect(() => {
         async function get() {
-            const actors: IActor[] = await fetchActors.getActors()            
-            setActorData(actors)
+            setActors(await fetchActors.getShort(props.gender))
         }
         get()
     }, [])
 
     return (
         <div>
-            {actorData ? (
-                actorData.map(actor => 
-                    <ActorCard key={actor.id} actor={actor} />
+            {actors ? (
+                actors.map(actor => 
+                    <ActorCard key={actor.id} shortActor={actor}/>
             )) : (
                 <p>Loading...</p>
             )}

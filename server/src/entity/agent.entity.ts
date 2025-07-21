@@ -37,7 +37,7 @@ export class Agent {
     description?: string;    // описание (на утверждении)
 
     @Column({ type: "varchar", length: 255, nullable: false })
-    photoName: string;       // путь к фото на сервере
+    photo: string;       // путь к фото на сервере
 
     @Column({ type: "varchar", length: 100, nullable: true })
     telegram?: string;       // ссылка на телегу

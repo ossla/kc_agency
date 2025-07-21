@@ -25,7 +25,7 @@ function setName(agent: Agent, name: IName) {
     }
 }
 
-function setAgentField<T extends keyof Agent>(agent: Agent, field: T, value: Agent[T] | undefined) {
+function setAgentField<T extends keyof Agent>(agent: Agent, field: T, value: Agent[T] | undefined) {    
     if (value !== undefined) {
         agent[field] = value
     }
@@ -34,6 +34,9 @@ function setAgentField<T extends keyof Agent>(agent: Agent, field: T, value: Age
 export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
         const { id } = req.body
+        if (!id) {
+            throw new Error("agent::edit: не указан id агента")
+        }
         const {
             firstName,
             lastName,
@@ -46,6 +49,7 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
             isAdmin
         } = req.body
 
+
         let agent: Agent = await getAgent(Number(id))
         setName(agent, {first: firstName, last: lastName, middle: middleName})
         setAgentField(agent, "email", email)
@@ -57,7 +61,7 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
 
         const newAvatar: CustomFileType = req.files?.newAvatar
         if (newAvatar) {
-            await changePhoto(newAvatar, agent.photoName)
+            await changePhoto(newAvatar, agent.photo)
         }
 
         await appDataSource.getRepository(Agent).save(agent)

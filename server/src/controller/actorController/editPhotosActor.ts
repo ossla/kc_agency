@@ -9,11 +9,12 @@ import { appDataSource } from "../../data-source"
 
 export async function changeAvatar(req: Request, res: Response, next: NextFunction) {
     try {
-        const { actorId } = req.body 
+        const { id } = req.body 
+        if (!id) throw new Error("changeAvatar: не найдено поле id")
         const newAvatar: CustomFileType = req.files?.newAvatar
         if (!newAvatar) throw new Error("changeAvatar: не найдено поле newAvatar")
 
-        const actor: Actor = await getActor(Number(actorId))
+        const actor: Actor = await getActor(Number(id))
 
         await changePhoto(newAvatar, "avatar.jpg", actor.directory)
         res.json(true)
@@ -28,15 +29,15 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
 // {"1.jpg", "5.jpg", "3.jpg"}
 export async function changeOrder(req: Request, res: Response, next: NextFunction) {
     try {
-        const {currIdx, putAfterIdx, actorId} = req.body
+        const {currIdx, putAfterIdx, id} = req.body
         if (currIdx === undefined || putAfterIdx === undefined) {
             throw new Error("changeOrder: не найдено поле currPos или putAfterIdx")
         }
-        if (!actorId) {
-            throw new Error("changeOrder: не найдено поле actorId")
+        if (!id) {
+            throw new Error("changeOrder: не найдено поле id")
         }
 
-        let actor: Actor = await getActor(Number(actorId))
+        let actor: Actor = await getActor(Number(id))
         if (!actor.photos || actor.photos.length <= 0) {
             throw new Error("changeOrder: у актера нет фото")
         }
@@ -73,11 +74,11 @@ export async function changeOrder(req: Request, res: Response, next: NextFunctio
 
 export async function deletePhoto(req: Request, res: Response, next: NextFunction) {
     try {
-        const { actorId, photoIdx } = req.body
-        if (!actorId || photoIdx === undefined) {
+        const { id, photoIdx } = req.body
+        if (!id || photoIdx === undefined) {
             throw new Error("deletePhoto: не указано поле agentId или photoIdx")
         }
-        const actor: Actor = await getActor(actorId)
+        const actor: Actor = await getActor(id)
         const index: number = Number(photoIdx)
         if (index >= actor.photos.length || index < 0) {
             throw new Error(`changeOrder: неверная позиция. photoIdx = ${index}, последний индекс = ${actor.photos.length - 1}`)

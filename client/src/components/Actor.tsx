@@ -1,7 +1,6 @@
-import { IActorProps } from "./IActorProps";
 
-export function Actor(props: IActorProps) {
+export function Actor(props: any) {
     return (
-        <div></div>
+        <div>actor</div>
     )
 }

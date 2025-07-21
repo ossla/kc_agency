@@ -1,15 +1,34 @@
 export interface IAgent {
     id: number,
-    first_name: string,
-    last_name: string,
-    middle_name?: string,
+    firstName: string,
+    lastName: string,
+    middleName?: string,
     email: string,
     phone: string,
     description?: string,
-    photo_name: string,
+    photo: string,
     telegram?: string,
     VK?: string,
-    is_admin: boolean,
+    isAdmin: boolean,
     createdAt: Date,
     updatedAt: Date
+}
+
+
+export function toIAgent(raw: any): IAgent {
+    return {
+        id: raw.id,
+        firstName: raw.firstName,
+        lastName: raw.lastName,
+        middleName: raw.middleName ?? undefined,
+        email: raw.email,
+        phone: raw.phone ?? undefined,
+        photo: raw.photo,
+        description: raw.description ?? undefined,
+        telegram: raw.telegram ?? undefined,
+        VK: raw.VK ?? undefined,
+        isAdmin: raw.isAdmin ?? undefined,
+        createdAt: new Date(raw.createdAt),
+        updatedAt: new Date(raw.updatedAt),
+    }
 }
