@@ -1,10 +1,12 @@
-import { IActorCardProps } from "./IActorProps";
 import { useNavigate } from "react-router-dom"
 import { IShortActor } from "../models/IShortActor";
 import { useState } from "react";
 
 
-export function ActorCard(props: IActorCardProps) {
+export interface ActorCardProps {
+    shortActor: IShortActor
+}
+export function ActorCard(props: ActorCardProps) {
     const [actor] = useState<IShortActor>(props.shortActor) 
     const navigate = useNavigate()
 

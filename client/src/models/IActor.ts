@@ -22,7 +22,8 @@ export interface IActor {
     eyeColor?: IEyeColor,
     city?: ICity,
     languages?: ILanguage[],
-    createdAt: Date
+    photos?: string[],
+    createdAt: Date,
     updatedAt: Date
 }
 
@@ -46,6 +47,7 @@ export function toIActor(raw: any): IActor {
         eyeColor: raw.eyeColor?.name ?? undefined,
         city: raw.city ?? undefined,
         languages: raw.languages ?? [],
+        photos: raw.photos ?? [],
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
     }
