@@ -22,7 +22,7 @@ export interface IActor {
     eyeColor?: IEyeColor,
     city?: ICity,
     languages?: ILanguage[],
-    photos?: string[],
+    photos: string[],
     createdAt: Date,
     updatedAt: Date
 }

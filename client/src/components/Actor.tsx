@@ -32,7 +32,14 @@ export function Actor() {
                     alt={`${actor.firstName} ${actor.lastName}`}
                     style={{ width: "200px", borderRadius: "8px", objectFit: "cover" }}
                 />
-                <AlbumPhotos photos={actor.photos}/>
+                <AlbumPhotos
+                    photos={actor.photos}
+                    directory={actor.directory}
+                    actorId={actor.id}
+                    onUpdate={(updatedPhotos) => {
+                        setActor(prev => prev ? { ...prev, photos: updatedPhotos } : prev)
+                    }}
+                />
 
                 <div>
                     <h2 style={{ margin: 0 }}>{actor.firstName} {actor.middleName ?? ""} {actor.lastName}</h2>
