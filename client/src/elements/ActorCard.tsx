@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
-import { IShortActor } from "../models/IShortActor";
 import { useState } from "react";
+
+import { IShortActor } from "../models/IActor";
 
 
 export interface ActorCardProps {

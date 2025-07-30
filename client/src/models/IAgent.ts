@@ -32,3 +32,19 @@ export function toIAgent(raw: any): IAgent {
         updatedAt: new Date(raw.updatedAt),
     }
 }
+
+export interface IShortAgent {
+    id: number,
+    firstName: string,
+    lastName: string,
+    avatarUrl: string
+}
+
+export function toIShortAgent(raw: any): IShortAgent{
+    return {
+        id: raw.id,
+        firstName: raw.firstName,
+        lastName: raw.lastName,
+        avatarUrl:`http://localhost:3001/${raw.photo}`,
+    }
+}

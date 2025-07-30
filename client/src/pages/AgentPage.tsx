@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react"
-import { ActorCard } from "../elements/ActorCard"
-import { IShortActor } from "../models/IShortActor"
+import { IShortAgent } from "../models/IAgent"
+import { AgentCard } from "../elements/AgentCard"
+import fetchAgents from "../data/fetchAgents"
 
 
 export function AgentPage() {
 
-    const [actors, setActors] = useState<IShortActor[]>([])
+    const [agents, setAgents] = useState<IShortAgent[]>([])
 
-    // useEffect(() => {
-    //     async function get() {
-    //         // setActors(await fetchActors.getShort(props.gender))
-    //     }
-    //     get()
-    // }, [])
+    useEffect(() => {
+        async function get() {
+            setAgents(await fetchAgents.getShort())
+        }
+        get()
+    }, [])
+
+    if (!agents) { return (<p>Loading...</p>) }
 
     return (
-        <div>
-            {actors ? (
-                actors.map(actor => 
-                    <ActorCard key={actor.id} shortActor={actor}/>
-            )) : (
-                <p>Loading...</p>
-            )}
-        </div>
+        <>
+            {   
+                agents.map(actor => 
+                    <>
+                        <AgentCard key={actor.id} shortAgent={actor}/>
+                    </>
+                )
+            }
+        </>
     )
 }

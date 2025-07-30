@@ -17,7 +17,7 @@ export interface IActor {
     linkToKinoTeatr?: string,
     linkToFilmTools?: string,
     linkToKinopoisk?: string,
-    video?: string,
+    videoCode?: string,
     agent: IAgent,
     eyeColor?: IEyeColor,
     city?: ICity,
@@ -42,7 +42,7 @@ export function toIActor(raw: any): IActor {
         linkToKinoTeatr: raw.linkToKinoTeatr ?? undefined,
         linkToFilmTools: raw.linkToFilmTools ?? undefined,
         linkToKinopoisk: raw.linkToKinopoisk ?? undefined,
-        video: raw.videoCode ?? undefined,
+        videoCode: raw.videoCode ?? undefined,
         agent: raw.agent ?? undefined,
         eyeColor: raw.eyeColor?.name ?? undefined,
         city: raw.city ?? undefined,
@@ -50,5 +50,23 @@ export function toIActor(raw: any): IActor {
         photos: raw.photos ?? [],
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
+    }
+}
+
+export interface IShortActor {
+    id: number,
+    firstName: string,
+    lastName: string,
+    directory: string,
+    avatarUrl: string
+}
+
+export function toIShortActor(raw: any): IShortActor{
+    return {
+        id: raw.id,
+        firstName: raw.firstName,
+        lastName: raw.lastName,
+        directory: raw.directory,
+        avatarUrl: `http://localhost:3001/${raw.directory}/avatar.jpg`
     }
 }

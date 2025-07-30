@@ -28,6 +28,8 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
 // порядок задается индексами в массиве, элементы массива string -- наименования файлов
 // {"1.jpg", "5.jpg", "3.jpg"}
 export async function changeOrder(req: Request, res: Response, next: NextFunction) {
+    console.log("QUERYUEOJPWRQKDVNA;KLSDJF;ASLDFA;SDFNKADF")
+    
     try {
         const {currIdx, putAfterIdx, id} = req.body
         if (currIdx === undefined || putAfterIdx === undefined) {

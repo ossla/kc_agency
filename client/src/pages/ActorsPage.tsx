@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import fetchActors from "../data/fetchActors"
 import { ActorCard } from "../elements/ActorCard"
 import { GenderEnum } from "../types/enums";
-import { IShortActor } from "../models/IShortActor";
+import { IShortActor } from "../models/IActor";
 
 
 interface ActorPageProps {
