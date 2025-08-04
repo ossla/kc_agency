@@ -44,7 +44,7 @@ export function toIActor(raw: any): IActor {
         linkToKinopoisk: raw.linkToKinopoisk ?? undefined,
         videoCode: raw.videoCode ?? undefined,
         agent: raw.agent ?? undefined,
-        eyeColor: raw.eyeColor?.name ?? undefined,
+        eyeColor: raw.eyeColor ?? undefined,
         city: raw.city ?? undefined,
         languages: raw.languages ?? [],
         photos: raw.photos ?? [],

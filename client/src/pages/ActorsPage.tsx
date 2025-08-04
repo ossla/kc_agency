@@ -5,20 +5,29 @@ import { GenderEnum } from "../types/enums";
 import { IShortActor } from "../models/IActor";
 
 
-interface ActorPageProps {
-    gender: GenderEnum;
-}
+// interface ActorPageProps {
+//     gender: GenderEnum;
+// }
 
-export function ActorPage(props: ActorPageProps) {
+// interface IFilters {
+//     agent,
+//     minAge,
+//     maxAge,
+//     cities: ,
+//     clothesSize: number
+//     eyeColors: string[]
+// }
+
+export function ActorPage(props: any) {
 
     const [actors, setActors] = useState<IShortActor[]>([])
 
     useEffect(() => {
         async function get() {
-            setActors(await fetchActors.getShort(props.gender))
+            setActors(await fetchActors.getShort())
         }
         get()
-    }, [props.gender])
+    }, [])
 
     return (
         <div>

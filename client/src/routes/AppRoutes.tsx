@@ -5,16 +5,16 @@ import { Actor } from "../components/Actor"
 import { GenderEnum } from "../types/enums"
 import HomePage from "../pages/HomePage"
 import { AgentPage } from "../pages/AgentPage"
+import { Agent } from "../components/Agent"
 
 
 export function AppRoutes() {
     return (
         <Routes>
-            <Route path="/" element={ <ActorPage gender={GenderEnum.man} /> } />
-            <Route path="/men" element={   <ActorPage gender={GenderEnum.man}   />} />
-            <Route path="/women" element={ <ActorPage gender={GenderEnum.woman} />} />
+            <Route path="/actors" element={ <ActorPage /> } />
             <Route path="/agents" element={ <AgentPage />} />
-            <Route path="/actor/:id" element={<Actor />} />
+            <Route path="/actor/:id" element={<Actor />}   />
+            <Route path="/agent/:id" element={<Agent />}   />
         </Routes>
     )
-}b
+}

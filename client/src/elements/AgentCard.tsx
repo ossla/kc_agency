@@ -20,7 +20,7 @@ export function AgentCard(props: AgentCardProps) {
             <img 
                 src={agent.avatarUrl}              
                 alt={`${agent.firstName} ${agent.lastName}`} 
-                style={{ width: "200px", borderRadius: "8px" }}
+                style={{ width: "200px"}}
             />
             <h1>{agent.firstName} {agent.lastName}</h1>
         </div>

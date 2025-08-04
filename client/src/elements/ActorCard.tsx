@@ -20,7 +20,7 @@ export function ActorCard(props: ActorCardProps) {
             <img 
                 src={actor.avatarUrl}              
                 alt={`${actor.firstName} ${actor.lastName}`} 
-                style={{ width: "200px", borderRadius: "8px" }}
+                style={{ width: "200px"}}
             />
             <h1>{actor.firstName} {actor.lastName}</h1>
         </div>

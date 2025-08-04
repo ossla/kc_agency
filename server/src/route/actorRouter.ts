@@ -2,7 +2,7 @@ import express, { Express } from "express"
 import { check } from "../middleware/checkMiddleware"
 import { create } from "../controller/actorController/createActor"
 import { remove } from "../controller/actorController/removeActor"
-import { getAllFull, getOne, getShortMen, getShortWomen } from "../controller/actorController/getActor"
+import { getAllFull, getOne, getShort, getShortMen, getShortWomen} from "../controller/actorController/getActor"
 import { filter } from "../controller/actorController/filterActor"
 import { edit } from "../controller/actorController/editActor"
 import { changeAvatar, changeOrder, deletePhoto } from "../controller/actorController/editPhotosActor"
@@ -21,7 +21,7 @@ actorRouter.post("/filter", filter)
 actorRouter.get("/:id", getOne)
 actorRouter.get("/get/men", getShortMen)
 actorRouter.get("/get/women", getShortWomen)
-actorRouter.get("/", getAllFull)
+actorRouter.get("/", getShort)
 
 
 export default actorRouter

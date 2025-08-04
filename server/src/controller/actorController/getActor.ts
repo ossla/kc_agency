@@ -17,7 +17,7 @@ export async function getActor(id: number): Promise<Actor> {
     return actor
 }
 
-export async function getOne(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function getOne(req: Request, res: Response, next: NextFunction) {
     try {
         const { id } = req.params
         const agent = await getActor(Number(id))
@@ -30,11 +30,25 @@ export async function getOne(req: Request, res: Response, next: NextFunction) : 
 }
 
 // для тестов
-export async function getAllFull(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function getAllFull(req: Request, res: Response, next: NextFunction) {
     try {
         const actors: Actor[] = await appDataSource.getRepository(Actor).find()
         res.status(200).json(actors)
         
+    } catch (error: unknown) {
+        processApiError(404, error, next)
+    }
+}
+
+export async function getShort(req: Request, res: Response, next: NextFunction) {
+    try {
+        const actors = await appDataSource.getRepository(Actor)
+            .createQueryBuilder("actor")
+            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+            .getMany()
+
+        res.json(actors);
+
     } catch (error: unknown) {
         processApiError(404, error, next)
     }
@@ -49,7 +63,7 @@ async function getShortByGender(res: Response, gender: GenderEnum, next: NextFun
             .getMany()
 
         res.json(actors);
-        
+
     } catch (error: unknown) {
         processApiError(404, error, next)
     }

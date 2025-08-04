@@ -15,7 +15,7 @@ class fetchAgents {
 
     static async getAgent(id: number): Promise<IAgent> {
         
-        const response = await fetch(`http://localhost:3001/api/actor/${id}`)
+        const response = await fetch(`http://localhost:3001/api/agent/${id}`)
         const data = await response.json()
 
         console.log(data)

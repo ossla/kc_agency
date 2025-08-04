@@ -8,14 +8,12 @@ import Album from "../elements/AlbumPhotos"
 import AlbumPhotos from "../elements/AlbumPhotos"
 
 
-
-
 export function Actor() {
     const [actor, setActor] = useState<IActor>()
     // const [links, setLinks] = useState<ILinks>()
 
     const { id } = useParams<{ id: string }>()
-    
+
     useEffect(() => {
         async function get() {
             const data: IActor = await fetchActors.getActor(Number(id))

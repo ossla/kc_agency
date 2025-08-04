@@ -98,28 +98,29 @@ export async function filter(req: Request, res: Response, next: NextFunction): P
             .leftJoin("actor.languages", "language")
 
         const {
-            agent,
+            agentId,
             minAge,
             maxAge,
-            cities,
             clothesSize,
-            eyeColors,
             gender,
-            languages,
             minHeight,
-            maxHeight
+            maxHeight,
+
+            eyeColorIds,
+            cityIds,
+            languageIds,
         } = req.body
 
-        filterByAgent(qb, agent)
-        filterByCities(qb, cities)
-        filterByEyeColors(qb, eyeColors)
-        filterByLanguages(qb, languages)
+        filterByAgent(qb, agentId)
+        filterByCities(qb, cityIds)
+        filterByEyeColors(qb, eyeColorIds)
+        filterByLanguages(qb, languageIds)
         filterByGender(qb, gender)
         filterByClothesSize(qb, clothesSize)
         filterByHeight(qb, minHeight, maxHeight)
         filterByAge(qb, minAge, maxAge)
 
-        if (languages) {
+        if (languageIds) {
             qb.groupBy("actor.id")
         }
 

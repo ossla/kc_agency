@@ -20,18 +20,14 @@ export default function Navbar() {
                 </button>
 
                 <div className="hidden md:flex space-x-6">
-                    <NavLink to="/" className={navLinkStyle}>Главная</NavLink>
-                    <NavLink to="/men" className={navLinkStyle}>Актёры</NavLink>
-                    <NavLink to="/women" className={navLinkStyle}>Актрисы</NavLink>
+                    <NavLink to="/actors" className={navLinkStyle}>Актёры</NavLink>
                     <NavLink to="/agents" className={navLinkStyle}>Агенты</NavLink>
                 </div>
             </div>
 
             {menuOpen && (
                 <div className="flex flex-col space-y-2 px-4 pb-4 md:hidden">
-                    <NavLink to="/" className={navLinkStyle}>Главная</NavLink>
-                    <NavLink to="/men" className={navLinkStyle}>Актёры</NavLink>
-                    <NavLink to="/women" className={navLinkStyle}>Актрисы</NavLink>
+                    <NavLink to="/actors" className={navLinkStyle}>Актёры</NavLink>
                     <NavLink to="/agents" className={navLinkStyle}>Агенты</NavLink>
                 </div>
             )}
