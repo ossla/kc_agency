@@ -4,7 +4,7 @@ import { GenderEnum } from "../types/enums";
 
 class fetchActors {
     static async getShort(): Promise<IShortActor[]> {
-        const response = await fetch(`http://localhost:3001/api/actor/`)
+        const response = await fetch(`http://localhost:3001/api/actor/`, {method: "GET"})
         const data = await response.json()
 
         const actors: IShortActor[] = data.map(toIShortActor)
@@ -14,7 +14,7 @@ class fetchActors {
     static async getShortByGender(gender: GenderEnum): Promise<IShortActor[]> {
         let sex: string = "women"
 
-        const response = await fetch(`http://localhost:3001/api/actor/get/${sex}`)
+        const response = await fetch(`http://localhost:3001/api/actor/get/${sex}`, {method: "GET"})
         const data = await response.json()
 
         const actors: IShortActor[] = data.map(toIShortActor)
@@ -33,7 +33,7 @@ class fetchActors {
 
     static async getActor(id: number): Promise<IActor> {
         
-        const response = await fetch(`http://localhost:3001/api/actor/${id}`)
+        const response = await fetch(`http://localhost:3001/api/actor/${id}`, {method: "GET"})
         const data = await response.json()
 
         return toIActor(data)

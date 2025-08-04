@@ -1,25 +1,25 @@
+import { ICity, toICity } from "../models/ICity"
+import { IEyeColor, toIEyeColor } from "../models/IEyeColor"
+import { ILanguage, toILanguage } from "../models/ILanguage"
 
 class fetchActors {
-    static async getCities() {
-
+    static async getCities() : Promise<ICity[]> {
+        const response = await fetch("http://localhost:3001/api/relevant/city/", { method: "GET" })
+        const data = await response.json()
+        return data.map(toICity)
     }
 
-    static async getEyeColors() {
-
+    static async getEyeColors() : Promise<IEyeColor[]> {
+        const response = await fetch("http://localhost:3001/api/relevant/eyeColor/", { method: "GET" })
+        const data = await response.json()
+        return data.map(toIEyeColor)
     }
 
-    static async getLanguages() {
-        const res = await fetch("http://localhost:3001/api/actor/filter")
+    static async getLanguages() : Promise<ILanguage[]> {
+        const response = await fetch("http://localhost:3001/api/relevant/language/", { method: "GET" })
+        const data = await response.json()        
+        return data.map(toILanguage)
     }
-    // static async fetchFiltered() {
-    //     const res = await fetch("http://localhost:3001/api/actor/filter", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify(filters)
-    //     })
-    //     const data = await response.json()
-
-    // }
 }
 
 export default fetchActors

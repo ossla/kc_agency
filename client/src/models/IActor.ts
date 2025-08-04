@@ -29,7 +29,7 @@ export interface IActor {
 
 export function toIActor(raw: any): IActor {
     return {
-        id: raw.id,
+        id: Number(raw.id),
         firstName: raw.firstName,
         lastName: raw.lastName,
         middleName: raw.middleName,
@@ -63,7 +63,7 @@ export interface IShortActor {
 
 export function toIShortActor(raw: any): IShortActor{
     return {
-        id: raw.id,
+        id: Number(raw.id),
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
