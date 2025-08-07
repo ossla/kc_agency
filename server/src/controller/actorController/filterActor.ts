@@ -7,6 +7,14 @@ import processApiError from "../../error/processError"
 import { GenderEnum } from "../services/types"
 
 
+// select * from actor WHERE LOWER(CONCAT_WS(' ', "lastName", "firstName", "middleName")) ILIKE '%arn%';
+function search(qb: SelectQueryBuilder<Actor>, searchQuery: any) {
+    if (searchQuery) {
+        qb.andWhere(`LOWER(CONCAT_WS(' ', actor.lastName, actor.firstName, actor.middleName)) ILIKE :searchQuery`,
+        { searchQuery: `%${(searchQuery as string).toLowerCase()}%` })
+    }
+}
+
 function filterByAgent(qb: SelectQueryBuilder<Actor>, agent: any) {
     if (agent) {
         qb.andWhere("actor.agent.id = :agentId", { agentId: Number(agent) })
@@ -20,9 +28,9 @@ function filterByCities(qb: SelectQueryBuilder<Actor>, cities: any) {
     }
 }
 
-function filterByEyeColors(qb: SelectQueryBuilder<Actor>, eye_colors: any) {
-    if (eye_colors) {
-        const eyeColorIds = (Array.isArray(eye_colors) ? eye_colors : (eye_colors as string).split(",")).map(Number)
+function filterByEyeColors(qb: SelectQueryBuilder<Actor>, eyeColors: any) {
+    if (eyeColors) {
+        const eyeColorIds = (Array.isArray(eyeColors) ? eyeColors : (eyeColors as string).split(",")).map(Number)
         qb.andWhere("actor.eye_color_id IN (:...eyeColorIds)", { eyeColorIds })
     }
 }
@@ -44,9 +52,9 @@ function filterByGender(qb: SelectQueryBuilder<Actor>, gender: any) {
     }
 }
 
-function filterByClothesSize(qb: SelectQueryBuilder<Actor>, clothes_size: any) {
-    if (clothes_size) {
-        qb.andWhere("actor.clothes_size = :clothes_size", { clothes_size })
+function filterByClothesSize(qb: SelectQueryBuilder<Actor>, clothesSize: any) {
+    if (clothesSize) {
+        qb.andWhere("actor.clothesSize = :clothesSize", { clothesSize })
     }
 }
 
@@ -54,9 +62,9 @@ function filterByHeight(qb: SelectQueryBuilder<Actor>, minHeight: any, maxHeight
     if (minHeight || maxHeight) {
         if (minHeight && maxHeight) {
             qb.andWhere("actor.height BETWEEN :heightMin AND :heightMax", { 
-                                                        heightMin: Number(minHeight),
-                                                        heightMax: Number(maxHeight)
-                                                    })
+                    heightMin: Number(minHeight),
+                    heightMax: Number(maxHeight)
+                })
         } else if (minHeight) {
             qb.andWhere("actor.height >= :heightMin", { heightMin: Number(minHeight) })
         } else if (maxHeight) {
@@ -78,14 +86,14 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
         }
 
         if (minBirthDate && maxBirthDate) {
-            qb.andWhere("actor.date_of_birth BETWEEN :minBirth AND :maxBirth", {
+            qb.andWhere("actor.dateOfBirth BETWEEN :minBirth AND :maxBirth", {
                 minBirth: minBirthDate.toISOString().split('T')[0],
                 maxBirth: maxBirthDate.toISOString().split('T')[0]
             })
         } else if (minBirthDate) {
-            qb.andWhere("actor.date_of_birth >= :minBirth", { minBirth: minBirthDate.toISOString().split('T')[0] })
+            qb.andWhere("actor.dateOfBirth >= :minBirth", { minBirth: minBirthDate.toISOString().split('T')[0] })
         } else if (maxBirthDate) {
-            qb.andWhere("actor.date_of_birth <= :maxBirth", { maxBirth: maxBirthDate.toISOString().split('T')[0] })
+            qb.andWhere("actor.dateOfBirth <= :maxBirth", { maxBirth: maxBirthDate.toISOString().split('T')[0] })
         }
     }
 }
@@ -94,10 +102,11 @@ export async function filter(req: Request, res: Response, next: NextFunction): P
     try {
         const actorRepo = appDataSource.getRepository(Actor)
         const qb = actorRepo.createQueryBuilder("actor")
-            .select(["actor.id", "actor.first_name", "actor.last_name", "actor.directory"])
+            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
             .leftJoin("actor.languages", "language")
 
         const {
+            searchQuery,
             agentId,
             minAge,
             maxAge,
@@ -105,12 +114,12 @@ export async function filter(req: Request, res: Response, next: NextFunction): P
             gender,
             minHeight,
             maxHeight,
-
             eyeColorIds,
             cityIds,
             languageIds,
         } = req.body
 
+        search(qb, searchQuery)
         filterByAgent(qb, agentId)
         filterByCities(qb, cityIds)
         filterByEyeColors(qb, eyeColorIds)

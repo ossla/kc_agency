@@ -18,9 +18,11 @@ const PORT = process.env.PORT || 3000
 /* Using */
 app.use(express.json())
 app.use(express.text())
-app.use(cors())         // обход браузерных блокировок http запросов                 
-app.use(bodyParser.urlencoded({extended: false}))   // Для парсинга 
-                    // application/xwww-form-urlencoded|multipart/form-data:
+app.use(cors())         // обход браузерных блокировок http запросов
+// Когда фронт и бэк на разных портах, браузер требует, чтобы бэкенд отправлял заголовки CORS
+
+// Для парсинга application/xwww-form-urlencoded|multipart/form-data:
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(fileUpload())        // парсинг файлов
 app.use(express.static(path.join(__dirname, "..", "static"))) // папка для хранения данных
 

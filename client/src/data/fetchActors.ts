@@ -1,10 +1,12 @@
 import { IActor, toIActor } from "../models/IActor"
 import { IShortActor, toIShortActor } from "../models/IActor";
 import { GenderEnum } from "../types/enums";
+import { ActorURL, getShortActorURL, getShortMenActorURL, getShortWomenActorURL } from "./server_path";
+
 
 class fetchActors {
     static async getShort(): Promise<IShortActor[]> {
-        const response = await fetch(`http://localhost:3001/api/actor/`, {method: "GET"})
+        const response = await fetch(getShortActorURL, {method: "GET"})
         const data = await response.json()
 
         const actors: IShortActor[] = data.map(toIShortActor)
@@ -12,28 +14,17 @@ class fetchActors {
     }
 
     static async getShortByGender(gender: GenderEnum): Promise<IShortActor[]> {
-        let sex: string = "women"
-
-        const response = await fetch(`http://localhost:3001/api/actor/get/${sex}`, {method: "GET"})
+        const response = await fetch(
+                    gender === GenderEnum.man ? getShortMenActorURL : getShortWomenActorURL
+                    , {method: "GET"})
         const data = await response.json()
 
         const actors: IShortActor[] = data.map(toIShortActor)
         return actors
     }
 
-    // static async fetchFiltered() {
-    //     const res = await fetch("http://localhost:3001/api/actor/filter", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify(filters)
-    //     })
-    //     const data = await response.json()
-
-    // }
-
-    static async getActor(id: number): Promise<IActor> {
-        
-        const response = await fetch(`http://localhost:3001/api/actor/${id}`, {method: "GET"})
+    static async getActor(id: number): Promise<IActor> {        
+        const response = await fetch(`${ActorURL}/${id}`, {method: "GET"})
         const data = await response.json()
 
         return toIActor(data)

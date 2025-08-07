@@ -10,12 +10,19 @@ import { changeAvatar, changeOrder, deletePhoto } from "../controller/actorContr
 
 const actorRouter: Express = express()
 
-actorRouter.post("/create", check, create)
-actorRouter.post("/delete", check, remove)
-actorRouter.post("/edit", check, edit)
-actorRouter.post("/edit/changeAvatar", check, changeAvatar)
-actorRouter.post("/edit/changeOrder", check, changeOrder)
-actorRouter.post("/edit/deleteFromAlbum", check, deletePhoto)
+// actorRouter.post("/create", check, create)
+// actorRouter.post("/delete", check, remove)
+// actorRouter.post("/edit", check, edit)
+// actorRouter.post("/edit/changeAvatar", check, changeAvatar)
+// actorRouter.post("/edit/changeOrder", check, changeOrder)
+// actorRouter.post("/edit/deleteFromAlbum", check, deletePhoto)
+
+actorRouter.post("/create", create)
+actorRouter.post("/delete", remove)
+actorRouter.post("/edit", edit)
+actorRouter.post("/edit/changeAvatar", changeAvatar)
+actorRouter.post("/edit/changeOrder", changeOrder)
+actorRouter.post("/edit/deleteFromAlbum", deletePhoto)
 
 actorRouter.post("/filter", filter)
 actorRouter.get("/:id", getOne)

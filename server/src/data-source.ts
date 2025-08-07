@@ -4,7 +4,6 @@ import dotenv from "dotenv"
 
 import { Agent } from "./entity/agent.entity"
 import { Actor } from "./entity/actor.entity"
-import { processDefaultError } from "./error/processError"
 import { EyeColor } from "./entity/eyeColor.entity"
 import { City } from "./entity/city.entity"
 import { Language } from "./entity/language.entity"
