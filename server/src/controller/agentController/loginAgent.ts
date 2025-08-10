@@ -41,7 +41,7 @@ export async function login(req: Request, res: Response, next: NextFunction) : P
         if (!valid) throw new Error('Неверный пароль')
         // создание токена
         const token = await createToken(agent.id, agent.firstName, agent.email, true)
-        res.json(token)
+        res.status(200).json(token)
 
     } catch (error: unknown) {
         processApiError(404, error, next)
@@ -49,12 +49,17 @@ export async function login(req: Request, res: Response, next: NextFunction) : P
 }
 
 export async function auth(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
-    const agent = req.agent as IJwtPayload;
-    const agentId = agent.id;
-    const agentName = agent.name;
-    const agentEmail = agent.email;
-    const agentIsAdmin = agent.isAdmin;
-    const token = await createToken(agentId, agentName, agentEmail, agentIsAdmin)
-    res.json(token)
+    try {
+        const agent = req.agent as IJwtPayload
+        const agentId = agent.id
+        const agentName = agent.name
+        const agentEmail = agent.email
+        const agentIsAdmin = agent.isAdmin
+        const token = await createToken(agentId, agentName, agentEmail, agentIsAdmin)
+
+        res.status(200).json(token)
+    } catch (error: unknown) {
+        processApiError(404, error, next)
+    }
 }
 

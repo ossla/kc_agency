@@ -15,7 +15,7 @@ export async function remove(req: Request, res: Response, next: NextFunction)
         await removePhoto(agent.photo)
         await appDataSource.getRepository(Agent).delete({ id: agent.id })
 
-        res.status(200).json({message: 'удалён успешно'})
+        res.status(200).json(true)
 
     } catch (error: unknown) {
         processApiError(404, error, next)

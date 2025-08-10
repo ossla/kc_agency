@@ -9,11 +9,16 @@ import { edit } from "../controller/agentController/editAgent"
 
 const agentRouter: Express = express()
 
-agentRouter.post("/create", /**check,*/ create)
-agentRouter.post("/delete", check, remove)
-agentRouter.post("/edit", check, edit)
+// agentRouter.post("/create", check, create)
+// agentRouter.post("/delete", check, remove)
+// agentRouter.post("/edit", check, edit)
+// agentRouter.get("/auth", check, auth)
 
-agentRouter.get("/auth", check, auth)
+agentRouter.post("/create", create)
+agentRouter.post("/delete", remove)
+agentRouter.post("/edit", edit)
+
+agentRouter.get("/auth", auth)
 agentRouter.get("/:id", getOne)
 agentRouter.get("/", getShort)
 

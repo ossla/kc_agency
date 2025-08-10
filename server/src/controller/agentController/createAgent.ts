@@ -21,6 +21,9 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
         if (is_exist) throw new Error('Пользователь с таким email уже существует')
 
         const photo: CustomFileType = req.files?.photo
+        if (!photo) {
+            throw new Error("Необходимо добавить поле photo для загрузки аватара")
+        }
         photoName = crypto.randomUUID()
         await savePhoto(photo, crypto.randomUUID())
 

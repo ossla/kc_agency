@@ -15,7 +15,7 @@ export async function remove(req: Request, res: Response, next: NextFunction) : 
         await removeActorFolder(actor.directory)
         await appDataSource.getRepository(Actor).delete({ id: actor.id })
         
-        res.status(200).json({message: 'удалён успешно'})
+        res.status(200).json(true)
 
     } catch (error: unknown) {
         processApiError(404, error, next)

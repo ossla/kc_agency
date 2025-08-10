@@ -8,10 +8,10 @@ import { GenderEnum } from "../services/types"
 
 
 // select * from actor WHERE LOWER(CONCAT_WS(' ', "lastName", "firstName", "middleName")) ILIKE '%arn%';
-function search(qb: SelectQueryBuilder<Actor>, searchQuery: any) {
-    if (searchQuery) {
-        qb.andWhere(`LOWER(CONCAT_WS(' ', actor.lastName, actor.firstName, actor.middleName)) ILIKE :searchQuery`,
-        { searchQuery: `%${(searchQuery as string).toLowerCase()}%` })
+function filterSearch(qb: SelectQueryBuilder<Actor>, search: any) {
+    if (search) {
+        qb.andWhere(`LOWER(CONCAT_WS(' ', actor.lastName, actor.firstName, actor.middleName)) ILIKE :search`,
+        { search: `%${(search as string).toLowerCase()}%` })
     }
 }
 
@@ -98,7 +98,7 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
     }
 }
 
-export async function filter(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function filter(req: Request, res: Response, next: NextFunction) {
     try {
         const actorRepo = appDataSource.getRepository(Actor)
         const qb = actorRepo.createQueryBuilder("actor")
@@ -106,7 +106,7 @@ export async function filter(req: Request, res: Response, next: NextFunction): P
             .leftJoin("actor.languages", "language")
 
         const {
-            searchQuery,
+            search,
             agentId,
             minAge,
             maxAge,
@@ -119,7 +119,7 @@ export async function filter(req: Request, res: Response, next: NextFunction): P
             languageIds,
         } = req.body
 
-        search(qb, searchQuery)
+        filterSearch(qb, search)
         filterByAgent(qb, agentId)
         filterByCities(qb, cityIds)
         filterByEyeColors(qb, eyeColorIds)

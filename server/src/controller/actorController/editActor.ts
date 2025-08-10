@@ -79,31 +79,38 @@ function setGender(actor: Actor, gender: any) {
     }
 }
 
-function setVideo(actor: Actor, videoCode?: string) {
-    if (videoCode) {
-        actor.videoCode = videoCode
+function setVideo(actor: Actor, video?: string) {
+    if (video) {
+        actor.videoCode = video
+    }
+}
+
+function setDescription(actor: Actor, description?: string) {
+    if (description) {
+        actor.description = description
     }
 }
 
 export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
-        const { id } = req.body
         const {
+            id,
             firstName,
             lastName,
             middleName,
-            agentId,
             dateOfBirth,
-            clothesSize,
-            height,
+            agentId,
             gender,
-            city,
-            eyeColor,
-            languages,
-            linkToKinopoisk,
-            linkToFilmTools,
+            height,
+            clothesSize,
+            video,  
+            description,
             linkToKinoTeatr,
-            videoCode,  
+            linkToFilmTools,
+            linkToKinopoisk,
+            languages,
+            eyeColor,
+            city,
         } = req.body
         
         let actor: Actor = await getActor(Number(id))
@@ -113,7 +120,8 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
         setClothesSize(actor, clothesSize)
         setHeight(actor, height)
         setGender(actor, gender)
-        setVideo(actor, videoCode)
+        setVideo(actor, video)
+        setDescription(actor, description)
 
         await setAgent(actor, agentId)
         await saveCity(actor, city)

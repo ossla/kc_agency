@@ -45,6 +45,7 @@ export async function getShort(req: Request, res: Response, next: NextFunction) 
         const actors = await appDataSource.getRepository(Actor)
             .createQueryBuilder("actor")
             .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+            .orderBy("LOWER(actor.lastName)", "ASC")
             .getMany()
 
         res.json(actors);

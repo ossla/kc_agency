@@ -17,7 +17,7 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
         const actor: Actor = await getActor(Number(id))
 
         await changePhoto(newAvatar, "avatar.jpg", actor.directory)
-        res.json(true)
+        res.status(200).json(true)
 
     } catch (error) {
         processApiError(500, error, next)
@@ -27,9 +27,7 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
 // при запросе change order нужно поменять порядок фото в поле actor.photos 
 // порядок задается индексами в массиве, элементы массива string -- наименования файлов
 // {"1.jpg", "5.jpg", "3.jpg"}
-export async function changeOrder(req: Request, res: Response, next: NextFunction) {
-    console.log("QUERYUEOJPWRQKDVNA;KLSDJF;ASLDFA;SDFNKADF")
-    
+export async function changeOrder(req: Request, res: Response, next: NextFunction) {    
     try {
         const {currIdx, putAfterIdx, id} = req.body
         if (currIdx === undefined || putAfterIdx === undefined) {
@@ -91,7 +89,7 @@ export async function deletePhoto(req: Request, res: Response, next: NextFunctio
         actor.photos.splice(index, 1)
 
         await appDataSource.getRepository(Actor).save(actor)
-        res.json(actor)
+        res.status(200).json(true)
 
     } catch (error) {
         processApiError(500, error, next)
