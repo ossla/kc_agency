@@ -60,9 +60,9 @@ export const filterActorSchema = z.object({
     maxHeight: z.preprocess((val) => Number(val), z.number()).optional(),
     clothesSize: z.preprocess((val) => Number(val), z.number()).optional(),
     gender: z.string().optional(),
-    cityIds: z.string().optional(),
-    eyeIds: z.string().optional(),
-    languageIds: z.string().optional(),
+    cityIds: z.array(z.number()).optional(), // ожидение, что с клиента придёт именно массив чисел
+    eyeIds: z.array(z.number()).optional(),
+    languageIds: z.array(z.number()).optional(),
 })
 
 export type FilterActorType = z.infer<typeof filterActorSchema>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-import fetchActors from "../data/fetchActors"
+import fetchActors from "../api/fetchActors"
 import { IActor } from "../models/IActor"
 import { useParams } from "react-router-dom"
 import { GenderEnum } from "../types/enums"

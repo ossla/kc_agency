@@ -21,25 +21,22 @@ function filterByAgent(qb: SelectQueryBuilder<Actor>, agent: any) {
     }
 }
 
-function filterByCities(qb: SelectQueryBuilder<Actor>, cities: any) {
-    if (cities) {
-        const cityIds = (Array.isArray(cities) ? cities : (cities as string).split(",")).map(Number)
-        qb.andWhere("actor.city_id IN (:...cityIds)", { cityIds })
-    }
+function filterByCities(qb: SelectQueryBuilder<Actor>, cities?: number[]) {
+  if (cities && cities.length > 0) {
+    qb.andWhere("actor.city_id IN (:...cityIds)", { cityIds: cities });
+  }
 }
 
-function filterByEyeColors(qb: SelectQueryBuilder<Actor>, eyeColors: any) {
-    if (eyeColors) {
-        const eyeColorIds = (Array.isArray(eyeColors) ? eyeColors : (eyeColors as string).split(",")).map(Number)
-        qb.andWhere("actor.eye_color_id IN (:...eyeColorIds)", { eyeColorIds })
-    }
+function filterByEyeColors(qb: SelectQueryBuilder<Actor>, eyeColors?: number[]) {
+  if (eyeColors && eyeColors.length > 0) {
+    qb.andWhere("actor.eye_color_id IN (:...eyeColorIds)", { eyeColorIds: eyeColors });
+  }
 }
 
-function filterByLanguages(qb: SelectQueryBuilder<Actor>, languages: any) {
-    if (languages) {
-        const languageIds = (Array.isArray(languages) ? languages : (languages as string).split(",")).map(Number)
-        qb.andWhere("language.id IN (:...languageIds)", { languageIds })
-    }
+function filterByLanguages(qb: SelectQueryBuilder<Actor>, languages?: number[]) {
+  if (languages && languages.length > 0) {
+    qb.andWhere("language.id IN (:...languageIds)", { languageIds: languages });
+  }
 }
 
 function filterByGender(qb: SelectQueryBuilder<Actor>, gender: any) {
@@ -119,6 +116,12 @@ export async function filter(req: Request, res: Response, next: NextFunction) {
         if (body.languageIds) {
             filterByLanguages(qb, body.languageIds)
             qb.groupBy("actor.id")
+        }
+        if (body.cityIds && body.cityIds.length > 0) {
+           filterByCities(qb, body.cityIds)
+        }
+        if (body.eyeIds && body.eyeIds.length > 0) {
+            filterByEyeColors(qb, body.eyeIds)
         }
 
         const actors = await qb.getMany()

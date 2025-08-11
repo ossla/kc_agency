@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { IShortAgent } from "../models/IAgent"
 import { AgentCard } from "../elements/AgentCard"
-import fetchAgents from "../data/fetchAgents"
+import fetchAgents from "../api/fetchAgents"
 
 
-export function AgentPage() {
+export function AgentsPage() {
 
     const [agents, setAgents] = useState<IShortAgent[]>([])
 
