@@ -41,7 +41,7 @@ export async function removeCity(req: Request, res: Response, next: NextFunction
         const { id } = req.body
         await appDataSource.getRepository(City).delete(Number(id))
 
-        res.status(200).json("deleted successfully")
+        res.status(200).json(true)
 
     } catch (error: unknown) {
         processApiError(404, error, next)

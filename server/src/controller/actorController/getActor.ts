@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import processApiError from "../../error/processError"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
-import { GenderEnum } from "../services/types"
+import { GenderEnum } from "../services/actorTypes"
 
 
 export async function getActor(id: number): Promise<Actor> {

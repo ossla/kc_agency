@@ -1,7 +1,7 @@
 import { IActor, toIActor } from "../models/IActor"
 import { IShortActor, toIShortActor } from "../models/IActor";
 import { GenderEnum } from "../types/enums";
-import { ActorURL, getShortActorURL, getShortMenActorURL, getShortWomenActorURL } from "./server_path";
+import { ActorURL, getShortActorURL, getShortMenActorURL, getShortWomenActorURL } from "./routes";
 
 
 class fetchActors {
@@ -28,6 +28,10 @@ class fetchActors {
         const data = await response.json()
 
         return toIActor(data)
+    }
+
+    static async filterActor(): Promise<IShortActor[]> {
+        return []
     }
 }
 

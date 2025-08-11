@@ -4,7 +4,7 @@ import { SelectQueryBuilder } from "typeorm"
 import { appDataSource } from "../../data-source"
 import { Actor } from "../../entity/actor.entity"
 import processApiError from "../../error/processError"
-import { GenderEnum } from "../services/types"
+import { GenderEnum, FilterActorType, filterActorSchema } from "../services/actorTypes"
 
 
 // select * from actor WHERE LOWER(CONCAT_WS(' ', "lastName", "firstName", "middleName")) ILIKE '%arn%';
@@ -100,36 +100,24 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
 
 export async function filter(req: Request, res: Response, next: NextFunction) {
     try {
+        const body: FilterActorType = filterActorSchema.parse(req.body)
+        
         const actorRepo = appDataSource.getRepository(Actor)
         const qb = actorRepo.createQueryBuilder("actor")
             .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
             .leftJoin("actor.languages", "language")
 
-        const {
-            search,
-            agentId,
-            minAge,
-            maxAge,
-            clothesSize,
-            gender,
-            minHeight,
-            maxHeight,
-            eyeColorIds,
-            cityIds,
-            languageIds,
-        } = req.body
-
-        filterSearch(qb, search)
-        filterByAgent(qb, agentId)
-        filterByCities(qb, cityIds)
-        filterByEyeColors(qb, eyeColorIds)
-        filterByLanguages(qb, languageIds)
-        filterByGender(qb, gender)
-        filterByClothesSize(qb, clothesSize)
-        filterByHeight(qb, minHeight, maxHeight)
-        filterByAge(qb, minAge, maxAge)
-
-        if (languageIds) {
+        filterSearch(qb, body.search)
+        filterByAgent(qb, body.agentId)
+        filterByCities(qb, body.cityIds)
+        filterByEyeColors(qb, body.eyeIds)
+        filterByGender(qb, body.gender)
+        filterByClothesSize(qb, body.clothesSize)
+        filterByHeight(qb, body.minHeight, body.maxHeight)
+        filterByAge(qb, body.minAge, body.maxAge)
+        
+        if (body.languageIds) {
+            filterByLanguages(qb, body.languageIds)
             qb.groupBy("actor.id")
         }
 

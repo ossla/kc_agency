@@ -6,7 +6,7 @@ import { Actor } from "../../entity/actor.entity"
 import processApiError from "../../error/processError"
 import { getAgent } from "../agentController/getAgent"
 import { Agent } from "../../entity/agent.entity"
-import { GenderEnum } from "../services/types"
+import { editActorSchema, EditActorType, GenderEnum } from "../services/actorTypes"
 import { saveCity, saveColor, saveLanguages } from "./createActor"
 
 
@@ -93,40 +93,22 @@ function setDescription(actor: Actor, description?: string) {
 
 export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
-        const {
-            id,
-            firstName,
-            lastName,
-            middleName,
-            dateOfBirth,
-            agentId,
-            gender,
-            height,
-            clothesSize,
-            video,  
-            description,
-            linkToKinoTeatr,
-            linkToFilmTools,
-            linkToKinopoisk,
-            languages,
-            eyeColor,
-            city,
-        } = req.body
+        const body: EditActorType = editActorSchema.parse(req.body)
         
-        let actor: Actor = await getActor(Number(id))
-        setName(actor, {first: firstName, last: lastName, middle: middleName})        
-        setLinks(actor, {kinopoisk: linkToKinopoisk, filmTools: linkToFilmTools, kinoTeatr: linkToKinoTeatr})
-        setAge(actor, dateOfBirth)
-        setClothesSize(actor, clothesSize)
-        setHeight(actor, height)
-        setGender(actor, gender)
-        setVideo(actor, video)
-        setDescription(actor, description)
+        let actor: Actor = await getActor(body.id)
+        setName(actor, {first: body.firstName, last: body.lastName, middle: body.middleName})        
+        setLinks(actor, {kinopoisk: body.kinopoisk, filmTools: body.filmTools, kinoTeatr: body.kinoTeatr})
+        setAge(actor, body.dateOfBirth)
+        setClothesSize(actor, body.clothesSize)
+        setHeight(actor, body.height)
+        setGender(actor, body.gender)
+        setVideo(actor, body.video)
+        setDescription(actor, body.description)
 
-        await setAgent(actor, agentId)
-        await saveCity(actor, city)
-        await saveColor(actor, eyeColor)
-        await saveLanguages(actor, languages)
+        await setAgent(actor, body.agentId)
+        await saveCity(actor, body.city)
+        await saveColor(actor, body.eyeColor)
+        await saveLanguages(actor, body.languages)
         
         await appDataSource.getRepository(Actor).save(actor)
         res.json(actor)

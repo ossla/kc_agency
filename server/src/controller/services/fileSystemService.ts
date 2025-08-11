@@ -1,11 +1,11 @@
 import fileUpload from "express-fileupload"
 import * as path from "path"
 import * as fs from "fs"
-import { CreateAgentType } from "./types"
-import { CreateActorType } from "./types"
+import { CreateAgentType } from "./agentTypes"
+import { CreateActorType } from "./actorTypes"
 
 
-// код для работы с файлами на сервере
+// код для работы с файлами на сервере (server/static)
 
 export function returnStaticPath(): string {
     const pathToStatic: string = path.join(__dirname, "..", "..", "..", "static")

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import * as bcrypt from "bcrypt"
 
 import { ICustomRequest } from "../../middleware/checkMiddleware"
-import { createAgentSchema, CreateAgentType } from "../services/types"
+import { createAgentSchema, CreateAgentType } from "../services/agentTypes"
 import { appDataSource } from "../../data-source"
 import { Agent } from "../../entity/agent.entity"
 import processApiError from "../../error/processError"

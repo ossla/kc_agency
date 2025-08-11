@@ -1,12 +1,11 @@
 import { NextFunction, Response } from "express"
-import path from "path"
 
 import { ICustomRequest } from "../../middleware/checkMiddleware"
 import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath, saveActorPhotos, savePhoto } from "../services/fileSystemService"
 import { Actor } from "../../entity/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { createActorSchema, CreateActorType, GenderEnum } from "../services/types"
+import { createActorSchema, CreateActorType, GenderEnum } from "../services/actorTypes"
 import { Language } from "../../entity/language.entity"
 import { EyeColor } from "../../entity/eyeColor.entity"
 import { City } from "../../entity/city.entity"
