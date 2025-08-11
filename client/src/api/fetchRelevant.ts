@@ -10,7 +10,7 @@ class fetchRelevant {
     }
 
     static async getEyeColors() : Promise<IEyeColor[]> {
-        const response = await fetch("http://localhost:3001/api/relevant/color/", { method: "GET" })
+        const response = await fetch("http://localhost:3001/api/relevant/eye/", { method: "GET" })
         const data = await response.json()
         return data.map(toIEyeColor)
     }

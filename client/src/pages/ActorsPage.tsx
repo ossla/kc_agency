@@ -63,59 +63,83 @@ export function ActorsPage() {
                     className="border px-2 py-1 w-full"
                 />
 
-                <select
-                    multiple
-                    value={filters.cityIds.map(String)}
-                    onChange={e =>
-                        handleFilterChange(
-                            "cityIds",
-                            Array.from(e.target.selectedOptions, o => Number(o.value))
-                        )
-                    }
-                    className="border px-2 py-1 w-full"
-                >
-                    {cities.map(c => (
-                        <option key={c.id} value={c.id}>
-                            {c.name}
-                        </option>
-                    ))}
-                </select>
+                {/* Города */}
+                <div className="mb-4">
+                {cities.map(c => (
+                    <label key={c.id} className="inline-flex items-center mr-4">
+                    <input
+                        type="checkbox"
+                        value={c.id}
+                        checked={filters.cityIds.includes(c.id)}
+                        onChange={e => {
+                        const checked = e.target.checked;
+                        let newCityIds;
+                        if (checked) {
+                            // добавляем id в массив
+                            newCityIds = [...filters.cityIds, c.id];
+                        } else {
+                            // удаляем id из массива
+                            newCityIds = filters.cityIds.filter(id => id !== c.id);
+                        }
+                        handleFilterChange("cityIds", newCityIds);
+                        }}
+                        className="mr-1"
+                    />
+                    {c.name}
+                    </label>
+                ))}
+                </div>
 
-                <select
-                    multiple
-                    value={filters.eyeIds.map(String)}
-                    onChange={e =>
-                        handleFilterChange(
-                            "eyeIds",
-                            Array.from(e.target.selectedOptions, o => Number(o.value))
-                        )
-                    }
-                    className="border px-2 py-1 w-full"
-                >
-                    {eyeColors.map(ec => (
-                        <option key={ec.id} value={ec.id}>
-                            {ec.name}
-                        </option>
-                    ))}
-                </select>
 
-                <select
-                    multiple
-                    value={filters.languageIds.map(String)}
-                    onChange={e =>
-                        handleFilterChange(
-                            "languageIds",
-                            Array.from(e.target.selectedOptions, o => Number(o.value))
-                        )
-                    }
-                    className="border px-2 py-1 w-full"
-                >
-                    {languages.map(l => (
-                        <option key={l.id} value={l.id}>
-                            {l.name}
-                        </option>
-                    ))}
-                </select>
+                {/* Цвет глаз */}
+                <div className="mb-4">
+                {eyeColors.map(ec => (
+                    <label key={ec.id} className="inline-flex items-center mr-4">
+                    <input
+                        type="checkbox"
+                        value={ec.id}
+                        checked={filters.eyeIds.includes(ec.id)}
+                        onChange={e => {
+                        const checked = e.target.checked;
+                        let newEyeIds;
+                        if (checked) {
+                            newEyeIds = [...filters.eyeIds, ec.id];
+                        } else {
+                            newEyeIds = filters.eyeIds.filter(id => id !== ec.id);
+                        }
+                        handleFilterChange("eyeIds", newEyeIds);
+                        }}
+                        className="mr-1"
+                    />
+                    {ec.name}
+                    </label>
+                ))}
+                </div>
+
+                {/* Языки */}
+                <div className="mb-4">
+                {languages.map(l => (
+                    <label key={l.id} className="inline-flex items-center mr-4">
+                    <input
+                        type="checkbox"
+                        value={l.id}
+                        checked={filters.languageIds.includes(l.id)}
+                        onChange={e => {
+                        const checked = e.target.checked;
+                        let newLangIds;
+                        if (checked) {
+                            newLangIds = [...filters.languageIds, l.id];
+                        } else {
+                            newLangIds = filters.languageIds.filter(id => id !== l.id);
+                        }
+                        handleFilterChange("languageIds", newLangIds);
+                        }}
+                        className="mr-1"
+                    />
+                    {l.name}
+                    </label>
+                ))}
+                </div>
 
                 <select
                     value={filters.gender ?? ""}
