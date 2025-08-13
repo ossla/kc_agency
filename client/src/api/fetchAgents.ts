@@ -1,4 +1,4 @@
-import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "../models/IAgent";
+import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "../interfaces/IAgent";
 import { GenderEnum } from "../types/enums";
 
 class fetchAgents {
