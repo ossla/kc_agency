@@ -1,3 +1,4 @@
+import { serverURL } from "../api/url"
 import { IAgent } from "./IAgent"
 import { ICity } from "./ICity"
 import { IEyeColor } from "./IEyeColor"
@@ -67,6 +68,6 @@ export function toIShortActor(raw: any): IShortActor{
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
-        avatarUrl: `http://localhost:3001/${raw.directory}/avatar.jpg`
+        avatarUrl: `${serverURL}/${raw.directory}/avatar.jpg`
     }
 }
