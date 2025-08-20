@@ -33,7 +33,7 @@ export default function Filters(props: FiltersProps) {
             <input
                 type="number"
                 placeholder="Мин. возраст"
-                value={localFilters.minAge ?? 0}
+                value={localFilters.minAge}
                 onChange={(e) => handleChange("minAge", Number(e.target.value))}
             />
             <input

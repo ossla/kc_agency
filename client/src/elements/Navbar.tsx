@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
+import { ACTORS } from "../routes";
 
 export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="logo">
-        <img src="logo192.png" alt="Logo" />
+        <Link to={ACTORS}>
+          <img src="logo192.png" alt="Logo" />
+        </Link>
       </div>
 
       <input type="checkbox" id="menu-btn" className="menu-btn" />

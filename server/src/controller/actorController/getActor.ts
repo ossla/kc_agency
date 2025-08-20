@@ -29,7 +29,6 @@ export async function getOne(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-// для тестов
 export async function getAllFull(req: Request, res: Response, next: NextFunction) {
     try {
         const actors: Actor[] = await appDataSource.getRepository(Actor).find()

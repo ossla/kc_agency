@@ -1,4 +1,4 @@
-import { serverURL } from "../api/url"
+import { serverURL } from "../api/server_url"
 import { IAgent } from "./IAgent"
 import { ICity } from "./ICity"
 import { IEyeColor } from "./IEyeColor"
@@ -15,6 +15,7 @@ export interface IActor {
     clothesSize?: number,
     description?: string,
     directory: string,
+    url: string,
     linkToKinoTeatr?: string,
     linkToFilmTools?: string,
     linkToKinopoisk?: string,
@@ -25,7 +26,7 @@ export interface IActor {
     languages?: ILanguage[],
     photos: string[],
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
 }
 
 export function toIActor(raw: any): IActor {
@@ -33,13 +34,14 @@ export function toIActor(raw: any): IActor {
         id: Number(raw.id),
         firstName: raw.firstName,
         lastName: raw.lastName,
-        middleName: raw.middleName,
+        middleName: raw.middleName ?? undefined,
         gender: raw.gender,
         dateOfBirth: new Date(raw.dateOfBirth),
         height: raw.height ?? undefined,
         clothesSize: raw.clothesSize,
         description: raw.description ?? undefined,
-        directory: raw.directory ?? undefined,
+        directory: raw.directory,
+        url: serverURL + "/" + raw.directory,
         linkToKinoTeatr: raw.linkToKinoTeatr ?? undefined,
         linkToFilmTools: raw.linkToFilmTools ?? undefined,
         linkToKinopoisk: raw.linkToKinopoisk ?? undefined,

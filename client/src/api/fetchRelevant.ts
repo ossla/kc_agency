@@ -1,7 +1,7 @@
 import { ICity, toICity } from "../interfaces/ICity"
 import { IEyeColor, toIEyeColor } from "../interfaces/IEyeColor"
 import { ILanguage, toILanguage } from "../interfaces/ILanguage"
-import { cityURL, eyeURL, languageURL } from "./url"
+import { cityURL, eyeURL, languageURL } from "./server_url"
 
 class fetchRelevant {
     static async getCities() : Promise<ICity[]> {

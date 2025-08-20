@@ -1,13 +1,14 @@
-import { Suspense, use, useActionState, useEffect, useState } from "react"
-import { IActor, IShortActor } from "../interfaces/IActor"
+import { useEffect, useState } from "react"
+import { IShortActor } from "../interfaces/IActor"
 import Filters from "../elements/Filters"
 import Card from "../elements/Card"
 import fetchActors from "../api/fetchActors"
 import "../styles/Page.css"
 import { FilterActorType } from "../types/actorTypes"
+import Loading from "../elements/Loading"
 
 
-export default function ActorsPage(props: any) {
+export default function ActorsList() {
     const [actors, setActors] = useState<IShortActor[]>([])
     const [isFiltered, setIsFiltered] = useState<boolean>(false)
 
@@ -25,7 +26,7 @@ export default function ActorsPage(props: any) {
     }
 
     if (actors.length === 0 && !isFiltered) {
-        return <img src="loading.gif" />
+        return <Loading />
     }
 
     return (

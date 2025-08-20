@@ -1,0 +1,79 @@
+.actor_container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Аватар + альбом */
+.actor_avatar_section {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.actor_avatar {
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.actor_album {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.actor_photo {
+    width: 80px;
+    border: 1px solid black;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.actor_name {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+/* Таблица */
+.actor_about_section {
+    flex: 1;
+    min-width: 280px;
+    margin: 20px;
+}
+
+.actor_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.actor_table th {
+    text-align: left;
+    padding: 8px;
+    background: #f3f3f3;
+    width: 140px;
+}
+
+.actor_table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .actor_container {
+        flex-direction: column;
+    }
+
+    .actor_avatar_section {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .actor_table th {
+        width: 40%;
+    }
+}
