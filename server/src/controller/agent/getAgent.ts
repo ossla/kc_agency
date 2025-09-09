@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from "express"
 import { instanceToPlain } from "class-transformer" 
 
 import processApiError from "../../error/processError"
-import { Agent } from "../../entity/agent.entity"
+import { Agent } from "../../models/agent.entity"
 import { appDataSource } from "../../data-source"
+import ApiError from "../../error/apiError"
 
 
 export async function getAgent(id: number): Promise<Agent> {
@@ -11,7 +12,7 @@ export async function getAgent(id: number): Promise<Agent> {
                                             .getRepository(Agent)
                                             .findOne({where: { id }})
     if (!agent) {
-        throw new Error("агента с таким id нет")
+        throw new ApiError(401, "агента с таким id нет")
     }
 
     return agent
@@ -26,7 +27,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction)
         res.status(200).json(instanceToPlain(agent)) // @exclude hash password поле
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -37,7 +38,7 @@ export async function getAll(req: Request, res: Response, next: NextFunction)
         res.status(200).json(instanceToPlain(agents))
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -52,6 +53,6 @@ export async function getShort(req: Request, res: Response, next: NextFunction)
         res.json(actors);
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }

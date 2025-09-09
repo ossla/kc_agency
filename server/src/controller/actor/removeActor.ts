@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express"
 
-import { Actor } from "../../entity/actor.entity"
+import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
 import { getActor } from "./getActor"

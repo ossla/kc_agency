@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 
 import processApiError from "../../error/processError"
-import { Actor } from "../../entity/actor.entity"
+import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
-import { GenderEnum } from "../services/actorTypes"
+import { GenderEnum } from "./actorTypes"
 
 
 export async function getActor(id: number): Promise<Actor> {

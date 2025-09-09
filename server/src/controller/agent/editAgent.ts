@@ -3,9 +3,10 @@ import * as fs from "fs"
 
 import { appDataSource } from "../../data-source"
 import { getAgent } from "./getAgent"
-import { Agent } from "../../entity/agent.entity"
+import { Agent } from "../../models/agent.entity"
 import processApiError from "../../error/processError"
 import { changePhoto, CustomFileType } from "../services/fileSystemService"
+import ApiError from "../../error/apiError"
 
 
 interface IName {
@@ -35,7 +36,7 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
     try {    
         const { id } = req.body
         if (!id) {
-            throw new Error("agent::edit: не указан id агента")
+            throw new ApiError(400, "edit: не указан id агента")
         }
         const {
             firstName,
@@ -46,7 +47,6 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
             description,
             telegram,
             vk,
-            isAdmin
         } = req.body
 
 
@@ -57,7 +57,6 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
         setAgentField(agent, "description", description)
         setAgentField(agent, "telegram", telegram)
         setAgentField(agent, "vk", vk)
-        setAgentField(agent, "isAdmin", isAdmin)
 
         const newAvatar: CustomFileType = req.files?.newAvatar
         if (newAvatar) {
@@ -67,6 +66,6 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
         await appDataSource.getRepository(Agent).save(agent)
         res.json(agent)
     } catch (error: unknown) {
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 }

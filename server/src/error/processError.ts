@@ -11,18 +11,17 @@ export function processDefaultError(error: unknown) {
     }
 }
 
-export default function processApiError(status: number, error: unknown, next: NextFunction) {
-    if (error instanceof Error) {
-        console.error(error.message);
-        if (status === 404) {
-            next(ApiError.badRequest(error.message))
-        } else {
-            next(ApiError.internal(error.message))
-        }
+export default function processApiError(error: unknown, next: NextFunction) {
+    if (error instanceof ApiError) {
+        console.error(error.message)
+        next(error)
+    } else if (error instanceof Error) {
+        console.error(error.message)
+        next(new ApiError(500, error.message))
     } else if (typeof error === "string") {
         console.error(error)
-        next(ApiError.badRequest(error))
+        next(new ApiError(500, error))
     } else {
-        throw new Error("unexpected err")
+        next(new ApiError(500, "Unexpected error"))
     }
 }

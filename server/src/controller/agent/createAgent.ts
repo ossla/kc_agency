@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express"
 import * as bcrypt from "bcrypt"
 
-import { ICustomRequest } from "../../middleware/checkMiddleware"
-import { createAgentSchema, CreateAgentType } from "../services/agentTypes"
+import { ICustomRequest } from "../../middleware/authMiddleware"
+import { createAgentSchema, CreateAgentType } from "./agentTypes"
 import { appDataSource } from "../../data-source"
-import { Agent } from "../../entity/agent.entity"
+import { Agent } from "../../models/agent.entity"
 import processApiError from "../../error/processError"
 import { CustomFileType, /** makeAgentPhotoName,*/ removePhoto, savePhoto } from "../services/fileSystemService"
-import { createToken } from "./loginAgent"
+import ApiError from "../../error/apiError"
 
 
 export async function create(req: ICustomRequest, res: Response, next: NextFunction) {
@@ -22,7 +22,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
 
         const photo: CustomFileType = req.files?.photo
         if (!photo) {
-            throw new Error("Необходимо добавить поле photo для загрузки аватара")
+            throw new ApiError(400, "Необходимо добавить поле photo для загрузки аватара")
         }
         photoName = crypto.randomUUID()
         await savePhoto(photo, crypto.randomUUID())
@@ -37,25 +37,14 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
         agent.photo = photoName
         agent.telegram = body.telegram ?? null
         agent.vk = body.vk ?? null
-        agent.isAdmin = true
-
-        agent.hashPassword = await bcrypt.hash(body.password, 5)
 
         await appDataSource.getRepository(Agent).save(agent)
-
-        const token: string = await createToken(
-            agent.id,
-            agent.firstName,
-            agent.lastName,
-            agent.isAdmin
-        )
-
-        res.json(token)
+        res.status(200).json(agent)
 
     } catch (error: any) {
         if (photoName != "") {
             await removePhoto(photoName)
         }
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 } // create

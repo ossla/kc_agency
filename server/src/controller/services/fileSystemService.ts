@@ -1,8 +1,8 @@
 import fileUpload from "express-fileupload"
 import * as path from "path"
 import * as fs from "fs"
-import { CreateAgentType } from "./agentTypes"
-import { CreateActorType } from "./actorTypes"
+import { CreateAgentType } from "../agent/agentTypes"
+import { CreateActorType } from "../actor/actorTypes"
 
 
 // код для работы с файлами на сервере (server/static)

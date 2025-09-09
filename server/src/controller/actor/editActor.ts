@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express"
 
 import { appDataSource } from "../../data-source"
 import { getActor } from "./getActor"
-import { Actor } from "../../entity/actor.entity"
+import { Actor } from "../../models/actor.entity"
 import processApiError from "../../error/processError"
-import { getAgent } from "../agentController/getAgent"
-import { Agent } from "../../entity/agent.entity"
-import { editActorSchema, EditActorType, GenderEnum } from "../services/actorTypes"
+import { getAgent } from "../agent/getAgent"
+import { Agent } from "../../models/agent.entity"
+import { editActorSchema, EditActorType, GenderEnum } from "./actorTypes"
 import { saveCity, saveColor, saveLanguages } from "./createActor"
 
 

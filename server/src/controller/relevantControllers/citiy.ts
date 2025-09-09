@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { appDataSource } from "../../data-source"
-import { City } from "../../entity/city.entity"
+import { City } from "../../models/city.entity"
 import processApiError from "../../error/processError"
 
 async function getOne(id: number): Promise<City> {

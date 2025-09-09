@@ -1,15 +1,13 @@
 import express, { Express } from "express"
-import { check } from "../middleware/checkMiddleware"
-import { create } from "../controller/agentController/createAgent"
-import { remove } from "../controller/agentController/removeAgent"
-import { getAll, getOne, getShort } from "../controller/agentController/getAgent"
-import { auth } from "../controller/agentController/loginAgent"
-import { edit } from "../controller/agentController/editAgent"
-
+import { checkMiddleware } from "../middleware/checkMiddleware"
+import { create } from "../controller/agent/createAgent"
+import { remove } from "../controller/agent/removeAgent"
+import { getAll, getOne, getShort } from "../controller/agent/getAgent"
+import { edit } from "../controller/agent/editAgent"
 
 const agentRouter: Express = express()
 
-// agentRouter.post("/create", check, create)
+// agentRouter.post("/registration", check, create)
 // agentRouter.post("/delete", check, remove)
 // agentRouter.post("/edit", check, edit)
 // agentRouter.get("/auth", check, auth)
@@ -18,7 +16,6 @@ agentRouter.post("/create", create)
 agentRouter.post("/delete", remove)
 agentRouter.post("/edit", edit)
 
-agentRouter.get("/auth", auth)
 agentRouter.get("/:id", getOne)
 agentRouter.get("/", getShort)
 

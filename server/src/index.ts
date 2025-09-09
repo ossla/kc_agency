@@ -1,13 +1,14 @@
 import express, { Request, Response } from "express"
 import dotenv from "dotenv"
-
-import { appDataSource } from "./data-source"
-import { processDefaultError } from "./error/processError"
-import router from "./route/router"
+import cookieParser from "cookie-parser"
 import path from "path"
 import cors from "cors"
 import bodyParser from "body-parser"
 import fileUpload from "express-fileupload"
+
+import { appDataSource } from "./data-source"
+import { processDefaultError } from "./error/processError"
+import router from "./route/router"
 
 
 /* Configuration */
@@ -18,15 +19,18 @@ const PORT = process.env.PORT || 3000
 /* Using */
 app.use(express.json())
 app.use(express.text())
-app.use(cors())         // обход браузерных блокировок http запросов
-// Когда фронт и бэк на разных портах, браузер требует, чтобы бэкенд отправлял заголовки CORS
+app.use(cookieParser())
 
-// Для парсинга application/xwww-form-urlencoded|multipart/form-data:
-app.use(bodyParser.urlencoded({extended: false}))
+// Когда фронт и бэк на разных портах, браузер требует, чтобы бэкенд отправлял заголовки CORS.
+app.use(cors({
+    origin: "http://localhost:3000", // фронт
+    credentials: true
+}))
+app.use(bodyParser.urlencoded({extended: false})) // Для парсинга application/xwww-form-urlencoded|multipart/form-data:
 app.use(fileUpload())        // парсинг файлов
 app.use(express.static(path.join(__dirname, "..", "static"))) // папка для хранения данных
+app.use("/api", router)
 
-app.use("/api", router)         // роутинг
 
 async function start() {
     try {

@@ -2,11 +2,13 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import dotenv from "dotenv"
 
-import { Agent } from "./entity/agent.entity"
-import { Actor } from "./entity/actor.entity"
-import { EyeColor } from "./entity/eyeColor.entity"
-import { City } from "./entity/city.entity"
-import { Language } from "./entity/language.entity"
+import { Agent } from "./models/agent.entity"
+import { Actor } from "./models/actor.entity"
+import { EyeColor } from "./models/eyeColor.entity"
+import { City } from "./models/city.entity"
+import { Language } from "./models/language.entity"
+import { User } from "./models/user.entity"
+import { RefreshToken } from "./models/refreshToken.entity"
 
 
 dotenv.config()
@@ -24,7 +26,7 @@ export const appDataSource = new DataSource({
     database: process.env.DBNAME,
     synchronize: true,
     logging: false,
-    entities: [Agent, Actor, EyeColor, City, Language],
+    entities: [Agent, Actor, User, RefreshToken, EyeColor, City, Language],
     migrations: [],
     subscribers: [],
 })

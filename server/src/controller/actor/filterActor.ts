@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express"
 import { SelectQueryBuilder } from "typeorm"
 
 import { appDataSource } from "../../data-source"
-import { Actor } from "../../entity/actor.entity"
+import { Actor } from "../../models/actor.entity"
 import processApiError from "../../error/processError"
-import { GenderEnum, FilterActorType, filterActorSchema } from "../services/actorTypes"
+import { GenderEnum, FilterActorType, filterActorSchema } from "./actorTypes"
 
 
 // select * from actor WHERE LOWER(CONCAT_WS(' ', "lastName", "firstName", "middleName")) ILIKE '%arn%';

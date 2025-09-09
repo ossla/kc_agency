@@ -1,11 +1,11 @@
 import express, { Express } from "express"
-import { check } from "../middleware/checkMiddleware"
-import { create } from "../controller/actorController/createActor"
-import { remove } from "../controller/actorController/removeActor"
-import { getAllFull, getOne, getShort, getShortMen, getShortWomen} from "../controller/actorController/getActor"
-import { filter } from "../controller/actorController/filterActor"
-import { edit } from "../controller/actorController/editActor"
-import { changeAvatar, changeOrder, deletePhoto } from "../controller/actorController/editPhotosActor"
+import { checkMiddleware } from "../middleware/checkMiddleware"
+import { create } from "../controller/actor/createActor"
+import { remove } from "../controller/actor/removeActor"
+import { getAllFull, getOne, getShort, getShortMen, getShortWomen} from "../controller/actor/getActor"
+import { filter } from "../controller/actor/filterActor"
+import { edit } from "../controller/actor/editActor"
+import { changeAvatar, changeOrder, deletePhoto } from "../controller/actor/editPhotosActor"
 
 
 const actorRouter: Express = express()

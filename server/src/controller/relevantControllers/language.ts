@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { appDataSource } from "../../data-source"
-import { Language } from "../../entity/language.entity"
+import { Language } from "../../models/language.entity"
 import processApiError from "../../error/processError"
 
 async function getOne(id: number): Promise<Language> {

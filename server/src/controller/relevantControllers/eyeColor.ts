@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { appDataSource } from "../../data-source"
-import { EyeColor } from "../../entity/eyeColor.entity"
+import { EyeColor } from "../../models/eyeColor.entity"
 import processApiError from "../../error/processError"
 
 async function getOne(id: number): Promise<EyeColor> {

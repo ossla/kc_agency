@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from "express"
 
 import { getAgent } from "./getAgent"
 import { appDataSource } from "../../data-source"
-import { Agent } from "../../entity/agent.entity"
+import { Agent } from "../../models/agent.entity"
 import processApiError from "../../error/processError"
 import { removePhoto } from "../services/fileSystemService"
 

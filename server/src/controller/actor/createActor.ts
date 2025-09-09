@@ -2,14 +2,15 @@ import { NextFunction, Response } from "express"
 
 import { ICustomRequest } from "../../middleware/checkMiddleware"
 import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath, saveActorPhotos, savePhoto } from "../services/fileSystemService"
-import { Actor } from "../../entity/actor.entity"
+import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { createActorSchema, CreateActorType, GenderEnum } from "../services/actorTypes"
-import { Language } from "../../entity/language.entity"
-import { EyeColor } from "../../entity/eyeColor.entity"
-import { City } from "../../entity/city.entity"
-import { getAgent } from "../agentController/getAgent"
+import { createActorSchema, CreateActorType, GenderEnum } from "./actorTypes"
+import { Language } from "../../models/language.entity"
+import { EyeColor } from "../../models/eyeColor.entity"
+import { City } from "../../models/city.entity"
+import { getAgent } from "../agent/getAgent"
+import ApiError from "../../error/apiError"
 
 
 export async function create(req: ICustomRequest, res: Response, next: NextFunction) {
@@ -31,7 +32,7 @@ export async function create(req: ICustomRequest, res: Response, next: NextFunct
         if (dirname != "") {
             await removeActorFolder(dirname)
         }
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 } // create
 
@@ -40,9 +41,9 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
                                                             : Promise<string> {
     let dirname: string;
     const avatar: CustomFileType = req.files?.avatar
-    if (!avatar) throw new Error('Нужно добавить аватарку актера')
+    if (!avatar) throw new ApiError(400, 'Нужно добавить аватарку актера')
     const photos: CustomFileType = req.files?.photos
-    if (!photos) throw new Error('Нужно добавить хотя бы одно фото')
+    if (!photos) throw new ApiError(400, 'Нужно добавить хотя бы одно фото')
 
     dirname = await makeActorDirectory(body)
     actor.directory = dirname
@@ -59,7 +60,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
-        throw new Error(`create: Неверно указан пол актера: ${body.gender}`)
+        throw new ApiError(400, `create: Неверно указан пол актера: ${body.gender}`)
     }
     actor.middleName = body.middleName ?? null
     actor.dateOfBirth = body.dateOfBirth;
@@ -119,13 +120,13 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
             rawLangsArr = JSON.parse(rawLanguages)
             if (!Array.isArray(rawLangsArr)) throw new Error()
         } catch {
-            throw new Error("Некорректный JSON в поле languages")
+            throw new ApiError(400, "Некорректный JSON в поле languages")
         }
 
     } else if (Array.isArray(rawLanguages)) {
         rawLangsArr = rawLanguages
     } else {
-        throw new Error("languages должен быть или string или string[]")
+        throw new ApiError(400, "languages должен быть или string или string[]")
     }
 
     let langsArr: Array<Language> = new Array<Language>()
