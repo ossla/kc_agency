@@ -1,9 +1,5 @@
 import dotenv from "dotenv"
-import { RefreshToken } from "../../models/refreshToken.entity"
-import { appDataSource } from "../../data-source"
 dotenv.config()
-
-export const refreshRepo = () => appDataSource.getRepository(RefreshToken)
 
 export const SALT_ROUNDS: number = 5
 

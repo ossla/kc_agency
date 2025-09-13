@@ -25,7 +25,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction) {
         res.status(200).json(agent)
         
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -35,7 +35,7 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
         res.status(200).json(actors)
         
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -50,7 +50,7 @@ export async function getShort(req: Request, res: Response, next: NextFunction) 
         res.json(actors);
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -65,7 +65,7 @@ async function getShortByGender(res: Response, gender: GenderEnum, next: NextFun
         res.json(actors);
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 

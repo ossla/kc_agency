@@ -22,7 +22,7 @@ export async function getEyeColor(req: Request, res: Response, next: NextFunctio
         res.status(200).json(eyeColor)
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -32,7 +32,7 @@ export async function getEyeColors(req: Request, res: Response, next: NextFuncti
         res.status(200).json(eyeColors)
         
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -44,6 +44,6 @@ export async function removeEyeColor(req: Request, res: Response, next: NextFunc
         res.status(200).json("deleted successfully")
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }

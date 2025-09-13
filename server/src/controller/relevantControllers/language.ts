@@ -22,7 +22,7 @@ export async function getLanguage(req: Request, res: Response, next: NextFunctio
         res.status(200).json(language)
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -32,7 +32,7 @@ export async function getLanguages(req: Request, res: Response, next: NextFuncti
         res.status(200).json(languages)
         
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -44,6 +44,6 @@ export async function removeLanguage(req: Request, res: Response, next: NextFunc
         res.status(200).json("deleted successfully")
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }

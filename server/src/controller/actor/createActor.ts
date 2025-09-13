@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express"
 
-import { ICustomRequest } from "../../middleware/checkMiddleware"
+import { ICustomRequest } from "../../middleware/authMiddleware"
 import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath, saveActorPhotos, savePhoto } from "../services/fileSystemService"
 import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"

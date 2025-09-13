@@ -1,18 +1,22 @@
 import { Response, NextFunction } from "express"
 import { ICustomRequest } from "./authMiddleware"
-import ApiError from "../error/apiError";
+import processApiError from "../error/processError";
 
-
-export function checkAdminMiddleware(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
-    if (!req.user) {
-        res.status(401).json("Unauthorized")
-        return;
+export function checkMiddleware(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+        if (!req.user) {
+            res.status(401).json("Unauthorized")
+            return;
+        }
+    
+        if (!req.user.isAdmin) {
+            res.status(403).json("Недостаточно прав")
+            return;
+        }
+    
+        next()
+        
+    } catch (error) {
+        processApiError(error, next)
     }
-
-    if (!req.user.isAdmin) {
-        res.status(403).json("Недостаточно прав")
-        return;
-    }
-
-    next()
 }

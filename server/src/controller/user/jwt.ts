@@ -1,11 +1,13 @@
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
 
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_DAYS, REFRESH_TOKEN_EXPIRES_MS, refreshRepo, REFRESH_TOKEN_PEPPER } from "./config"
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_DAYS, REFRESH_TOKEN_EXPIRES_MS, REFRESH_TOKEN_PEPPER } from "./config"
 import { User } from "../../models/user.entity"
 import { RefreshToken } from "../../models/refreshToken.entity"
-import ApiError from "../../error/apiError"
+import { appDataSource } from "../../data-source"
 
+
+export const refreshRepo = () => appDataSource.getRepository(RefreshToken)
 
 export function hashToken(token: string) {
     return crypto.createHash("sha256").update(token + REFRESH_TOKEN_PEPPER).digest("hex")
@@ -45,7 +47,7 @@ export interface TokenPair {
 }
 
 // обрабатывает данные юзера, создаёт пару токенов и сохраняет refresh 
-// (или обновляет, если stored не undefined, такой токен уже был)
+// (или обновляет. если stored не undefined, такоц токен уже был)
 export async function createTokens(user: User, stored?: RefreshToken): Promise<TokenPair> {
     const accessPayload: IJwtAccessPayload = {id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin}
     const refreshPayload: IJwtRefreshPayload = {id: user.id, email: user.email}
@@ -56,9 +58,9 @@ export async function createTokens(user: User, stored?: RefreshToken): Promise<T
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
     
     if (stored) {
-        stored.tokenHash = tokenHash;
-        stored.expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS);
-        await refreshRepo().save(stored);
+        stored.tokenHash = tokenHash
+        stored.expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
+        await refreshRepo().save(stored)
     } else {
         const rt = refreshRepo().create({ user, tokenHash, expiresAt })
         await refreshRepo().save(rt)

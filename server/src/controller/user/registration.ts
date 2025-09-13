@@ -31,6 +31,7 @@ export async function registration(req: Request, res: Response, next: NextFuncti
         user.hashPassword = await bcrypt.hash(regbody.password, SALT_ROUNDS)
         user.name = regbody.name
         user.email = regbody.email
+        user.isAdmin = false
         await appDataSource.getRepository(User).save(user)
 
         res.status(201).json({ id: user.id, email: user.email });

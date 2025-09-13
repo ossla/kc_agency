@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express"
 
 import { ICustomRequest } from "../../middleware/authMiddleware"
-import { createTokens, hashToken, TokenPair, verifyRefreshToken } from "./jwt"
-import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS, refreshRepo } from "./config"
+import { createTokens, hashToken, refreshRepo, TokenPair, verifyRefreshToken } from "./jwt"
+import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS } from "./config"
 import processApiError from "../../error/processError"
 import ApiError from "../../error/apiError"
 
@@ -20,13 +20,11 @@ export async function auth(req: ICustomRequest, res: Response, next: NextFunctio
         payload = verifyRefreshToken(token) as any
     } catch (err) {
         throw new ApiError(401, "неверный refresh токен");
-        return;
     }
 
     const tokenHash = hashToken(token)
     const stored = await refreshRepo().findOne({ where: { tokenHash }, relations: ["user"] })
     if (!stored || stored.revoked || stored.expiresAt < new Date()) {
-        // возможно replay при logout / похищение
         throw new ApiError(401, "неверный refresh токен");
     }
 

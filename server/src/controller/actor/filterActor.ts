@@ -127,6 +127,6 @@ export async function filter(req: Request, res: Response, next: NextFunction) {
         const actors = await qb.getMany()
         res.json(actors)
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }

@@ -20,7 +20,7 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
         res.status(200).json(true)
 
     } catch (error) {
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -68,7 +68,7 @@ export async function changeOrder(req: Request, res: Response, next: NextFunctio
         res.json(actor)
 
     } catch (error) {
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -92,6 +92,6 @@ export async function deletePhoto(req: Request, res: Response, next: NextFunctio
         res.status(200).json(true)
 
     } catch (error) {
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 }

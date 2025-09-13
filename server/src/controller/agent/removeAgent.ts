@@ -18,6 +18,6 @@ export async function remove(req: Request, res: Response, next: NextFunction)
         res.status(200).json(true)
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 } // delete

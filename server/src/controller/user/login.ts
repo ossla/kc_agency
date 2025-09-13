@@ -3,12 +3,10 @@ import * as bcrypt from "bcrypt"
 
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
-import { createTokens, hashToken, IJwtAccessPayload, IJwtRefreshPayload, signAccessToken, signRefreshToken, TokenPair } from "./jwt"
+import { createTokens, TokenPair } from "./jwt"
 import { User } from "../../models/user.entity"
 import ApiError from "../../error/apiError"
-import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS, refreshRepo } from "./config"
-import { RefreshToken } from "../../models/refreshToken.entity"
-
+import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS } from "./config"
 
 
 export async function login(req: Request, res: Response, next: NextFunction) : Promise<void> {
@@ -20,13 +18,13 @@ export async function login(req: Request, res: Response, next: NextFunction) : P
         const user = await appDataSource.getRepository(User).findOneBy({
             email: email
         })
-        if (!user) throw new Error('Пользователя с таким email не существует')
+        if (!user) throw new ApiError(400, 'Пользователя с таким email не существует')
         // проверка пароля
         const valid: boolean = bcrypt.compareSync(password, user.hashPassword)
-        if (!valid) throw new Error('Неверный пароль')
+        if (!valid) throw new ApiError(400, 'Неверный пароль')
 
         // создание токена
-        const tokens: TokenPair = await createTokens(user)
+        const tokens: TokenPair = await createTokens(user) // + работа с entity refresh_token
 
         res.cookie(COOKIE_NAME, tokens.refresh, {
             httpOnly: true,

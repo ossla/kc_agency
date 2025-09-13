@@ -113,6 +113,6 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
         await appDataSource.getRepository(Actor).save(actor)
         res.json(actor)
     } catch (error: unknown) {
-        processApiError(500, error, next)
+        processApiError(error, next)
     }
 }

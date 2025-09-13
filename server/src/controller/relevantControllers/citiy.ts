@@ -22,7 +22,7 @@ export async function getCity(req: Request, res: Response, next: NextFunction) {
         res.status(200).json(city)
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -32,7 +32,7 @@ export async function getCities(req: Request, res: Response, next: NextFunction)
         res.status(200).json(cities)
         
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
 
@@ -44,6 +44,6 @@ export async function removeCity(req: Request, res: Response, next: NextFunction
         res.status(200).json(true)
 
     } catch (error: unknown) {
-        processApiError(404, error, next)
+        processApiError(error, next)
     }
 }
