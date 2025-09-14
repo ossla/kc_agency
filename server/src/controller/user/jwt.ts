@@ -23,13 +23,14 @@ export interface IJwtAccessPayload {
 export interface IJwtRefreshPayload {
     id: number;
     email: string;
+    deviceId: string;
 }
 
-export function signAccessToken(payload: object) {
+export function signAccessToken(payload: IJwtAccessPayload) {
     return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES_IN })
 }
 
-export function signRefreshToken(payload: object) {
+export function signRefreshToken(payload: IJwtRefreshPayload) {
     return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: `${REFRESH_TOKEN_EXPIRES_DAYS}d`})
 }
 
@@ -46,19 +47,20 @@ export interface TokenPair {
     access: string;
 }
 
-// обрабатывает данные юзера, создаёт пару токенов и сохраняет refresh 
-// (или обновляет. если stored не undefined, такоц токен уже был)
+// обрабатывает данные юзера, создаёт пару токенов и сохраняет/обновляет refresh данные
 export async function createTokens(user: User, stored?: RefreshToken): Promise<TokenPair> {
-    const accessPayload: IJwtAccessPayload = {id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin}
-    const refreshPayload: IJwtRefreshPayload = {id: user.id, email: user.email}
+    const deviceId: string = crypto.randomUUID()
+    const accessPayload: IJwtAccessPayload = { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin }
+    const refreshPayload: IJwtRefreshPayload = { id: user.id, email: user.email, deviceId }
     const access = signAccessToken(accessPayload)
     const refresh = signRefreshToken(refreshPayload)
     const tokenHash = hashToken(refresh)
 
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
-    
+
     if (stored) {
         stored.tokenHash = tokenHash
+        stored.deviceId = deviceId
         stored.expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
         await refreshRepo().save(stored)
     } else {

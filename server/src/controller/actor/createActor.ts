@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express"
 
 import { ICustomRequest } from "../../middleware/authMiddleware"
-import { CustomFileType, makeActorDirectory, removeActorFolder, returnStaticPath, saveActorPhotos, savePhoto } from "../services/fileSystemService"
+import { CustomFileType, makeActorDirectory, removeActorFolder, saveActorPhotos, savePhoto } from "../services/fileSystemService"
 import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"

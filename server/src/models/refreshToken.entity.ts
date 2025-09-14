@@ -4,24 +4,24 @@ import { User } from "./user.entity"
 
 @Entity()
 export class RefreshToken {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string
+    @PrimaryGeneratedColumn("uuid")
+    id!: string
 
-  @ManyToOne(() => User, { onDelete: "CASCADE" })
-  user!: User
+    @ManyToOne(() => User, { onDelete: "CASCADE" })
+    user!: User
 
-  @Column()
-  tokenHash!: string
+    @Column()
+    tokenHash!: string
 
-  @Column({ type: "timestamptz" })
-  expiresAt!: Date
+    @Column({ type: "timestamptz" })
+    expiresAt!: Date
 
-  @Column({ default: false })
-  revoked!: boolean
+    @Column({ default: false })
+    revoked!: boolean
 
-  @Column({ nullable: true })
-  replacedByTokenId?: string
+    @Column()
+    deviceId!: string
 
-  @CreateDateColumn()
-  createdAt!: Date
+    @CreateDateColumn()
+    createdAt!: Date
 }

@@ -25,7 +25,7 @@ export async function auth(req: ICustomRequest, res: Response, next: NextFunctio
     const tokenHash = hashToken(token)
     const stored = await refreshRepo().findOne({ where: { tokenHash }, relations: ["user"] })
     if (!stored || stored.revoked || stored.expiresAt < new Date()) {
-        throw new ApiError(401, "неверный refresh токен");
+        throw new ApiError(401, "неверный refresh токен")
     }
 
     // ротация
