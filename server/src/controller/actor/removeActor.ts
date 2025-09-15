@@ -11,7 +11,9 @@ import ApiError from "../../error/apiError"
 export async function removeActor(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {
         const { id } = req.params
-        if (!id || isNaN(Number(id))) {
+        const idNum = Number(id)
+
+        if (!id || !Number.isInteger(idNum)) {
             throw new ApiError(400, "укажите корректный id")
         }
         const actor = await getActor(Number(id))

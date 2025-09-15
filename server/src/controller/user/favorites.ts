@@ -27,6 +27,14 @@ async function getUser(userId: number): Promise<User> {
     return user
 }
 
+async function getActor(actorId: number): Promise<Actor> {
+    const actor = await appDataSource.getRepository(Actor).findOne({ where: { id: Number(actorId) }})
+    if (!actor) {
+        throw new ApiError(404, "не найден пользователь")
+    }
+    return actor
+}
+
 export async function addFavorite(req: ICustomRequest, res: Response, next: NextFunction) {
     try {
         const { userId, actorId } = req.params
@@ -36,10 +44,7 @@ export async function addFavorite(req: ICustomRequest, res: Response, next: Next
         }
 
         const user = await getUser(Number(userId))
-        const actor = await appDataSource.getRepository(Actor).findOneBy({ id: Number(actorId) })
-        if (!actor) {
-            throw new ApiError(404, "не найден актёр")
-        } 
+        const actor = await getActor(Number(actorId))
 
         const favorite: Favorite = new Favorite()
         favorite.actor = actor
@@ -53,7 +58,7 @@ export async function addFavorite(req: ICustomRequest, res: Response, next: Next
     }
 }
 
-export async function removeFavorite(req: ICustomRequest, res: Response, next: NextFunction) {
+export async function removeFavorite(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
         const { userId, actorId } = req.params
         checkIdentificators(userId, actorId)
@@ -61,12 +66,16 @@ export async function removeFavorite(req: ICustomRequest, res: Response, next: N
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const user = await getUser(Number(userId))
-        
-        user.favorites = user.favorites.filter(actor => actor.id !== Number(actorId))
-        await appDataSource.getRepository(User).save(user)
+        const _ = await getUser(Number(userId))
+        const __ = await getActor(Number(actorId))
 
-        res.status(200).json(user.favorites)
+        await appDataSource.getRepository(Favorite).delete({
+            user: { id: Number(userId) },
+            actor: { id: Number(actorId) }
+        })
+
+        res.status(200).json(true)
+
     } catch (error: unknown) {
         processApiError(error, next)
     }

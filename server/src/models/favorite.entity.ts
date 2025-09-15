@@ -1,4 +1,4 @@
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Actor } from "./actor.entity"
 import { User } from "./user.entity"
 
@@ -9,9 +9,11 @@ export class Favorite {
     id!: number
 
     @ManyToOne(() => User, (user) => user.favorites, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "userId" })
     user!: User
 
     @ManyToOne(() => Actor, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "actorId" })
     actor!: Actor
 
     @CreateDateColumn()

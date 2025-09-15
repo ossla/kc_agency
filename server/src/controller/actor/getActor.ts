@@ -21,7 +21,9 @@ export async function getActor(id: number): Promise<Actor> {
 export async function getOneActor(req: Request, res: Response, next: NextFunction) {
     try {
         const { id } = req.params
-        if (!id || isNaN(Number(id))) {
+        const idNum = Number(id)
+
+        if (!id || !Number.isInteger(idNum)) {
             throw new ApiError(400, "укажите корректный id")
         }
         const agent = await getActor(Number(id))

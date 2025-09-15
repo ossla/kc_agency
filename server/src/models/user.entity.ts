@@ -3,7 +3,9 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    OneToMany
+    OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn
 } from "typeorm"
 
 import { Favorite } from "./favorite.entity"
@@ -27,6 +29,12 @@ export class User {
     @Exclude()
     hashPassword!: string    // хэш пароля
 
-    @OneToMany(() => Favorite, (fav) => fav.user)
+    @OneToMany(() => Favorite, (fav) => fav.user, { cascade: true })
     favorites!: Favorite[]
+
+    @CreateDateColumn()
+    createdAt!: Date
+
+    @UpdateDateColumn()
+    updatedAt!: Date
 }

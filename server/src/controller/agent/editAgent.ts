@@ -35,7 +35,8 @@ function setAgentField<T extends keyof Agent>(agent: Agent, field: T, value: Age
 export async function editAgent(req: Request, res: Response, next: NextFunction) {
     try {    
         const { id } = req.body
-        if (!id || isNaN(Number(id))) {
+        const idNum = Number(id)
+        if (!id || !Number.isInteger(idNum)) {
             throw new ApiError(400, "укажите корректный id")
         }
         const {

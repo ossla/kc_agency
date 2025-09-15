@@ -5,7 +5,6 @@ export const createAgentSchema = z.object({
     lastName: z.string().min(1),
     middleName: z.string().optional(),
     email: z.string().email(),
-    password: z.string().min(1),
     phone: z.string().min(1),
     description: z.string().optional(),
     telegram: z.string().optional(),
