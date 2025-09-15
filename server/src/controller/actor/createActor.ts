@@ -13,7 +13,7 @@ import { getAgent } from "../agent/getAgent"
 import ApiError from "../../error/apiError"
 
 
-export async function create(req: ICustomRequest, res: Response, next: NextFunction) {
+export async function createActor(req: ICustomRequest, res: Response, next: NextFunction) {
     let dirname: string = ""
     try {
         console.log("create actor controller starts...")

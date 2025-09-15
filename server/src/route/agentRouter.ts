@@ -1,22 +1,18 @@
 import express, { Express } from "express"
 import { checkMiddleware } from "../middleware/checkMiddleware"
-import { create } from "../controller/agent/createAgent"
-import { remove } from "../controller/agent/removeAgent"
-import { getAll, getOne, getShort } from "../controller/agent/getAgent"
-import { edit } from "../controller/agent/editAgent"
+import { createAgent } from "../controller/agent/createAgent"
+import { removeAgent } from "../controller/agent/removeAgent"
+import { getAllAgents, getOneAgent, getShortAgents } from "../controller/agent/getAgent"
+import { editAgent } from "../controller/agent/editAgent"
 import { authMiddleware } from "../middleware/authMiddleware"
 
 const agentRouter: Express = express()
 
-agentRouter.post("/create", authMiddleware, checkMiddleware, create)
-// agentRouter.post("/delete", check, remove)
-// agentRouter.post("/edit", check, edit)
-// agentRouter.get("/auth", check, auth)
+agentRouter.post("/create", authMiddleware, checkMiddleware, createAgent)
+agentRouter.delete("/delete/:id", authMiddleware, checkMiddleware, removeAgent)
+agentRouter.post("/edit", authMiddleware, checkMiddleware, editAgent)
 
-agentRouter.post("/delete", remove)
-agentRouter.post("/edit", edit)
-
-agentRouter.get("/:id", getOne)
-agentRouter.get("/", getShort)
+agentRouter.get("/:id", getOneAgent)
+agentRouter.get("/", getShortAgents)
 
 export default agentRouter

@@ -95,7 +95,7 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
     }
 }
 
-export async function filter(req: Request, res: Response, next: NextFunction) {
+export async function filterActor(req: Request, res: Response, next: NextFunction) {
     try {
         const body: FilterActorType = filterActorSchema.parse(req.body)
         

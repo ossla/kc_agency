@@ -6,6 +6,7 @@ import { registration } from "../controller/user/registration"
 import { auth } from "../controller/user/auth"
 import { addFavorite, getFavorites, removeFavorite } from "../controller/user/favorites"
 import { authMiddleware } from "../middleware/authMiddleware"
+import { getUser } from "../controller/user/getUser"
 
 
 const userRouter: Express = express()
@@ -14,6 +15,7 @@ userRouter.post("/registration", registration)
 userRouter.post("/auth", auth)
 userRouter.post("/login", login)
 userRouter.post("/logout", logout)
+userRouter.get("/:id", authMiddleware, getUser)
 
 userRouter.post("/:userId/favorites/:actorId", authMiddleware, addFavorite)
 userRouter.delete("/:userId/favorites/:actorId", authMiddleware, removeFavorite)

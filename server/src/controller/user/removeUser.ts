@@ -1,23 +1,19 @@
 import { NextFunction, Response, Request } from "express"
-
-import { getAgent } from "./getAgent"
 import { appDataSource } from "../../data-source"
-import { Agent } from "../../models/agent.entity"
+import { User } from "../../models/user.entity"
 import processApiError from "../../error/processError"
-import { removePhoto } from "../services/fileSystemService"
 import ApiError from "../../error/apiError"
 
 
-export async function removeAgent(req: Request, res: Response, next: NextFunction) 
+export async function removeUser(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {
     try {
-        const { id } = req.params
+        const { id } = req.body
         if (!id || isNaN(Number(id))) {
             throw new ApiError(400, "укажите корректный id")
         }
-        const agent = await getAgent(Number(id))
-        await removePhoto(agent.photo)
-        await appDataSource.getRepository(Agent).delete({ id: agent.id })
+        const user: User = await appDataSource.getRepository(User).findOneBy({id: Number(id)})
+        await appDataSource.getRepository(User).delete({ id: user.id })
 
         res.status(200).json(true)
 

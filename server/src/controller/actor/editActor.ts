@@ -91,7 +91,7 @@ function setDescription(actor: Actor, description?: string) {
     }
 }
 
-export async function edit(req: Request, res: Response, next: NextFunction) {
+export async function editActor(req: Request, res: Response, next: NextFunction) {
     try {    
         const body: EditActorType = editActorSchema.parse(req.body)
         

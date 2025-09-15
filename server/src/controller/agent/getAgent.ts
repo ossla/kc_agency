@@ -18,10 +18,13 @@ export async function getAgent(id: number): Promise<Agent> {
     return agent
 }
 
-export async function getOne(req: Request, res: Response, next: NextFunction) 
+export async function getOneAgent(req: Request, res: Response, next: NextFunction) 
                                                         : Promise<void> {
     try {
         const { id } = req.params
+        if (!id || isNaN(Number(id))) {
+            throw new ApiError(400, "укажите корректный id")
+        }
         const agent: Agent = await getAgent(Number(id))
         
         res.status(200).json(instanceToPlain(agent)) // @exclude hash password поле
@@ -31,7 +34,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction)
     }
 }
 
-export async function getAll(req: Request, res: Response, next: NextFunction) 
+export async function getAllAgents(req: Request, res: Response, next: NextFunction) 
                                                     : Promise<void> {
     try {
         const agents: Agent[] = await appDataSource.getRepository(Agent).find()
@@ -42,7 +45,7 @@ export async function getAll(req: Request, res: Response, next: NextFunction)
     }
 }
 
-export async function getShort(req: Request, res: Response, next: NextFunction) 
+export async function getShortAgents(req: Request, res: Response, next: NextFunction) 
                                                     : Promise<void> {
     try {
         const actors = await appDataSource.getRepository(Agent)

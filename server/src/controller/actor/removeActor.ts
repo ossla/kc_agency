@@ -5,12 +5,16 @@ import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
 import { getActor } from "./getActor"
 import { removeActorFolder } from "../services/fileSystemService"
+import ApiError from "../../error/apiError"
 
 
-export async function remove(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function removeActor(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {
-        const { id } = req.body
-        const actor = await getActor(id) // внутри проверит валидность id
+        const { id } = req.params
+        if (!id || isNaN(Number(id))) {
+            throw new ApiError(400, "укажите корректный id")
+        }
+        const actor = await getActor(Number(id))
 
         await removeActorFolder(actor.directory)
         await appDataSource.getRepository(Actor).delete({ id: actor.id })

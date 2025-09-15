@@ -10,7 +10,7 @@ import { CustomFileType, /** makeAgentPhotoName,*/ removePhoto, savePhoto } from
 import ApiError from "../../error/apiError"
 
 
-export async function create(req: ICustomRequest, res: Response, next: NextFunction) {
+export async function createAgent(req: ICustomRequest, res: Response, next: NextFunction) {
     let photoName: string = ""
     try {
         console.log("create agent controller starts...")

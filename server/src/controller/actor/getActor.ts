@@ -4,6 +4,7 @@ import processApiError from "../../error/processError"
 import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
 import { GenderEnum } from "./actorTypes"
+import ApiError from "../../error/apiError"
 
 
 export async function getActor(id: number): Promise<Actor> {
@@ -11,15 +12,18 @@ export async function getActor(id: number): Promise<Actor> {
                                             .getRepository(Actor)
                                             .findOne({where: { id }})
     if (!actor) {
-        throw new Error("актера с таким id нет")
+        throw new ApiError(400, "актера с таким id нет")
     }
 
     return actor
 }
 
-export async function getOne(req: Request, res: Response, next: NextFunction) {
+export async function getOneActor(req: Request, res: Response, next: NextFunction) {
     try {
         const { id } = req.params
+        if (!id || isNaN(Number(id))) {
+            throw new ApiError(400, "укажите корректный id")
+        }
         const agent = await getActor(Number(id))
         
         res.status(200).json(agent)
@@ -29,7 +33,7 @@ export async function getOne(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function getAllFull(req: Request, res: Response, next: NextFunction) {
+export async function getAllFullActors(req: Request, res: Response, next: NextFunction) {
     try {
         const actors: Actor[] = await appDataSource.getRepository(Actor).find()
         res.status(200).json(actors)
@@ -39,7 +43,7 @@ export async function getAllFull(req: Request, res: Response, next: NextFunction
     }
 }
 
-export async function getShort(req: Request, res: Response, next: NextFunction) {
+export async function getShortActors(req: Request, res: Response, next: NextFunction) {
     try {
         const actors = await appDataSource.getRepository(Actor)
             .createQueryBuilder("actor")
@@ -69,10 +73,10 @@ async function getShortByGender(res: Response, gender: GenderEnum, next: NextFun
     }
 }
 
-export async function getShortMen(req: Request, res: Response, next: NextFunction) {
+export async function getShortMenActors(req: Request, res: Response, next: NextFunction) {
     getShortByGender(res, GenderEnum.Man, next)
 }
 
-export async function getShortWomen(req: Request, res: Response, next: NextFunction) {
+export async function getShortWomenActors(req: Request, res: Response, next: NextFunction) {
     getShortByGender(res, GenderEnum.Woman, next)
 }
