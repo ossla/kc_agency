@@ -27,7 +27,7 @@ export function authMiddleware (req: Request, res: Response, next: NextFunction)
             res.status(403).json("Неверно указан access токен")
         }
         
-        const user = decoded as JwtPayload & IJwtAccessPayload
+        const user = decoded as JwtPayload & IJwtAccessPayload 
         
         if (!user.id || !user.email || !user.name || user.isAdmin === undefined) {
             res.status(403).json("Неверно указан access токен")

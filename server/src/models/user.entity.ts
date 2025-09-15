@@ -1,15 +1,13 @@
 import { Exclude } from "class-transformer"
-import { Actor } from "./actor.entity"
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    OneToMany,
-    CreateDateColumn,
-    UpdateDateColumn,
-    OneToOne,
-    JoinColumn
+    OneToMany
 } from "typeorm"
+
+import { Favorite } from "./favorite.entity"
+
 
 @Entity()
 export class User {
@@ -28,4 +26,7 @@ export class User {
     @Column({ type: "varchar", length: 255, nullable: false })
     @Exclude()
     hashPassword!: string    // хэш пароля
+
+    @OneToMany(() => Favorite, (fav) => fav.user)
+    favorites!: Favorite[]
 }

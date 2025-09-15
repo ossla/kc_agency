@@ -47,20 +47,19 @@ export interface TokenPair {
     access: string;
 }
 
-// обрабатывает данные юзера, создаёт пару токенов и сохраняет/обновляет refresh данные
 export async function createTokens(user: User, stored?: RefreshToken): Promise<TokenPair> {
-    const deviceId: string = crypto.randomUUID()
+    // генерация новой пары токенов, хэша refresh
+    const deviceId: string = crypto.randomUUID() 
     const accessPayload: IJwtAccessPayload = { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin }
     const refreshPayload: IJwtRefreshPayload = { id: user.id, email: user.email, deviceId }
-    const access = signAccessToken(accessPayload)
-    const refresh = signRefreshToken(refreshPayload)
-    const tokenHash = hashToken(refresh)
+    const access: string = signAccessToken(accessPayload)
+    const refresh: string = signRefreshToken(refreshPayload)
+    const tokenHash: string = hashToken(refresh)
 
+    // сохранение refreshToken в БД
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
-
     if (stored) {
         stored.tokenHash = tokenHash
-        stored.deviceId = deviceId
         stored.expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
         await refreshRepo().save(stored)
     } else {

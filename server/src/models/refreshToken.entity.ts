@@ -16,12 +16,6 @@ export class RefreshToken {
     @Column({ type: "timestamptz" })
     expiresAt!: Date
 
-    @Column({ default: false })
-    revoked!: boolean
-
-    @Column()
-    deviceId!: string
-
     @CreateDateColumn()
     createdAt!: Date
 }

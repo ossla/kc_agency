@@ -12,8 +12,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) : 
             const tokenHash = hashToken(token)
             const stored = await refreshRepo().findOne({ where: { tokenHash }})
             if (stored) {
-                stored.revoked = true
-                await refreshRepo().save(stored)
+                await refreshRepo().delete(stored)
             }
         }
         res.clearCookie(COOKIE_NAME, { path: "/" })

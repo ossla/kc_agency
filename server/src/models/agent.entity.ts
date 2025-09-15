@@ -1,4 +1,3 @@
-import { Actor } from "./actor.entity"
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -6,10 +5,9 @@ import {
     OneToMany,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToOne,
-    JoinColumn
 } from "typeorm"
-import { Exclude } from "class-transformer"
+
+import { Actor } from "./actor.entity"
 
 
 @Entity()
