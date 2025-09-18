@@ -1,7 +1,11 @@
-import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "../interfaces/IAgent";
+import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "./types/agentTypes";
 import { GenderEnum } from "./types/enums";
 
 class fetchAgents {
+    // ================== CREATE ==================
+    // ================== EDIT ==================
+    // ================== DELETE ==================
+    // ================== GET ==================
     static async getShort(): Promise<IShortAgent[]> {
         
         const response = await fetch(`http://localhost:3001/api/agent/`, {method: "GET"})

@@ -4,6 +4,10 @@ import { ILanguage, toILanguage } from "../interfaces/ILanguage"
 import { cityURL, eyeURL, languageURL } from "./URLs"
 
 class fetchRelevant {
+    // ================== CREATE ==================
+    // ================== EDIT ==================
+    // ================== DELETE ==================
+    // ================== GET ==================
     static async getCities() : Promise<ICity[]> {
         const response = await fetch(cityURL, { method: "GET" })
         const data = await response.json()

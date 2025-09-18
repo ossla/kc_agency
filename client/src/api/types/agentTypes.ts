@@ -27,7 +27,6 @@ export interface IAgent {
     photo: string,
     telegram?: string,
     VK?: string,
-    isAdmin: boolean,
     createdAt: Date,
     updatedAt: Date
 }
@@ -44,7 +43,6 @@ export function toIAgent(raw: any): IAgent {
         description: raw.description ?? undefined,
         telegram: raw.telegram ?? undefined,
         VK: raw.VK ?? undefined,
-        isAdmin: raw.isAdmin ?? undefined,
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
     }

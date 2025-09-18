@@ -4,6 +4,10 @@ import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } fro
 
 
 class fetchActors {
+    // ================== CREATE ==================
+    // ================== EDIT ==================
+    // ================== DELETE ==================
+    // ================== GET ==================
     static async getShort(): Promise<IShortActor[]> {
         const response = await fetch(getActorsURL, {method: "GET"})
         const data = await response.json()
@@ -36,7 +40,8 @@ class fetchActors {
             Object.entries(filters).filter(([k, v]) => v != null)
         )
         
-        // гарантия того, что будут отправляться именно массивы с клиента 
+        // гарантия того, что будут отправляться именно массивы айди из таблиц 
+        // city, eye... с клиента 
         if (cleanedFilters.cityIds && typeof cleanedFilters.cityIds === "string") {
             cleanedFilters.cityIds = cleanedFilters.cityIds.split(",").map(Number);
         }
