@@ -11,10 +11,10 @@ import { getUser } from "../controller/user/getUser"
 
 const userRouter: Express = express()
 
+userRouter.post("/", authMiddleware, auth)
 userRouter.post("/registration", registration)
-userRouter.post("/auth", auth)
 userRouter.post("/login", login)
-userRouter.post("/logout", logout)
+userRouter.post("/logout", authMiddleware, logout)
 userRouter.get("/:id", authMiddleware, getUser)
 
 userRouter.post("/:userId/favorites/:actorId", authMiddleware, addFavorite)

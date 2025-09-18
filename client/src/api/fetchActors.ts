@@ -1,8 +1,6 @@
-import { IActor, toIActor } from "../interfaces/IActor"
-import { IShortActor, toIShortActor } from "../interfaces/IActor";
-import { FilterActorType } from "../types/actorTypes";
-import { GenderEnum } from "../types/enums";
-import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./server_url";
+import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
+import { GenderEnum } from "./types/enums";
+import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
 
 
 class fetchActors {

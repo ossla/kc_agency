@@ -8,6 +8,6 @@ export const createAgentSchema = z.object({
     phone: z.string().min(1),
     description: z.string().optional(),
     telegram: z.string().optional(),
-    vk: z.string().optional(),
+    vk: z.string().optional()
 })
 export type CreateAgentType = z.infer<typeof createAgentSchema>

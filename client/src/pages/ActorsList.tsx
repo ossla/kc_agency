@@ -4,7 +4,7 @@ import Filters from "../elements/Filters"
 import Card from "../elements/Card"
 import fetchActors from "../api/fetchActors"
 import "../styles/Page.css"
-import { FilterActorType } from "../types/actorTypes"
+import { FilterActorType } from "../api/types/actorTypes"
 import Loading from "../elements/Loading"
 
 

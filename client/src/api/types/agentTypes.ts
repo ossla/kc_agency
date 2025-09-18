@@ -1,3 +1,21 @@
+
+// Типы для api хранятся в данном файле:
+// * REQUEST для формирования запроса
+// * RESPONSE для парсинга входящих данных
+
+// ================================ REQUEST ================================
+export interface CreateAgentType {
+    firstName: string,
+    lastName: string,
+    middleName: string,
+    email: string,
+    phone: string,
+    description: string,
+    telegram: string,
+    vk: string
+}
+
+// ================================ RESPONSE ================================
 export interface IAgent {
     id: number,
     firstName: string,
@@ -13,7 +31,6 @@ export interface IAgent {
     createdAt: Date,
     updatedAt: Date
 }
-
 
 export function toIAgent(raw: any): IAgent {
     return {
@@ -40,7 +57,7 @@ export interface IShortAgent {
     avatarUrl: string
 }
 
-export function toIShortAgent(raw: any): IShortAgent{
+export function toIShortAgent(raw: any): IShortAgent {
     return {
         id: raw.id,
         firstName: raw.firstName,

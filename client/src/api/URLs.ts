@@ -23,3 +23,8 @@ const relevantURL = serverURL + "/api/relevant"
 export const cityURL = relevantURL + "/city"
 export const eyeURL = relevantURL + "/eye"
 export const languageURL = relevantURL + "/language"
+
+export const mainAuthURL = serverURL + "/auth"
+export const registrationURL = mainAuthURL + "/registration"
+export const loginURL = mainAuthURL + "/login"
+export const authURL = mainAuthURL + "/"

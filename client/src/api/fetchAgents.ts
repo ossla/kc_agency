@@ -1,5 +1,5 @@
 import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "../interfaces/IAgent";
-import { GenderEnum } from "../types/enums";
+import { GenderEnum } from "./types/enums";
 
 class fetchAgents {
     static async getShort(): Promise<IShortAgent[]> {

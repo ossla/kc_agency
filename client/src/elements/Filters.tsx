@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FilterActorType } from "../types/actorTypes";
-import { GenderEnum } from "../types/enums";
+import { FilterActorType } from "../api/types/actorTypes";
+import { GenderEnum } from "../api/types/enums";
 
 
 interface FiltersProps {

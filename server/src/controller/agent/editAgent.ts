@@ -26,7 +26,7 @@ function setName(agent: Agent, name: IName) {
     }
 }
 
-function setAgentField<T extends keyof Agent>(agent: Agent, field: T, value: Agent[T] | undefined) {    
+function setAgentStringField<T extends keyof Agent>(agent: Agent, field: T, value: Agent[T] | undefined) {    
     if (value !== undefined) {
         agent[field] = value
     }
@@ -53,11 +53,11 @@ export async function editAgent(req: Request, res: Response, next: NextFunction)
 
         let agent: Agent = await getAgent(Number(id))
         setName(agent, {first: firstName, last: lastName, middle: middleName})
-        setAgentField(agent, "email", email)
-        setAgentField(agent, "phone", phone)
-        setAgentField(agent, "description", description)
-        setAgentField(agent, "telegram", telegram)
-        setAgentField(agent, "vk", vk)
+        setAgentStringField(agent, "email", email)
+        setAgentStringField(agent, "phone", phone)
+        setAgentStringField(agent, "description", description)
+        setAgentStringField(agent, "telegram", telegram)
+        setAgentStringField(agent, "vk", vk)
 
         const newAvatar: CustomFileType = req.files?.newAvatar
         if (newAvatar) {

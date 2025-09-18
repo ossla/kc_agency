@@ -3,10 +3,10 @@ import { z } from "zod"
 
 // create
 export const createActorSchema = z.object({
-    dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
-    agentId: z.string().min(1),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
+    dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
+    agentId: z.string().min(1),
     gender: z.string(),
 
     middleName: z.string().optional(),
