@@ -1,6 +1,4 @@
-import { ICity, toICity } from "../interfaces/ICity"
-import { IEyeColor, toIEyeColor } from "../interfaces/IEyeColor"
-import { ILanguage, toILanguage } from "../interfaces/ILanguage"
+import { ICity, IEyeColor, ILanguage, toICity, toIEyeColor, toILanguage } from "./types/relevantTypes"
 import { cityURL, eyeURL, languageURL } from "./URLs"
 
 class fetchRelevant {

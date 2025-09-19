@@ -1,6 +1,6 @@
 // Типы для api хранятся в данном файле:
 // * REQUEST для формирования запроса
-// * RESPONSE для парсинга входящих данных
+// * остальное для парсинга входящих данных
 
 // ================================ REQUEST ================================
 export interface RegisterUserType {
@@ -9,7 +9,24 @@ export interface RegisterUserType {
     password: string;
 }
 
-// ================================ RESPONSE ================================
+export interface LoginUserType {
+    email: string;
+    password: string;
+}
+
+// ================================ USER DATA ================================
+export interface IRegistered {
+    id: number;
+    email: string;
+}
+
+export function toIRegistered(raw: any): IRegistered {
+    return {
+        id: raw.id,
+        email: raw.email
+    }
+}
+
 export interface IUser {
     id: number;
     name: string;
@@ -23,5 +40,18 @@ export function toIUser(raw: any): IUser {
         name: raw.name,
         email: raw.email,
         isAdmin: raw.isAdmin
+    }
+}
+
+// ================================ AUTH ================================
+export interface IAuthorized {
+    accessToken: string;
+    user: IUser;
+}
+
+export function toIAuthorized(raw: any) {
+    return {
+        accessToken: raw.token,
+        user: toIUser(raw.user)
     }
 }

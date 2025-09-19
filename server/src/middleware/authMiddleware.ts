@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { Jwt, JwtPayload } from 'jsonwebtoken'
 import ApiError from "../error/apiError"
 import processApiError from "../error/processError"
-import { IJwtAccessPayload, verifyAccessToken } from "../controller/user/jwt"
+import { IJwtAccessPayload, verifyAccessToken } from "../controller/auth/jwt"
 
 
 export interface ICustomRequest extends Request {

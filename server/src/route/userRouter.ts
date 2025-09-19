@@ -1,12 +1,12 @@
 import express, { Express } from "express"
 
-import { logout } from "../controller/user/logout"
-import { login } from "../controller/user/login"
-import { registration } from "../controller/user/registration"
-import { auth } from "../controller/user/auth"
-import { addFavorite, getFavorites, removeFavorite } from "../controller/user/favorites"
+import { logout } from "../controller/auth/logout"
+import { login } from "../controller/auth/login"
+import { registration } from "../controller/auth/registration"
+import { auth } from "../controller/auth/auth"
+import { addFavorite, getFavorites, removeFavorite } from "../controller/auth/favorites"
 import { authMiddleware } from "../middleware/authMiddleware"
-import { getUser } from "../controller/user/getUser"
+import { getUser } from "../controller/auth/getUser"
 
 
 const userRouter: Express = express()

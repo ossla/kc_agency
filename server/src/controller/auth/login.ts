@@ -34,7 +34,7 @@ export async function login(req: Request, res: Response, next: NextFunction) : P
             maxAge: REFRESH_TOKEN_EXPIRES_MS
         })
 
-        res.json({ accessToken: tokens.access, user: { id: user.id, email: user.email, isAdmin: user.isAdmin } })
+        res.json({ accessToken: tokens.access, user: { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin } })
 
     } catch (error: unknown) {
         processApiError(error, next)
