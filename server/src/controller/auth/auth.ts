@@ -39,8 +39,10 @@ export async function auth(req: ICustomRequest, res: Response, next: NextFunctio
             maxAge: REFRESH_TOKEN_EXPIRES_MS
         })
 
-        res.json({ accessToken: tokens.access, 
-        user: { id: stored.user.id, email: stored.user.email, isAdmin: stored.user.isAdmin } })
+        res.json({  
+                    accessToken: tokens.access, 
+                    user: { id: stored.user.id, email: stored.user.email, isAdmin: stored.user.isAdmin } 
+                })
 
     } catch (error: unknown) {
         processApiError(error, next)   

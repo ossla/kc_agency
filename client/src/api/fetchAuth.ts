@@ -1,6 +1,7 @@
+import { clearUser, updateUser } from "../context/UserUpdaterBridge"
 import { ResponseHandler } from "./ResponseHandler"
 import { IAuthorized, IRegistered, IUser, LoginUserType, RegisterUserType, toIAuthorized, toIRegistered, toIUser } from "./types/userTypes"
-import { loginURL, registrationURL } from "./URLs"
+import { authURL, loginURL, registrationURL } from "./URLs"
 
 
 class fetchAuth {
@@ -30,20 +31,26 @@ class fetchAuth {
     }
 
     // ================== AUTHENTICATION ==================
-    static async auth(raw: LoginUserType): Promise<IAuthorized> {
-        const response = await fetch(loginURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer 1`
-            },
-            body: JSON.stringify(raw),
-        })
+    static async auth(): Promise<IAuthorized> {
+        try {
+            const response = await fetch(authURL, {
+                method: "POST",
+                credentials: "include", // httpOnly
+            })
 
-        return ResponseHandler<IAuthorized>(response, toIAuthorized)
+            const data = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+            updateUser(toIUser(data.user), data.accessToken)
+            return data
+        } catch (err: any) {
+            if (err.status === 401) {
+                clearUser()
+            }
+            throw err
+        }
     }
 
     // ================== DELETE ==================
+    
 }
 
 export default fetchAuth

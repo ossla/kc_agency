@@ -1,10 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
 import "../styles/Login.css"
 import { IAuthorized } from "../api/types/userTypes"
-import fetchAuth from "../api/fetchAuth"
-import { useNavigate } from "react-router-dom"
 import { DefaultError, processDefaultError } from "../error/ErrorProcessor"
 import { useUser } from "../context/UserContext"
+import fetchAuth from "../api/fetchAuth"
 
 
 async function loginFunc(email: string | undefined, password: string | undefined): Promise<IAuthorized> {
