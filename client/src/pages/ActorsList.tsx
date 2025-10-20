@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
-import { IShortActor } from "../interfaces/IActor"
 import Filters from "../elements/Filters"
 import Card from "../elements/Card"
 import fetchActors from "../api/fetchActors"
 import "../styles/Page.css"
-import { FilterActorType } from "../api/types/actorTypes"
+import { FilterActorType, IShortActor } from "../api/types/actorTypes"
 import Loading from "../elements/Loading"
 
 

@@ -21,7 +21,7 @@ class fetchAuth {
         const response = await fetch(loginURL, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(raw),
         })
@@ -30,7 +30,20 @@ class fetchAuth {
     }
 
     // ================== AUTHENTICATION ==================
-    
+    static async auth(raw: LoginUserType): Promise<IAuthorized> {
+        const response = await fetch(loginURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer 1`
+            },
+            body: JSON.stringify(raw),
+        })
+
+        return ResponseHandler<IAuthorized>(response, toIAuthorized)
+    }
 
     // ================== DELETE ==================
 }
+
+export default fetchAuth

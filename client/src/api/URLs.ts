@@ -1,3 +1,5 @@
+import path from "path"
+
 export const serverURL = `http://${process.env.REACT_APP_SHOST}:${process.env.REACT_APP_SPORT}`
 
 /* actors **/
@@ -24,7 +26,8 @@ export const cityURL = relevantURL + "/city"
 export const eyeURL = relevantURL + "/eye"
 export const languageURL = relevantURL + "/language"
 
-export const mainAuthURL = serverURL + "/auth"
+/* user */
+export const mainAuthURL = serverURL + "/api/auth"
 export const registrationURL = mainAuthURL + "/registration"
 export const loginURL = mainAuthURL + "/login"
 export const authURL = mainAuthURL + "/"

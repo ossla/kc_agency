@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { IActor } from "../interfaces/IActor"
 import fetchActors from "../api/fetchActors"
 import Loading from "../elements/Loading"
 import { serverURL } from "../api/URLs"
 import "../styles/Actor.css"
 import "react-photo-view/dist/react-photo-view.css"
 import { PhotoProvider, PhotoView } from "react-photo-view"
+import { IActor } from "../api/types/actorTypes"
 
 export default function Actor() {
     const { id } = useParams()
