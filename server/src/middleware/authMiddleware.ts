@@ -15,17 +15,18 @@ export function authMiddleware (req: Request, res: Response, next: NextFunction)
         return;
     }
 
-    try {
-        const token: string | undefined = req.header('authorization')?.replace('Bearer ', '')
+    try {        
+        const token: string | undefined = req.header('Authorization')?.replace('Bearer ', '')
 
-        if (!token) { 
-           res.status(401).json("Unauthorized")
+        if (!token) {
+            throw new ApiError(401, "Unauthorized")
         }
 
         const decoded: JwtPayload | string = verifyAccessToken(token)
         if (typeof decoded !== "object" || decoded === null) {
             res.status(403).json("Неверно указан access токен")
         }
+        
         
         const user = decoded as JwtPayload & IJwtAccessPayload 
         

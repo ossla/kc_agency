@@ -2,12 +2,12 @@ import { useContext } from "react"
 import { Link } from "react-router-dom"
 
 import { ACTORS } from "../routes"
-import { UserContext } from "../context/UserContext"
 import "../styles/Navbar.css"
+import { useUser } from "../context/UserContext"
 
 
 export default function Navbar() {
-    const user = useContext(UserContext)
+    const { user } = useUser()
 
     return (
         <nav className="navbar">
@@ -29,10 +29,17 @@ export default function Navbar() {
                 <li>
                     <Link to="/agents">Агенты</Link>
                 </li>
-                <li>
-                    <Link to="/login">Войти</Link>
-                </li>
             </ul>
+            {
+                user ?
+                <p>
+                    <Link to={`/profile/${user.id}`}>{user.name}</Link>
+                </p>
+                :
+                <p>
+                    <Link to="/login">Войти</Link>
+                </p>
+            }
         </nav>
     );
 }

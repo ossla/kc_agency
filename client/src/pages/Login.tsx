@@ -7,24 +7,14 @@ import { useUser } from "../context/UserContext"
 import fetchAuth from "../api/fetchAuth"
 
 
-async function loginFunc(email: string | undefined, password: string | undefined): Promise<IAuthorized> {
-    if (!email || !password || email === "" || password === "") {
-        throw new Error("Все поля должны быть заполнены")
-    }
-    const authData: IAuthorized = await fetchAuth.login({email, password})
-    return authData
-}
-
 export default function Login() {
     const [email, setEmail] = useState<string>()
     const [password, setPassword] = useState<string>()
-    const { setUser } = useUser()
     const navigator = useNavigate()
     
     const loginClick = async () => {
-        const authData: IAuthorized = await loginFunc(email, password)
-        setUser(authData.user)
-        navigator("/", {replace: true}) // "replace" для невозможности вернуться назад
+        await fetchAuth.login({email, password})
+        navigator("/")
     }
 
     return (

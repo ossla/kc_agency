@@ -11,7 +11,7 @@ import { getUser } from "../controller/auth/getUser"
 
 const userRouter: Express = express()
 
-userRouter.post("/", authMiddleware, auth)
+userRouter.post("/", auth)
 userRouter.post("/registration", registration)
 userRouter.post("/login", login)
 userRouter.post("/logout", authMiddleware, logout)

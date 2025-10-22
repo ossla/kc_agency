@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { IUser } from "../api/types/userTypes"
 import { initUserContextBridge } from "./UserUpdaterBridge"
+import { useLocation } from "react-router-dom"
+import fetchAuth from "../api/fetchAuth"
 
 interface UserContextType {
     user: IUser | null
@@ -11,8 +13,22 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | null>(null)
 
+async function authenticate() {
+    try {
+        await fetchAuth.auth()
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 // компонент позволяет уменьшить количество кода в app.tsx
 export function UserProvider({ children }: { children: React.ReactNode }) {
+    const location = useLocation()
+
+    useEffect(() => {
+        authenticate()
+    }, [location.pathname])
+
     const [user, setUser] = useState<IUser | null>(null)
     const [accessToken, setAccessToken] = useState<string | null>(null)
 

@@ -12,7 +12,7 @@ export async function auth(req: ICustomRequest, res: Response, next: NextFunctio
     try {
         
         const token = req.cookies[COOKIE_NAME]
-        if (!token) {
+        if (!token) {            
             throw new ApiError(401, "refresh токен не найден");
         }
 

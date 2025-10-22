@@ -7,6 +7,9 @@ import { authURL, loginURL, registrationURL } from "./URLs"
 class fetchAuth {
     // ================== AUTHORIZATION ==================
     static async registration(raw: RegisterUserType): Promise<IAuthorized> {
+        if (!raw.email || !raw.password || !raw.name) {
+            throw new Error("Должны быть заполнены все поля")
+        }
         const response = await fetch(registrationURL, {
             method: "POST",
             headers: {
@@ -19,16 +22,25 @@ class fetchAuth {
     }
 
     static async login(raw: LoginUserType): Promise<IAuthorized> {
+        if (!raw.email || !raw.password) {
+            throw new Error("Должны быть заполнены все поля")
+        }
+        console.log(raw)
+        
         const response = await fetch(loginURL, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(raw),
         })
 
         const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
         updateUser(data.user, data.accessToken)
+        
+        console.log(data)
+        
         return data
     }
 

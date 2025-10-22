@@ -10,6 +10,7 @@ export async function ResponseHandler<T>(response: Response
     // не json ошибка
     try { 
         data = await response.json()
+        
     } catch {
         const err: HttpError = {
             name: "HttpError",

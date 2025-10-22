@@ -4,14 +4,14 @@
 
 // ================================ REQUEST ================================
 export interface RegisterUserType {
-    name: string;
-    email: string;
-    password: string;
+    name: string | undefined;
+    email: string | undefined;
+    password: string | undefined;
 }
 
 export interface LoginUserType {
-    email: string;
-    password: string;
+    email: string | undefined;
+    password: string| undefined;
 }
 
 // ================================ USER DATA ================================
@@ -40,7 +40,7 @@ export interface IAuthorized {
 
 export function toIAuthorized(raw: any) {
     return {
-        accessToken: raw.token,
+        accessToken: raw.accessToken,
         user: toIUser(raw.user)
     }
 }
