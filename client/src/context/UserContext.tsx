@@ -1,34 +1,38 @@
-// src/context/UserContext.tsx
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { IUser } from "../api/types/userTypes"
 import { initUserContextBridge } from "./UserUpdaterBridge"
 
 interface UserContextType {
-  user: IUser | null
-  setUser: (user: IUser | null) => void
-  accessToken: string | null
-  setAccessToken: (token: string | null) => void
+    user: IUser | null
+    setUser: (user: IUser | null) => void
+    accessToken: string | null
+    setAccessToken: (token: string | null) => void
 }
 
 const UserContext = createContext<UserContextType | null>(null)
 
 // компонент позволяет уменьшить количество кода в app.tsx
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IUser | null>(null)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
+    const [user, setUser] = useState<IUser | null>(null)
+    const [accessToken, setAccessToken] = useState<string | null>(null)
 
-  initUserContextBridge(setUser, setAccessToken)
+    useEffect(() => {
+        initUserContextBridge(setUser, setAccessToken)
+    }, [])
 
-  return (
-    <UserContext.Provider value={{ user, setUser, accessToken, setAccessToken }}>
-      {children}
-    </UserContext.Provider>
-  )
+    return (
+        <UserContext.Provider value={{  user
+								        ,setUser
+									    ,accessToken
+									    , setAccessToken }}>
+            {children}
+        </UserContext.Provider>
+    )
 }
 
-// чтобы каждый раз не писать throw new Error...
+// упрощение хука + error handler
 export function useUser() {
-  const ctx = useContext(UserContext)
-  if (!ctx) throw new Error("useUser должен находиться под UserProvider")
-  return ctx
+    const ctx = useContext(UserContext)
+    if (!ctx) throw new Error("useUser должен находиться под UserProvider")
+    return ctx
 }

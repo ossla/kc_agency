@@ -46,7 +46,6 @@ class fetchAuth {
         } catch (err: any) {
             if (err.status === 401) {
                 clearUser()
-                console.error("401: refresh expired or there is no such user. server: " + err.message)
             }
             throw err
         }
