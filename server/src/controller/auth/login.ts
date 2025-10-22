@@ -7,6 +7,7 @@ import { createTokens, TokenPair } from "./jwt"
 import { User } from "../../models/user.entity"
 import ApiError from "../../error/apiError"
 import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS } from "./config"
+import { IAuthorized, IUser } from "./authTypes"
 
 
 export async function login(req: Request, res: Response, next: NextFunction) : Promise<void> {
@@ -34,7 +35,9 @@ export async function login(req: Request, res: Response, next: NextFunction) : P
             maxAge: REFRESH_TOKEN_EXPIRES_MS
         })
 
-        res.json({ accessToken: tokens.access, user: { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin } })
+        const userResp: IUser = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
+        const resp: IAuthorized = { accessToken: tokens.access, user: userResp }
+        res.status(201).json(resp)
 
     } catch (error: unknown) {
         processApiError(error, next)

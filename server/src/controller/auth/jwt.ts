@@ -59,10 +59,13 @@ export async function createTokens(user: User, stored?: RefreshToken): Promise<T
     // сохранение refreshToken в БД
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
     if (stored) {
+        // изменение существующего, т.к. нет expiresAt
+        // payload не содержит в себе expiresAt, поэтому хэш не нужно изменять.
         stored.tokenHash = tokenHash
         stored.expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRES_MS)
         await refreshRepo().save(stored)
     } else {
+        // создание нового
         const rt = refreshRepo().create({ user, tokenHash, expiresAt })
         await refreshRepo().save(rt)
     }

@@ -12,7 +12,7 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | null>(null)
 
-// для регистрации в App.tsx
+// компонент позволяет уменьшить количество кода в app.tsx
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser | null>(null)
   const [accessToken, setAccessToken] = useState<string | null>(null)
@@ -26,6 +26,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+// чтобы каждый раз не писать throw new Error...
 export function useUser() {
   const ctx = useContext(UserContext)
   if (!ctx) throw new Error("useUser должен находиться под UserProvider")

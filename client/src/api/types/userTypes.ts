@@ -15,18 +15,6 @@ export interface LoginUserType {
 }
 
 // ================================ USER DATA ================================
-export interface IRegistered {
-    id: number;
-    email: string;
-}
-
-export function toIRegistered(raw: any): IRegistered {
-    return {
-        id: raw.id,
-        email: raw.email
-    }
-}
-
 export interface IUser {
     id: number;
     name: string;
@@ -44,6 +32,7 @@ export function toIUser(raw: any): IUser {
 }
 
 // ================================ AUTH ================================
+
 export interface IAuthorized {
     accessToken: string;
     user: IUser;
@@ -55,3 +44,15 @@ export function toIAuthorized(raw: any) {
         user: toIUser(raw.user)
     }
 }
+
+// USER DATA и AUTH типы описаны на сервере в src/controller/auth/authTypes.ts, должны быть те же значения.
+// IAuthorized:
+// {
+//   "accessToken"
+//   "user": {
+//     "id",
+//     "name",
+//     "email",
+//     "isAdmin"
+//   }
+// }

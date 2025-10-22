@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 
 import "../styles/Login.css"
 import { IAuthorized } from "../api/types/userTypes"
-import { DefaultError, processDefaultError } from "../error/ErrorProcessor"
 import { useUser } from "../context/UserContext"
 import fetchAuth from "../api/fetchAuth"
 
@@ -19,26 +18,18 @@ async function loginFunc(email: string | undefined, password: string | undefined
 export default function Login() {
     const [email, setEmail] = useState<string>()
     const [password, setPassword] = useState<string>()
-    const [error, setError] = useState<DefaultError>()
     const { setUser } = useUser()
     const navigator = useNavigate()
     
     const loginClick = async () => {
-        try {
-            const authData: IAuthorized = await loginFunc(email, password)
-            setUser(authData.user)
-            navigator("/", {replace: true}) // "replace" для невозможности вернуться назад
-        } catch (error: any) {
-            setError(processDefaultError(error))
-        }
+        const authData: IAuthorized = await loginFunc(email, password)
+        setUser(authData.user)
+        navigator("/", {replace: true}) // "replace" для невозможности вернуться назад
     }
 
     return (
         <div className="login-container">
             <h1>Вход</h1>
-            {error && error.getError()
-                // <h1>{error.message}</h1>
-            }
             <input 
                 type="text" 
                 placeholder="Логин"

@@ -5,6 +5,7 @@ import { createTokens, hashToken, IJwtAccessPayload, IJwtRefreshPayload, refresh
 import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS } from "./config"
 import processApiError from "../../error/processError"
 import ApiError from "../../error/apiError"
+import { IAuthorized, IUser } from "./authTypes"
 
 
 export async function auth(req: ICustomRequest, res: Response, next: NextFunction) {
@@ -39,10 +40,9 @@ export async function auth(req: ICustomRequest, res: Response, next: NextFunctio
             maxAge: REFRESH_TOKEN_EXPIRES_MS
         })
 
-        res.json({  
-                    accessToken: tokens.access, 
-                    user: { id: stored.user.id, email: stored.user.email, isAdmin: stored.user.isAdmin } 
-                })
+        const userResp: IUser = { id: stored.user.id, email: stored.user.email, name: stored.user.name, isAdmin: stored.user.isAdmin }
+        const resp: IAuthorized = { accessToken: tokens.access, user: userResp }
+        res.status(201).json(resp)
 
     } catch (error: unknown) {
         processApiError(error, next)   

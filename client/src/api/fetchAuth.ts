@@ -1,12 +1,12 @@
 import { clearUser, updateUser } from "../context/UserUpdaterBridge"
 import { ResponseHandler } from "./ResponseHandler"
-import { IAuthorized, IRegistered, IUser, LoginUserType, RegisterUserType, toIAuthorized, toIRegistered, toIUser } from "./types/userTypes"
+import { IAuthorized, LoginUserType, RegisterUserType, toIAuthorized, toIUser } from "./types/userTypes"
 import { authURL, loginURL, registrationURL } from "./URLs"
 
 
 class fetchAuth {
     // ================== AUTHORIZATION ==================
-    static async registration(raw: RegisterUserType): Promise<IRegistered | Error> {
+    static async registration(raw: RegisterUserType): Promise<IAuthorized> {
         const response = await fetch(registrationURL, {
             method: "POST",
             headers: {
@@ -15,7 +15,7 @@ class fetchAuth {
             body: JSON.stringify(raw)
         })
 
-        return ResponseHandler<IRegistered>(response, toIRegistered)
+        return ResponseHandler<IAuthorized>(response, toIAuthorized)
     }
 
     static async login(raw: LoginUserType): Promise<IAuthorized> {
@@ -27,7 +27,9 @@ class fetchAuth {
             body: JSON.stringify(raw),
         })
 
-        return ResponseHandler<IAuthorized>(response, toIAuthorized)
+        const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+        updateUser(data.user, data.accessToken)
+        return data
     }
 
     // ================== AUTHENTICATION ==================
@@ -35,15 +37,16 @@ class fetchAuth {
         try {
             const response = await fetch(authURL, {
                 method: "POST",
-                credentials: "include", // httpOnly
+                credentials: "include", // httpOnly r(efresh токен)
             })
 
-            const data = await ResponseHandler<IAuthorized>(response, toIAuthorized)
-            updateUser(toIUser(data.user), data.accessToken)
+            const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+            updateUser(data.user, data.accessToken)
             return data
         } catch (err: any) {
             if (err.status === 401) {
                 clearUser()
+                console.error("401: refresh expired or there is no such user. server: " + err.message)
             }
             throw err
         }
