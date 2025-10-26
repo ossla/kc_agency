@@ -15,10 +15,13 @@ class fetchAuth {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(raw)
+            body: JSON.stringify(raw),
+            credentials: "include"
         })
 
-        return ResponseHandler<IAuthorized>(response, toIAuthorized)
+        const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+        updateUser(data.user, data.accessToken)
+        return data
     }
 
     static async login(raw: LoginUserType): Promise<IAuthorized> {
@@ -32,15 +35,12 @@ class fetchAuth {
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include",
             body: JSON.stringify(raw),
+            credentials: "include"
         })
 
         const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
         updateUser(data.user, data.accessToken)
-        
-        console.log(data)
-        
         return data
     }
 

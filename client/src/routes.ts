@@ -5,3 +5,4 @@ export const AGENTS = "/agents/"
 export const AGENT = "/agents/:id"
 
 export const LOGIN = "/login" 
+export const REGISTRATION = "/registration" 

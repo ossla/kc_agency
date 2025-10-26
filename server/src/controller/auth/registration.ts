@@ -6,7 +6,7 @@ import { appDataSource } from "../../data-source"
 import processApiError from "../../error/processError"
 import { User } from "../../models/user.entity"
 import ApiError from "../../error/apiError"
-import { SALT_ROUNDS } from "./config"
+import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS, SALT_ROUNDS } from "./config"
 import { createTokens, TokenPair } from "./jwt"
 import { IAuthorized, IUser } from "./authTypes"
 
@@ -39,9 +39,17 @@ export async function registration(req: Request, res: Response, next: NextFuncti
         
         // создание токенов, сохранение refresh
         const tokens: TokenPair = await createTokens(user)
+        res.cookie(COOKIE_NAME, tokens.refresh, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: REFRESH_TOKEN_EXPIRES_MS
+        })
 
         const userResp: IUser = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
         const resp: IAuthorized = { accessToken: tokens.access, user: userResp }
+        
         res.status(201).json(resp)
 
     } catch (error: unknown) {

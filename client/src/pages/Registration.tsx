@@ -6,24 +6,31 @@ import fetchAuth from "../api/fetchAuth"
 import { ACTORS } from "../routes"
 
 
-export default function Login() {
+export default function Registration() {
     const [email, setEmail] = useState<string>()
     const [password, setPassword] = useState<string>()
+    const [name, setName] = useState<string>()
     const navigator = useNavigate()
     
-    const loginClick = async () => {
-        await fetchAuth.login({email, password})
+    const registrationClick = async () => {
+        await fetchAuth.registration({email, name, password})
         navigator(ACTORS)
     }
 
     return (
         <div className="login-container">
-            <h1>Вход</h1>
+            <h1>Регистрация</h1>
             <input 
                 type="text" 
-                placeholder="Логин"
+                placeholder="Почта"
                 onChange={(e) => setEmail(e.target.value)} 
                 value={email} 
+            />
+            <input 
+                type="text" 
+                placeholder="Имя"
+                onChange={(e) => setName(e.target.value)}
+                value={name} 
             />
             <input
                 type="password"
@@ -31,7 +38,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password} 
             />
-            <button onClick={loginClick}>Войти</button>
+            <button onClick={registrationClick}>Регистрация</button>
         </div>
     )
 }

@@ -13,7 +13,7 @@ export default function Navbar() {
         <nav className="navbar">
             <div className="logo">
                 <Link to={ACTORS}>
-                    <img src="logo192.png" alt="Logo" />
+                    <img src="bereg_logo.png" alt="Logo" />
                 </Link>
             </div>
 
@@ -36,9 +36,14 @@ export default function Navbar() {
                     <Link to={`/profile/${user.id}`}>{user.name}</Link>
                 </p>
                 :
-                <p>
-                    <Link to="/login">Войти</Link>
-                </p>
+                <div>
+                    <p>
+                        <Link to="/login">Войти</Link>
+                    </p>
+                    <p>
+                        <Link to="/registration">Регистрация</Link>
+                    </p>
+                </div>
             }
         </nav>
     );

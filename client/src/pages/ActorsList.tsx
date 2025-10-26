@@ -30,6 +30,7 @@ export default function ActorsList() {
 
     return (
         <>
+            <h1>не забудь поставить лого в центр между актерами и агентами</h1>
             <Filters setFilters={handleFiltersChange} />
 
             <div className="page_cards">
