@@ -16,7 +16,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) : 
             }
         }
         res.clearCookie(COOKIE_NAME, { path: "/" })
-        res.status(200).json({ ok: true })
+        res.status(200).json(true)
 
     } catch (error: unknown) {
         processApiError(error, next)

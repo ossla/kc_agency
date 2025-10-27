@@ -1,16 +1,6 @@
 import ApiError from "./apiError"
 import { NextFunction } from "express"
 
-export function processDefaultError(error: unknown) {
-    if (error instanceof Error) {
-        throw new Error(error.message)
-    } else if (typeof error === "string") {
-        throw new Error(error)
-    } else {
-        throw new Error("unexpected err")
-    }
-}
-
 export default function processApiError(error: unknown, next: NextFunction) {
     if (error instanceof ApiError) {
         console.error(error.message)

@@ -20,7 +20,7 @@ export default function Registration() {
     return (
         <div className="login-container">
             <h1>Регистрация</h1>
-            <input 
+            <input
                 type="text" 
                 placeholder="Почта"
                 onChange={(e) => setEmail(e.target.value)} 

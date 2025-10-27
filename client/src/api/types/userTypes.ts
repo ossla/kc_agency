@@ -56,3 +56,9 @@ export function toIAuthorized(raw: any) {
 //     "isAdmin"
 //   }
 // }
+
+// ================================ FAVORITES ================================
+
+export interface Favorites {
+    
+}

@@ -7,8 +7,8 @@ import bodyParser from "body-parser"
 import fileUpload from "express-fileupload"
 
 import { appDataSource } from "./data-source"
-import { processDefaultError } from "./error/processError"
 import router from "./route/router"
+import { errorMiddleware } from "./middleware/errorMiddleware"
 
 
 /* Configuration */
@@ -30,27 +30,23 @@ app.use(bodyParser.urlencoded({extended: false})) // Для парсинга app
 app.use(fileUpload())        // парсинг файлов
 app.use(express.static(path.join(__dirname, "..", "static"))) // папка для хранения данных
 app.use("/api", router)
+app.use(errorMiddleware)
 
 
 async function start() {
-    try {
-        if (!process.env.DBPASS) {
-            throw new Error("Missing DBPASS in .env")
-        }
-
-        await appDataSource
-            .initialize()
-            .then(() => {
-                console.log("Data Source has been initialized!")
-            })
-
-        app.listen(PORT, () => {
-            console.log(`[server]: Server is running at http://localhost:${PORT}`);
-        });
-
-    } catch (error: unknown) {
-        processDefaultError(error)
+    if (!process.env.DBPASS) {
+        throw new Error("Missing DBPASS in .env")
     }
+
+    await appDataSource
+        .initialize()
+        .then(() => {
+            console.log("Data Source has been initialized!")
+        })
+
+    app.listen(PORT, () => {
+        console.log(`[server]: Server is running at http://localhost:${PORT}`);
+    });
 }
 
 start()

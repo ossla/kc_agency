@@ -1,7 +1,7 @@
 import { clearUser, updateUser } from "../context/UserUpdaterBridge"
 import { ResponseHandler } from "./ResponseHandler"
 import { IAuthorized, LoginUserType, RegisterUserType, toIAuthorized, toIUser } from "./types/userTypes"
-import { authURL, loginURL, registrationURL } from "./URLs"
+import { authURL, loginURL, logoutURL, registrationURL } from "./URLs"
 
 
 class fetchAuth {
@@ -64,7 +64,20 @@ class fetchAuth {
     }
 
     // ================== DELETE ==================
-    
+    static async logout(): Promise<boolean> {
+        try {
+            const response = await fetch(logoutURL, {
+                method: "POST",
+                credentials: "include"
+            })
+
+            clearUser()
+            return true
+
+        } catch (error: any) {
+            throw error
+        }
+    }
 }
 
 export default fetchAuth
