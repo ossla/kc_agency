@@ -9,8 +9,6 @@ import fetchAuth from "./api/fetchAuth"
 
 
 export default function App() {
-    
-
     return (
         <Router>
             <UserProvider>

@@ -35,15 +35,7 @@ export default function ActorsList() {
 
             <div className="page_cards">
                 {actors.length !== 0 ?
-                    actors.map((actor) => (
-                        <Card
-                            key={actor.id}
-                            id={actor.id}
-                            firstName={actor.firstName}
-                            lastName={actor.lastName}
-                            imgURL={actor.avatarUrl}
-                        />
-                    )) 
+                    actors.map((actor, idx) => <Card actor={actor} key={idx} />) 
                     : 
                     <p>Ничего не найдено!</p>
                     }

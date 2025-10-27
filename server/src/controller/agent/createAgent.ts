@@ -39,7 +39,7 @@ export async function createAgent(req: ICustomRequest, res: Response, next: Next
         agent.vk = body.vk ?? null
 
         await appDataSource.getRepository(Agent).save(agent)
-        res.status(200).json(agent)
+        res.status(201).json(agent)
 
     } catch (error: any) {
         if (photoName != "") {

@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom"
 
 import NotFound from "./elements/NotFound"
-import { ACTOR, ACTORS, AGENT, AGENTS, LOGIN, REGISTRATION } from "./routes"
+import { ACTOR, ACTORS, AGENT, AGENTS, LOGIN, PROFILE, REGISTRATION } from "./routes"
 import ActorsList from "./pages/ActorsList"
 import Actor from "./pages/Actor"
 import Login from "./pages/Login"
 import Registration from "./pages/Registration"
+import User from "./pages/User"
 
 
 export default function AppRoutes() {
@@ -18,6 +19,7 @@ export default function AppRoutes() {
             
             <Route path={REGISTRATION} element={ < Registration /> } />
             <Route path={LOGIN} element={ < Login /> } />
+            <Route path={PROFILE} element={ < User /> } />
 
             <Route path="*" element={<NotFound />} />
         </Routes>

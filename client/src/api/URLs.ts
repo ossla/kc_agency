@@ -32,3 +32,5 @@ export const registrationURL = mainAuthURL + "/registration"
 export const loginURL = mainAuthURL + "/login"
 export const logoutURL = mainAuthURL + "/logout"
 export const authURL = mainAuthURL + "/"
+
+/* favorites */

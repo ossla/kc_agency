@@ -1,3 +1,4 @@
+import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
 import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
@@ -10,9 +11,8 @@ class fetchActors {
     // ================== GET ==================
     static async getShort(): Promise<IShortActor[]> {
         const response = await fetch(getActorsURL, {method: "GET"})
-        const data = await response.json()
 
-        const actors: IShortActor[] = data.map(toIShortActor)
+        const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
         return actors
     }
 
@@ -20,28 +20,24 @@ class fetchActors {
         const response = await fetch(
                     gender === GenderEnum.man ? getMenActorsURL : getWomenActorsURL
                     , {method: "GET"})
-        const data = await response.json()
-
-        const actors: IShortActor[] = data.map(toIShortActor)
+        const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
         return actors
     }
 
     static async getActor(id: number): Promise<IActor> {        
         const response = await fetch(`${getActorsURL}/${id}`, {method: "GET"})
-        const data = await response.json()
-
-        return toIActor(data)
+        const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
+        return actor
     }
 
     static async filterActor(filters: FilterActorType): Promise<IShortActor[]> {
       
-        // убирает поля, значения которых null
+        // убирает невыбранные фильтры (поля null)
         const cleanedFilters = Object.fromEntries(
             Object.entries(filters).filter(([k, v]) => v != null)
         )
         
-        // гарантия того, что будут отправляться именно массивы айди из таблиц 
-        // city, eye... с клиента 
+        // гарантия того, что будут отправляться именно массивы айди из таблиц (city, eye, etc.) с клиента
         if (cleanedFilters.cityIds && typeof cleanedFilters.cityIds === "string") {
             cleanedFilters.cityIds = cleanedFilters.cityIds.split(",").map(Number);
         }
@@ -59,9 +55,8 @@ class fetchActors {
             },
             body: JSON.stringify(cleanedFilters)
         })
-        const data = await response.json()
 
-        const actors: IShortActor[] = data.map(toIShortActor)
+        const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
         return actors
     }
 }

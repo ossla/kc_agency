@@ -1,3 +1,4 @@
+import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { IAgent, IShortAgent, toIAgent, toIShortAgent } from "./types/agentTypes";
 import { GenderEnum } from "./types/enums";
 
@@ -9,21 +10,15 @@ class fetchAgents {
     static async getShort(): Promise<IShortAgent[]> {
         
         const response = await fetch(`http://localhost:3001/api/agent/`, {method: "GET"})
-        const data = await response.json()
-        console.log(data[0]);
-        
-        
-        const agents: IShortAgent[] = data.map(toIShortAgent)
+        const agents: IShortAgent[] = await ResponseHandlerMap<IShortAgent>(response, toIShortAgent)
         return agents
     }
 
     static async getAgent(id: number): Promise<IAgent> {
-        
-        const response = await fetch(`http://localhost:3001/api/agent/${id}`, {method: "GET"})
-        const data = await response.json()
 
-        console.log(data)
-        return toIAgent(data)
+        const response = await fetch(`http://localhost:3001/api/agent/${id}`, {method: "GET"})
+        const agent: IAgent = await ResponseHandler<IAgent>(response, toIAgent)
+        return agent
     }
 }
 

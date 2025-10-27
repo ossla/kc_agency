@@ -25,7 +25,7 @@ export async function createActor(req: ICustomRequest, res: Response, next: Next
 
         await appDataSource.getRepository(Actor).save(actor)
 
-        res.status(200).json(actor)
+        res.status(201).json(actor)
 
     } catch (error: unknown) {
         // если папка другого актера существует, dirname == "", удалять ее не надо

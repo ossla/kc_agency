@@ -4,5 +4,6 @@ export const ACTOR = "/actors/:id"
 export const AGENTS = "/agents/"
 export const AGENT = "/agents/:id"
 
-export const LOGIN = "/login" 
 export const REGISTRATION = "/registration" 
+export const LOGIN = "/login"
+export const PROFILE = "/profile"

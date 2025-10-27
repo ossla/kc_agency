@@ -1,17 +1,29 @@
 import { useEffect, useState } from "react"
 import { useUser } from "../context/UserContext"
 import Loading from "../elements/Loading"
-import { Favorites } from "../api/types/userTypes"
 import Card from "../elements/Card"
+import fetchFavorites from "../api/fetchFavorites"
+import { IShortActor } from "../api/types/actorTypes"
+
+
 
 
 export default function User() {
-    const { user } = useUser()
-    const [ favorites, setFavorites ] = useState<Favorites[] | null>(null)
+    const { user, accessToken } = useUser()
+    const [ favorites, setFavorites ] = useState<IShortActor[] | null>(null)
 
     useEffect(() => {
+        console.log(user)
+        async function initFavorites() {
+            if (user && accessToken) {
+                setFavorites(await fetchFavorites.get(user.id, accessToken))
+            } else if (user === null) {
+                setFavorites([])
+            }
+        }
 
-    }, [])
+        initFavorites()
+    }, [user, accessToken])
 
     return (
         <div>
@@ -24,9 +36,7 @@ export default function User() {
                     {
                         favorites ?
                         <div>
-                            {favorites.map(f =>
-                                <Card firstName={f.firstName} lastName={f.lastName} imgURL={f.imgURL} id={f.id}/>
-                            )}
+                            {favorites.map((actor, idx) => <Card actor={actor} key={idx} />)}
                         </div>
                         :
                         <Loading />

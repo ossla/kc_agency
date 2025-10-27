@@ -39,12 +39,21 @@ export async function addFavorite(req: ICustomRequest, res: Response, next: Next
         const user = await getUr(Number(userId))
         const actor = await getActor(Number(actorId))
 
+        const exist = await appDataSource.getRepository(Favorite).findOneBy({ 
+            user: { id: Number(userId) },
+            actor: { id: Number(actorId) }
+        })
+        console.log(exist);
+        if (exist) {
+            throw new ApiError(400, "Bad request: Актёр уже добавлен в избранное. Логика клиента нарушена")
+        }
+
         const favorite: Favorite = new Favorite()
         favorite.actor = actor
         favorite.user = user
         await appDataSource.getRepository(Favorite).save(favorite)
 
-        res.status(201).json(favorite)
+        res.status(201).json({message: `актёр ${favorite.actor.id} добавлен пользователю ${favorite.user.id}`})
 
     } catch (error: unknown) {
         processApiError(error, next)   
@@ -90,7 +99,7 @@ export async function getFavorites(req: ICustomRequest, res: Response, next: Nex
             user.favorites.map((fav) => ({
                 id: fav.actor.id,
                 firstName: fav.actor.firstName,
-                lastName: fav.actor.firstName,
+                lastName: fav.actor.lastName,
                 directory: fav.actor.directory
             }))
         )
