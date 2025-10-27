@@ -7,6 +7,7 @@ import { Actor } from "../../models/actor.entity"
 import ApiError from "../../error/apiError"
 import { Favorite } from "../../models/favorite.entity"
 import processApiError from "../../error/processError"
+import { getUr } from "./getUser"
 
 
 function checkIdentificators(param1?: string, param2?: string): void {
@@ -17,14 +18,6 @@ function checkIdentificators(param1?: string, param2?: string): void {
     if (isNaN(Number(param1)) || isNaN(Number(param2))) {
         throw new ApiError(400, "userId & actorId должны быть числами")
     }
-}
-
-async function getUser(userId: number): Promise<User> {
-    const user = await appDataSource.getRepository(User).findOne({ where: { id: Number(userId) }, relations: ["favorites"] })
-    if (!user) {
-        throw new ApiError(404, "не найден пользователь")
-    }
-    return user
 }
 
 async function getActor(actorId: number): Promise<Actor> {
@@ -43,7 +36,7 @@ export async function addFavorite(req: ICustomRequest, res: Response, next: Next
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const user = await getUser(Number(userId))
+        const user = await getUr(Number(userId))
         const actor = await getActor(Number(actorId))
 
         const favorite: Favorite = new Favorite()
@@ -66,7 +59,7 @@ export async function removeFavorite(req: ICustomRequest, res: Response, next: N
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const _ = await getUser(Number(userId))
+        const _ = await getUr(Number(userId))
         const __ = await getActor(Number(actorId))
 
         await appDataSource.getRepository(Favorite).delete({
@@ -91,9 +84,17 @@ export async function getFavorites(req: ICustomRequest, res: Response, next: Nex
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const user = await getUser(Number(userId))
+        const user = await getUr(Number(userId))
 
-        res.status(200).json(user.favorites)
+        res.status(200).json(
+            user.favorites.map((fav) => ({
+                id: fav.actor.id,
+                firstName: fav.actor.firstName,
+                lastName: fav.actor.firstName,
+                directory: fav.actor.directory
+            }))
+        )
+
     } catch (error: unknown) {
         processApiError(error, next)
     }

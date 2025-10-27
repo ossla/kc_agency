@@ -58,7 +58,9 @@ export function toIAuthorized(raw: any) {
 // }
 
 // ================================ FAVORITES ================================
-
 export interface Favorites {
-    
+    firstName: string;
+    lastName: string;
+    imgURL: string;
+    id: number;
 }

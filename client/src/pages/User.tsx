@@ -2,11 +2,12 @@ import { useEffect, useState } from "react"
 import { useUser } from "../context/UserContext"
 import Loading from "../elements/Loading"
 import { Favorites } from "../api/types/userTypes"
+import Card from "../elements/Card"
 
 
 export default function User() {
     const { user } = useUser()
-    const [ favorites, setFavorites ] = useState<Favorites | null>(null)
+    const [ favorites, setFavorites ] = useState<Favorites[] | null>(null)
 
     useEffect(() => {
 
@@ -22,7 +23,11 @@ export default function User() {
                     <h1>Избранное:</h1>
                     {
                         favorites ?
-                        <div></div>
+                        <div>
+                            {favorites.map(f =>
+                                <Card firstName={f.firstName} lastName={f.lastName} imgURL={f.imgURL} id={f.id}/>
+                            )}
+                        </div>
                         :
                         <Loading />
                     }
