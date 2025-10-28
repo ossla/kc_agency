@@ -4,6 +4,17 @@ import { GenderEnum } from "./types/enums";
 
 class fetchAgents {
     // ================== CREATE ==================
+    static async create(accessToken: string, reqFormData: FormData): Promise<IAgent> {
+        const response = await fetch(`http://localhost:3001/api/agent/create`, {
+            method: "POST",
+            body: reqFormData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+        const agent: IAgent = await ResponseHandler<IAgent>(response, toIAgent)
+        return agent
+    }
     // ================== EDIT ==================
     // ================== DELETE ==================
     // ================== GET ==================

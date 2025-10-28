@@ -30,15 +30,12 @@ export default function ActorsList() {
 
     return (
         <>
-            <h1>не забудь поставить лого в центр между актерами и агентами</h1>
             <Filters setFilters={handleFiltersChange} />
 
             <div className="page_cards">
-                {actors.length !== 0 ?
-                    actors.map((actor, idx) => <Card actor={actor} key={idx} />) 
-                    : 
-                    <p>Ничего не найдено!</p>
-                    }
+                {actors.length !== 0 &&
+                    actors.map((actor, idx) => <Card person={actor} isActor={true} key={idx} />) 
+                }
             </div>
         </>
     )

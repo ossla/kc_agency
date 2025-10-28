@@ -2,42 +2,59 @@ import { Link } from "react-router-dom"
 import { ACTORS } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
+import { IUser } from "../api/types/userTypes"
+import { useState } from "react"
 
+function AuthEl(props: { user: IUser | null; classn: string; onClick?: () => void }) {
+    return (
+        <div className={props.classn}>
+            {props.user ? (
+                <Link to="/profile" onClick={props.onClick}>{props.user.name}</Link>
+            ) : (
+                <Link to="/login" onClick={props.onClick}>Войти</Link>
+            )}
+        </div>
+    )
+}
 
 export default function Navbar() {
     const { user } = useUser()
+    const [menuOpen, setMenuOpen] = useState(false)
+
+    const handleLinkClick = () => {
+        setMenuOpen(false)
+    }
+
+    const toggleMenu = () => {
+        setMenuOpen(prev => !prev)
+    }
 
     return (
         <nav className="navbar">
-            <input type="checkbox" id="menu-btn" className="menu-btn" />
-            <label htmlFor="menu-btn" className="menu-icon">
+            {/* скрытый чекбокс больше не нужен */}
+            <div className="menu-icon" onClick={toggleMenu}>
                 <span className="navicon"></span>
-            </label>
+            </div>
 
             <Link to={ACTORS} className="logo-mobile">
                 <img src="bereg_logo.png" alt="Logo" />
             </Link>
 
-            <ul className="menu">
-                <li><Link to="/actors">Актёры</Link></li>
+            <ul className={`menu ${menuOpen ? "open" : ""}`}>
+                <li><Link to="/actors" onClick={handleLinkClick}>Актёры</Link></li>
+                
                 <li className="logo-desktop">
-                    <Link to={ACTORS}>
+                    <Link to={ACTORS} onClick={handleLinkClick}>
                         <img src="bereg_logo.png" alt="Logo" />
                     </Link>
                 </li>
-                <li><Link to="/agents">Агенты</Link></li>
+                
+                <li><Link to="/agents" onClick={handleLinkClick}>Агенты</Link></li>
+
+                <li><AuthEl classn="auth-mobile" user={user} onClick={handleLinkClick} /></li>
             </ul>
 
-            <div className="auth">
-                {user ? (
-                    <Link to="/profile">{user.name}</Link>
-                ) : (
-                    <>
-                        <Link to="/login">Войти</Link>
-                        <Link to="/registration">Регистрация</Link>
-                    </>
-                )}
-            </div>
+            <AuthEl classn="auth-deskop" user={user} />
         </nav>
     )
 }

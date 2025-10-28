@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom"
 import { IShortActor } from "../api/types/actorTypes";
+import { IShortAgent } from "../api/types/agentTypes";
 
 
 interface ICardProps {
-    actor: IShortActor
+    person: IShortActor | IShortAgent
+    isActor: boolean;
 }
 
-export default function Card(props: ICardProps) {
+export default function Card(props: ICardProps) {    
     return (
-        <Link to={`/actors/${props.actor.id}`} className="card_main">
-            <img className="card_avatar" src={props.actor.avatarUrl} alt={`${props.actor.firstName} ${props.actor.lastName}`} />
+        <Link to={`${props.isActor ? "/actors/" : "/agents/"}${props.person.id}`} className="card_main">
+            <img className="card_avatar" src={props.person.avatarUrl} alt={`${props.person.firstName} ${props.person.lastName}`} />
             <h1 className="card_name">
-                {props.actor.firstName} {props.actor.lastName}
+                {props.person.firstName} {props.person.lastName}
             </h1>
         </Link>
     )

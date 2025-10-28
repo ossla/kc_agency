@@ -21,7 +21,6 @@ async function authenticate() {
     }
 }
 
-// компонент позволяет уменьшить количество кода в app.tsx
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const location = useLocation()
 
@@ -46,7 +45,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     )
 }
 
-// упрощение хука + error handler
 export function useUser() {
     const ctx = useContext(UserContext)
     if (!ctx) throw new Error("useUser должен находиться под UserProvider")

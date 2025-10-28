@@ -4,31 +4,33 @@
 // * RESPONSE для парсинга входящих данных
 
 // ================================ REQUEST ================================
-export interface CreateAgentType {
-    firstName: string,
-    lastName: string,
-    middleName: string,
-    email: string,
-    phone: string,
-    description: string,
-    telegram: string,
-    vk: string
-}
+// export interface CreateAgentType {
+//     firstName: string,
+//     lastName: string,
+//     middleName: string,
+//     email: string,
+//     phone: string,
+//     description: string,
+//     telegram: string,
+//     vk: string,
+//     photo: File
+// }
 
 // ================================ RESPONSE ================================
 export interface IAgent {
     id: number,
     firstName: string,
     lastName: string,
-    middleName?: string,
     email: string,
     phone: string,
-    description?: string,
     photo: string,
-    telegram?: string,
-    VK?: string,
     createdAt: Date,
     updatedAt: Date
+    // необязательные поля
+    middleName?: string,
+    description?: string,
+    telegram?: string,
+    VK?: string,
 }
 
 export function toIAgent(raw: any): IAgent {
@@ -36,15 +38,17 @@ export function toIAgent(raw: any): IAgent {
         id: raw.id,
         firstName: raw.firstName,
         lastName: raw.lastName,
-        middleName: raw.middleName ?? undefined,
         email: raw.email,
-        phone: raw.phone ?? undefined,
         photo: raw.photo,
+        createdAt: new Date(raw.createdAt),
+        updatedAt: new Date(raw.updatedAt),
+
+        // необязательные поля
+        middleName: raw.middleName ?? undefined,
+        phone: raw.phone ?? undefined,
         description: raw.description ?? undefined,
         telegram: raw.telegram ?? undefined,
         VK: raw.VK ?? undefined,
-        createdAt: new Date(raw.createdAt),
-        updatedAt: new Date(raw.updatedAt),
     }
 }
 
@@ -60,6 +64,6 @@ export function toIShortAgent(raw: any): IShortAgent {
         id: raw.id,
         firstName: raw.firstName,
         lastName: raw.lastName,
-        avatarUrl:`http://localhost:3001/${raw.photo}`,
+        avatarUrl:`http://localhost:3001/${raw.photo}.jpg`,
     }
 }

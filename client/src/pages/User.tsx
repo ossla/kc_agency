@@ -4,8 +4,8 @@ import Loading from "../elements/Loading"
 import Card from "../elements/Card"
 import fetchFavorites from "../api/fetchFavorites"
 import { IShortActor } from "../api/types/actorTypes"
-
-
+import AgentAdmin from "./AgentAdmin"
+import { Link } from "react-router-dom"
 
 
 export default function User() {
@@ -26,7 +26,7 @@ export default function User() {
     }, [user, accessToken])
 
     return (
-        <div>
+        <div className="container">
             {user ?
                 <div>
                     <h1>{user.name}</h1>
@@ -36,10 +36,14 @@ export default function User() {
                     {
                         favorites ?
                         <div>
-                            {favorites.map((actor, idx) => <Card actor={actor} key={idx} />)}
+                            {favorites.map((actor, idx) => <Card person={actor} isActor={true} key={idx} />)}
                         </div>
                         :
                         <Loading />
+                    }
+                    {
+                        user.isAdmin &&
+                        <Link to="/agent_admin_panel/">AgentAdmin</Link>
                     }
                 </div>
                 :

@@ -1,0 +1,53 @@
+.admin {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin h1{
+    margin: 20px;
+    font-size: 30px;
+}
+.admin h2{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.admin input {
+    width: 50%;
+    border: 1px solid black;
+    margin: 3px;
+    padding: 3px;
+}
+
+.admin textarea {
+    width: 60%;
+    height: 100px;
+    padding: 3px;
+    border: 1px solid black;
+}
+
+.admin br {
+    color: black;
+    display: block;
+}
+
+.admin button {
+  width: 200px;
+  padding: 12px;
+  margin-top: 15px;
+  background: #4a90e2;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.admin button:hover {
+  background: #357abd;
+}

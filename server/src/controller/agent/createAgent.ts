@@ -25,7 +25,7 @@ export async function createAgent(req: ICustomRequest, res: Response, next: Next
             throw new ApiError(400, "Необходимо добавить поле photo для загрузки аватара")
         }
         photoName = crypto.randomUUID()
-        await savePhoto(photo, crypto.randomUUID() + ".jpg")
+        await savePhoto(photo, photoName + ".jpg")
 
         const agent: Agent = new Agent()
         agent.firstName = body.firstName

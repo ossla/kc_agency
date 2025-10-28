@@ -48,3 +48,7 @@
 .login-container button:hover {
   background: #357abd;
 }
+
+.login-proposal {
+  margin-top: 10px;
+}

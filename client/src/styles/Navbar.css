@@ -39,7 +39,7 @@
 
 /* ссылки */
 .menu a,
-.auth a {
+.auth-deskop .auth-mobile a {
     color: #000;
     text-decoration: none;
     font-weight: 500;
@@ -47,7 +47,7 @@
 }
 
 .menu a:hover,
-.auth a:hover {
+.auth-deskop .auth-mobile a:hover {
     color: #555;
 }
 
@@ -59,10 +59,6 @@
 }
 
 /* гамбургер */
-.menu-btn {
-    display: none;
-}
-
 .menu-icon {
     display: none;
     cursor: pointer;
@@ -96,8 +92,19 @@
     top: 7px;
 }
 
-/* адаптив */
+.auth-mobile {
+    display: none;
+}
+
+/* Адаптив */
 @media (max-width: 768px) {
+    .auth-deskop {
+        display: none;
+    }
+    .auth-mobile {
+        display: block;
+    }
+
     .menu-icon {
         display: block;
     }
@@ -133,7 +140,7 @@
         padding: 1rem 0;
     }
 
-    .menu-btn:checked ~ .menu {
+    .menu.open {
         max-height: 400px;
     }
 }
