@@ -14,5 +14,5 @@ export default function Card(props: ICardProps) {
                 {props.actor.firstName} {props.actor.lastName}
             </h1>
         </Link>
-    );
+    )
 }

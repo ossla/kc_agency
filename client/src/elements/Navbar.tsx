@@ -1,6 +1,4 @@
-import { useContext } from "react"
 import { Link } from "react-router-dom"
-
 import { ACTORS } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
@@ -11,40 +9,35 @@ export default function Navbar() {
 
     return (
         <nav className="navbar">
-            <div className="logo">
-                <Link to={ACTORS}>
-                    <img src="bereg_logo.png" alt="Logo" />
-                </Link>
-            </div>
-
             <input type="checkbox" id="menu-btn" className="menu-btn" />
             <label htmlFor="menu-btn" className="menu-icon">
                 <span className="navicon"></span>
             </label>
 
+            <Link to={ACTORS} className="logo-mobile">
+                <img src="bereg_logo.png" alt="Logo" />
+            </Link>
+
             <ul className="menu">
-                <li>
-                    <Link to="/actors">Актёры</Link>
+                <li><Link to="/actors">Актёры</Link></li>
+                <li className="logo-desktop">
+                    <Link to={ACTORS}>
+                        <img src="bereg_logo.png" alt="Logo" />
+                    </Link>
                 </li>
-                <li>
-                    <Link to="/agents">Агенты</Link>
-                </li>
+                <li><Link to="/agents">Агенты</Link></li>
             </ul>
-            {
-                user ?
-                <p>
-                    <Link to={`/profile`}>{user.name}</Link>
-                </p>
-                :
-                <div>
-                    <p>
+
+            <div className="auth">
+                {user ? (
+                    <Link to="/profile">{user.name}</Link>
+                ) : (
+                    <>
                         <Link to="/login">Войти</Link>
-                    </p>
-                    <p>
                         <Link to="/registration">Регистрация</Link>
-                    </p>
-                </div>
-            }
+                    </>
+                )}
+            </div>
         </nav>
-    );
+    )
 }
