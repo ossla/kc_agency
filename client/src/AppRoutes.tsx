@@ -10,6 +10,7 @@ import User from "./pages/User"
 import AgentsList from "./pages/AgentsList"
 import AgentAdmin from "./pages/AgentAdmin"
 import Agent from "./pages/Agent"
+import ActorAdmin from "./pages/ActorAdmin"
 
 
 export default function AppRoutes() {
@@ -26,6 +27,7 @@ export default function AppRoutes() {
             <Route path={PROFILE} element={ < User /> } />
 
             <Route path={AGENT_ADMIN} element={ < AgentAdmin /> } />
+            <Route path={ACTOR_ADMIN} element={ < ActorAdmin /> } />
             
             <Route path="*" element={<NotFound />} />
         </Routes>

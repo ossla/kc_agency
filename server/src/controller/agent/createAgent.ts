@@ -1,5 +1,4 @@
-import { NextFunction, Request, Response } from "express"
-import * as bcrypt from "bcrypt"
+import { NextFunction, Response } from "express"
 
 import { ICustomRequest } from "../../middleware/authMiddleware"
 import { createAgentSchema, CreateAgentType } from "./agentTypes"

@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .admin h1{
@@ -16,7 +17,7 @@
 }
 
 .admin input {
-    width: 50%;
+    width: 60%;
     border: 1px solid black;
     margin: 3px;
     padding: 3px;
@@ -50,4 +51,30 @@
 
 .admin button:hover {
   background: #357abd;
+}
+
+.admin > label {
+    margin-top: 1em;
+}
+
+.gender-selector button {
+    padding: 6px 14px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    background: #eee;
+    color: black;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+.gender-selector button.selected {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+select {
+    width: 60%;
+    text-align: center;
+    border: 1px solid black;
 }

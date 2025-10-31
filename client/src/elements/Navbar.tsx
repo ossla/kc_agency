@@ -51,8 +51,8 @@ export default function Navbar() {
                 
                 <li><Link to="/agents" onClick={handleLinkClick}>Агенты</Link></li>
 
-                <li><AuthEl classn="auth-mobile" user={user} onClick={handleLinkClick} /></li>
             </ul>
+            <AuthEl classn="auth-mobile" user={user} onClick={handleLinkClick} />
 
             <AuthEl classn="auth-deskop" user={user} />
         </nav>

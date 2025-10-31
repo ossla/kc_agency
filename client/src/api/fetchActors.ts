@@ -6,6 +6,17 @@ import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } fro
 
 class fetchActors {
     // ================== CREATE ==================
+    static async create(accessToken: string, reqFormData: FormData): Promise<IActor> {
+        const response = await fetch(`http://localhost:3001/api/actor/create`, {
+            method: "POST",
+            body: reqFormData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+        const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
+        return actor
+    }
     // ================== EDIT ==================
     // ================== DELETE ==================
     // ================== GET ==================

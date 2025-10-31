@@ -8,7 +8,9 @@ class fetchRelevant {
     // ================== GET ==================
     static async getCities() : Promise<ICity[]> {
         const response = await fetch(cityURL, { method: "GET" })
+        console.log(response);
         const data = await response.json()
+        
         return data.map(toICity)
     }
 

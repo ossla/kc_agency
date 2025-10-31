@@ -43,7 +43,10 @@ export default function User() {
                     }
                     {
                         user.isAdmin &&
-                        <Link to="/agent_admin_panel/">AgentAdmin</Link>
+                        <div style={{"display": "flex", "flexDirection": "column", "marginTop": 10, "borderTop": "1px solid black"}}>
+                            <Link to="/agent_admin_panel/">Создать агента</Link>
+                            <Link to="/actor_admin_panel/">Создать актера</Link>
+                        </div>
                     }
                 </div>
                 :
