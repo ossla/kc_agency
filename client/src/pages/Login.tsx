@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 
 import "../styles/Login.css"
 import fetchAuth from "../api/fetchAuth"
-import { ACTORS } from "../routes"
+import { PROFILE } from "../routes"
 
 
 export default function Login() {
@@ -13,7 +13,7 @@ export default function Login() {
 
     const loginClick = async () => {
         await fetchAuth.login({email, password})
-        navigator(ACTORS)
+        navigator(PROFILE)
     }
 
     return (

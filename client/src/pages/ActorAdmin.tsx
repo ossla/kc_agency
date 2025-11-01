@@ -10,24 +10,29 @@ import { ICity, IEyeColor, ILanguage } from "../api/types/relevantTypes"
 import fetchRelevant from "../api/fetchRelevant"
 import fetchAgents from "../api/fetchAgents"
 import { IShortAgent } from "../api/types/agentTypes"
+import ImageCropper from "../utils/ImageCropper"
 
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()
     const navigator = useNavigate()
 
+    // basic data
     const [firstName, setFirstName] = useState<string>()
     const [lastName, setLastName] = useState<string>()
     const [dateOfbirth, setDateOfbirth] = useState<Date>(new Date("1992-01-01"))
     const [gender, setGender] = useState<GenderEnum>()
-    const [avatar, setAvatar] = useState<File>()
-    const [photos, setPhotos] = useState<File[]>([])
     const [height, setHeight] = useState<string>()
     const [clothesSize, setClothesSize] = useState<string>()
     const [description, setDescription] = useState<string>()
-
     const [middleName, setMiddleName] = useState<string>()
 
+    // files
+    const [avatar, setAvatar] = useState<File>()
+    const [tempAvatar, setTempAvatar] = useState<File>()
+    const [photos, setPhotos] = useState<File[]>([])
+
+    // relations
     const [agentId, setAgentId] = useState<string>()
     const [loadedAgents, setLoadedAgents] = useState<IShortAgent[]>([])
 
@@ -45,7 +50,7 @@ export default function ActorAdmin() {
         const files = (event.target as HTMLInputElement).files
 
         if (files && files.length > 0) {
-            setAvatar(files[0])
+            setTempAvatar(files[0])
         }
     }
 
@@ -121,7 +126,7 @@ export default function ActorAdmin() {
                 throw new Error("Авторизуйтесь")
             }
             await fetchActors.create(accessToken, reqFormData)
-            // navigator("/actors/")
+            navigator("/actors/")
 
         } else {
             throw new Error("Необходимо заполнить все обязательные поля!")
@@ -134,7 +139,21 @@ export default function ActorAdmin() {
                 <h1>Админ-актёр</h1>
 
                 <label htmlFor="avatar">Аватар актёра*</label>
-                <input type="file" id="avatar" placeholder="Загрузите аватар" onChange={uploadAvatar} />
+                <>
+                    <input type="file" onChange={uploadAvatar} />
+
+                    {tempAvatar && (
+                    <ImageCropper
+                        imageFile={tempAvatar}
+                        aspect={4 / 5}
+                        onCropped={(cropped) => {
+                        setAvatar(cropped);
+                        setTempAvatar(undefined);
+                        }}
+                        onCancel={() => setTempAvatar(undefined)}
+                    />
+                    )}
+                </>
 
                 <label htmlFor="photos">Фото актёра*</label>
                 <input 

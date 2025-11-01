@@ -1,4 +1,5 @@
-export const ACTORS = "/actors/"
+export const ACTORS_MEN = "/actors/men"
+export const ACTORS_WOMEN = "/actors/women"
 export const ACTOR = "/actors/:id"
 
 export const AGENTS = "/agents/"

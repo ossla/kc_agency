@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 
 import "../styles/Login.css"
 import fetchAuth from "../api/fetchAuth"
-import { ACTORS } from "../routes"
+import { PROFILE } from "../routes"
 
 
 export default function Registration() {
@@ -14,7 +14,7 @@ export default function Registration() {
     
     const registrationClick = async () => {
         await fetchAuth.registration({email, name, password})
-        navigator(ACTORS)
+        navigator(PROFILE)
     }
 
     return (

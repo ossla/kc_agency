@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 
 import NotFound from "./elements/NotFound"
-import { ACTOR, ACTOR_ADMIN, ACTORS, AGENT, AGENT_ADMIN, AGENTS, LOGIN, PROFILE, REGISTRATION } from "./routes"
+import { ACTOR, ACTOR_ADMIN, ACTORS_MEN, ACTORS_WOMEN, AGENT, AGENT_ADMIN, AGENTS, LOGIN, PROFILE, REGISTRATION } from "./routes"
 import ActorsList from "./pages/ActorsList"
 import Actor from "./pages/Actor"
 import Login from "./pages/Login"
@@ -11,12 +11,14 @@ import AgentsList from "./pages/AgentsList"
 import AgentAdmin from "./pages/AgentAdmin"
 import Agent from "./pages/Agent"
 import ActorAdmin from "./pages/ActorAdmin"
+import { GenderEnum } from "./api/types/enums"
 
 
 export default function AppRoutes() {
     return (
         <Routes>
-            <Route path={ACTORS} element={ < ActorsList /> } />
+            <Route path={ACTORS_MEN} element={ < ActorsList gender={GenderEnum.man} /> } />
+            <Route path={ACTORS_WOMEN} element={ < ActorsList gender={GenderEnum.woman} /> } />
             <Route path={AGENTS} element={ < AgentsList /> } />
 
             <Route path={ACTOR} element={ < Actor /> } />
@@ -29,6 +31,7 @@ export default function AppRoutes() {
             <Route path={AGENT_ADMIN} element={ < AgentAdmin /> } />
             <Route path={ACTOR_ADMIN} element={ < ActorAdmin /> } />
             
+            <Route path="/" element={<AgentsList />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )

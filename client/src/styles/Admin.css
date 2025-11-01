@@ -123,3 +123,60 @@ select {
     color: white;
     border-color: #007bff;
 }
+
+.image-cropper-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.cropper-container {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  aspect-ratio: 4 / 5;
+  background: #1f2937; /* gray-800 */
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cropper-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  z-index: 20;
+}
+
+.cropper-button-confirm,
+.cropper-button-cancel {
+  padding: 8px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cropper-button-confirm {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+}
+
+.cropper-button-confirm:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.cropper-button-cancel {
+  background-color: #d1d5db; /* gray-300 */
+  color: #000;
+}
+
+.cropper-button-cancel:hover {
+  background-color: #9ca3af; /* gray-400 */
+}

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ACTORS } from "../routes"
+import { ACTORS_MEN, ACTORS_WOMEN, AGENTS } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
@@ -36,20 +36,20 @@ export default function Navbar() {
                 <span className="navicon"></span>
             </div>
 
-            <Link to={ACTORS} className="logo-mobile">
+            <Link to={AGENTS} className="logo-mobile">
                 <img src="bereg_logo.png" alt="Logo" />
             </Link>
 
             <ul className={`menu ${menuOpen ? "open" : ""}`}>
-                <li><Link to="/actors" onClick={handleLinkClick}>Актёры</Link></li>
+                <li><Link to={ACTORS_MEN} onClick={handleLinkClick}>Актёры</Link></li>
                 
                 <li className="logo-desktop">
-                    <Link to={ACTORS} onClick={handleLinkClick}>
+                    <Link to={AGENTS} onClick={handleLinkClick}>
                         <img src="bereg_logo.png" alt="Logo" />
                     </Link>
                 </li>
                 
-                <li><Link to="/agents" onClick={handleLinkClick}>Агенты</Link></li>
+                <li><Link to={ACTORS_WOMEN} onClick={handleLinkClick}>Актрисы</Link></li>
 
             </ul>
             <AuthEl classn="auth-mobile" user={user} onClick={handleLinkClick} />
