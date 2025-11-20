@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ACTORS_MEN, ACTORS_WOMEN, AGENTS } from "../routes"
+import { ACTORS_MEN, ACTORS_WOMEN, HOME } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
@@ -36,7 +36,7 @@ export default function Navbar() {
                 <span className="navicon"></span>
             </div>
 
-            <Link to={AGENTS} className="logo-mobile">
+            <Link to={HOME} className="logo-mobile">
                 <img src="bereg_logo.png" alt="Logo" />
             </Link>
 
@@ -44,7 +44,7 @@ export default function Navbar() {
                 <li><Link to={ACTORS_MEN} onClick={handleLinkClick}>Актёры</Link></li>
                 
                 <li className="logo-desktop">
-                    <Link to={AGENTS} onClick={handleLinkClick}>
+                    <Link to={HOME} onClick={handleLinkClick}>
                         <img src="bereg_logo.png" alt="Logo" />
                     </Link>
                 </li>

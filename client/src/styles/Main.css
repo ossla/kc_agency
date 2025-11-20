@@ -1,101 +1,115 @@
-/* Reset and base styles  */
-* {
-	padding: 0px;
-	margin: 0px;
-	border: none;
-	font-family: serif;
-}
+/* ===== Reset + Base ===== */
 
 *,
 *::before,
 *::after {
-	box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: serif;
 }
 
-/* Links */
-
-a, a:link, a:visited  {
+a {
     text-decoration: none;
 }
 
-a:hover  {
-    text-decoration: none;
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+    vertical-align: top;
 }
 
-/* Common */
+ul {
+    list-style: none;
+}
 
 aside, nav, footer, header, section, main {
-	display: block;
+    display: block;
 }
 
 h1, h2, h3, h4, h5, h6, p {
     font-size: inherit;
-	font-weight: inherit;
-}
-
-ul, ul li {
-	list-style: none;
-}
-
-img {
-	vertical-align: top;
-}
-
-img, svg {
-	max-width: 100%;
-	height: auto;
+    font-weight: inherit;
 }
 
 address {
-  font-style: normal;
+    font-style: normal;
 }
 
-/* Form */
+/* ===== Form ===== */
 
-input, textarea, button, select {
-	font-family: inherit;
+input,
+textarea,
+button,
+select {
+    font-family: inherit;
     font-size: inherit;
     color: inherit;
-    background-color: transparent;
+    background: transparent;
 }
 
-input::-ms-clear {
-	display: none;
-}
-
-button, input[type="submit"] {
-    display: inline-block;
-    box-shadow: none;
-    background-color: transparent;
-    background: none;
+button,
+input[type="submit"] {
     cursor: pointer;
 }
 
-input:focus, input:active,
-button:focus, button:active {
+input:focus,
+textarea:focus,
+button:focus {
     outline: none;
 }
 
 button::-moz-focus-inner {
-	padding: 0;
-	border: 0;
+    padding: 0;
+    border: 0;
+}
+
+input[type="file"] {
+    max-width: 100%;
 }
 
 label {
-	cursor: pointer;
+    cursor: pointer;
 }
 
-legend {
-	display: block;
-}
-
-input[type='file'] {
-	max-width: 100%;
-}
+/* ===== Layout ===== */
 
 .container {
-	max-width: 700px;
-	margin: auto;
-	display: flex;
-	flex-direction: column;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-content {
+    flex: 1;
+}
+
+/* ===== Footer ===== */
+
+.agency-footer {
+    background-color: #4b4b4b;
+    color: #f7f7f7;
+    font-size: 14px;
+    text-align: center;
+    padding: 15px 20px;
+    flex-shrink: 0;
+}
+
+.footer-main {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.footer-small {
+    font-size: 12px;
+    color: #777;
 }

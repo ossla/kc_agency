@@ -11,14 +11,25 @@ import { IActor } from "../api/types/actorTypes"
 export default function Actor() {
     const { id } = useParams()
     const [actor, setActor] = useState<IActor>()
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const loadData = async () => { setActor(await fetchActors.getActor(Number(id))) } 
+        const loadData = async () => { 
+                try {
+                    setActor(await fetchActors.getActor(Number(id)))
+                } catch (e: any) {
+                    setError("Не удалось загрузить актёра")
+                }
+            }
         loadData()
     }, [])
 
     if (!actor) {
         return <Loading />
+    }
+
+    if (error) {
+        return <h1>{error}</h1>
     }
 
     return (

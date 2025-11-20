@@ -11,14 +11,25 @@ import { IAgent } from "../api/types/agentTypes"
 export default function Agent() {
     const { id } = useParams()
     const [agent, setAgent] = useState<IAgent>()
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const loadData = async () => { setAgent(await fetchAgents.getAgent(Number(id))) } 
+        const loadData = async () => { 
+                try {
+                    setAgent(await fetchAgents.getAgent(Number(id)))
+                } catch (e: any) {
+                    setError("Не удалось загрузить агента")
+                }
+            }
         loadData()
     }, [])
 
     if (!agent) {
         return <Loading />
+    }
+
+    if (error) {
+        return <h1>{error}</h1>
     }
 
     return (

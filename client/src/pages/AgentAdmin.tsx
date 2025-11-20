@@ -5,6 +5,7 @@ import fetchAuth from "../api/fetchAuth"
 import fetchAgents from "../api/fetchAgents"
 import { useUser } from "../context/UserContext"
 import { useNavigate } from "react-router-dom"
+import ImageCropper from "../utils/ImageCropper"
 
 
 export default function AgentAdmin() {
@@ -18,26 +19,28 @@ export default function AgentAdmin() {
     const [telegram, setTelegram] = useState<string>()
     const [vk, setVk] = useState<string>()
     const [description, setDescription] = useState<string>()
-    const [photo, setPhoto] = useState<File>()
     const navigator = useNavigate()
 
-    const uploadContent = (event: React.FormEvent) => {
+    const [avatar, setAvatar] = useState<File>()
+    const [tempAvatar, setTempAvatar] = useState<File>()
+
+    const uploadAvatar = (event: React.FormEvent) => {
         const files = (event.target as HTMLInputElement).files
 
         if (files && files.length > 0) {
-            setPhoto(files[0])
+            setTempAvatar(files[0])
         }
     }
 
     const createClick = async () => {
-        if (firstName && lastName && email && phone && photo) {
+        if (firstName && lastName && email && phone && avatar) {
             const reqFormData: FormData = new FormData()
 
             reqFormData.append("firstName", firstName)
             reqFormData.append("lastName", lastName)
             reqFormData.append("email", email)
             reqFormData.append("phone", phone)
-            reqFormData.append("photo", photo)
+            reqFormData.append("photo", avatar)
             // необязательные поля
             if (middleName) reqFormData.append("middleName", middleName)
             if (description) reqFormData.append("description", description)
@@ -69,8 +72,22 @@ export default function AgentAdmin() {
                 <label htmlFor="middleName">Отчество</label>
                 <input type="text" id="middleName" value={middleName} onChange={e => setMiddleName(e.target.value)} placeholder="Отчество" />
                 
-                <label htmlFor="photoFile">Аватар (фото) агента</label>
-                <input type="file" id="photoFile" placeholder="Загрузите аватар" onChange={uploadContent} />
+                <label htmlFor="avatar">Аватар актёра*</label>
+                <>
+                    <input type="file" onChange={uploadAvatar} />
+
+                    {tempAvatar && (
+                    <ImageCropper
+                        imageFile={tempAvatar}
+                        aspect={4 / 5}
+                        onCropped={(cropped) => {
+                        setAvatar(cropped);
+                        setTempAvatar(undefined);
+                        }}
+                        onCancel={() => setTempAvatar(undefined)}
+                    />
+                    )}
+                </>
 
                 <h2>Данные для связи с агентом</h2>
                 <label htmlFor="email">Email</label>

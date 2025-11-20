@@ -1,8 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 
 import "./styles/Main.css"
-import App from './App';
+import App from './App'
+import { ErrorBoundary } from './utils/ErrorBoundary'
 
 
 const root = ReactDOM.createRoot(
@@ -10,6 +11,8 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
+    <ErrorBoundary>
       <App />
+    </ErrorBoundary>
   </React.StrictMode>
 )
