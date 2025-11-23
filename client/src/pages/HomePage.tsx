@@ -3,6 +3,40 @@ import fetchEmployees from "../api/fetchEmployees"
 import { IShortEmployee } from "../api/types/employeeTypes"
 import Card from "../elements/Card"
 import Loading from "../elements/Loading"
+import ActorsWheel from "../elements/ActorsWheel"
+
+// export default function AgentsList() {
+//     const [agents, setAgents] = useState<IShortAgent[]>([])
+//     const [error, setError] = useState<string | null>(null)
+
+//     useEffect(() => {
+//         async function load() {
+//             try {
+//                 const data: IShortAgent[] = await fetchAgents.getShort()
+//                 setAgents(data)
+//             } catch(e) {
+//                 setError("что-то пошло не так")
+//             }
+//         }
+//         load()
+//     }, [])
+
+//     if (agents.length === 0) {
+//         return <p>Агенты не загружены</p>
+//     }
+
+//     if (error) {
+//         return <h1>{error}</h1>
+//     }
+
+//     return (
+//         <div className="page_cards">
+//             {agents.length !== 0 &&
+//                 agents.map((agent, idx) => <Card person={agent} isActor={false} key={idx} />)
+//             }
+//         </div>
+//     )
+// }
 
 import "../styles/Cards.css";
 import "../styles/HomePage.css";
@@ -44,7 +78,7 @@ export default function HomePage() {
 
             <section className="actors_section animate-on-scroll">
                 <h2>Наши актёры</h2>
-                <div className="actors_wheel"></div>
+                <ActorsWheel />
             </section>
 
             <section className="agents_section animate-on-scroll">

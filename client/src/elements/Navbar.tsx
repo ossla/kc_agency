@@ -4,6 +4,8 @@ import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
 import { useState } from "react"
+import logo from "../assets/bereg_logo.png"
+
 
 function AuthEl(props: { user: IUser | null; classn: string; onClick?: () => void }) {
     return (
@@ -37,7 +39,7 @@ export default function Navbar() {
             </div>
 
             <Link to={HOME} className="logo-mobile">
-                <img src="bereg_logo.png" alt="Logo" />
+                <img src={logo} alt="Logo" />
             </Link>
 
             <ul className={`menu ${menuOpen ? "open" : ""}`}>

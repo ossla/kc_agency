@@ -1,0 +1,28 @@
+.actors_wheel_container {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.actors_wheel_inner {
+    display: flex;
+    gap: 20px;
+}
+
+.actor_item {
+    flex: 0 0 auto;
+    width: 300px;
+}
+
+.actor_item .card_main {
+    width: 100%;
+}
+
+.actor_item .card_avatar {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.actor_item .card_name {
+    display: none;
+}
