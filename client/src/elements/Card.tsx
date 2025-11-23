@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { IShortActor } from "../api/types/actorTypes";
 import { IShortEmployee } from "../api/types/employeeTypes";
-import { ACTORS, EMPLOYEES, HOME } from "../routes";
+import { ACTORS, EMPLOYEES } from "../routes";
 
 
 interface ICardProps {
