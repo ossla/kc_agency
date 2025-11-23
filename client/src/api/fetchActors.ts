@@ -1,13 +1,13 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
-import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
+import { createActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL, serverURL } from "./URLs";
 
 
 class fetchActors {
     // ================== CREATE ==================
     static async create(accessToken: string, reqFormData: FormData): Promise<IActor> {
-        const response = await fetch(`/api/actor/create`, {
+        const response = await fetch(createActorURL, {
             method: "POST",
             body: reqFormData,
             headers: {
@@ -24,6 +24,7 @@ class fetchActors {
         const response = await fetch(getActorsURL, {method: "GET"})
 
         const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
+        console.log("getShort data: " + JSON.stringify(actors))
         return actors
     }
 
@@ -32,12 +33,14 @@ class fetchActors {
                     gender === GenderEnum.man ? getMenActorsURL : getWomenActorsURL
                     , {method: "GET"})
         const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
+        console.log("getShort data: " + JSON.stringify(actors))
         return actors
     }
 
     static async getActor(id: number): Promise<IActor> {        
-        const response = await fetch(`${getActorsURL}/${id}`, {method: "GET"})
+        const response = await fetch(getActorsURL + "/" + id, {method: "GET"})
         const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
+        console.log("getActor data: " + actor)
         return actor
     }
 
@@ -68,6 +71,7 @@ class fetchActors {
         })
 
         const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
+        console.log("filtered data: " + JSON.stringify(actors))
         return actors
     }
 }

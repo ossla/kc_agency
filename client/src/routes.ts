@@ -1,8 +1,8 @@
 export const ACTORS_MEN = "/actors/men"
 export const ACTORS_WOMEN = "/actors/women"
-export const ACTOR = "/actors/:id"
+export const ACTORS = "/actors/"
 
-export const EMPLOYEE = "/employees/:id"
+export const EMPLOYEES = "/employees/"
 
 export const REGISTRATION = "/registration" 
 export const LOGIN = "/login"

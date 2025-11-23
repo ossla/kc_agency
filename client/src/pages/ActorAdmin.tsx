@@ -193,20 +193,24 @@ export default function ActorAdmin() {
                 </div>
 
                 {/* ===== Agent ===== */}
-                <label htmlFor="employee-list">Агент*</label>
-                <input
-                    list="employee-list"
-                    value={employeeId}
-                    onChange={e => setEmployeeId(e.target.value)}
-                    placeholder="Начните вводить имя агента..."
-                />
-                <datalist id="agent-list">
+                <label>Агент*</label>
+                <div className="employee-radio-group">
                     {loadedEmployees.map((employee) => (
-                        <option key={employee.id} value={employee.id}>
-                            {employee.firstName + " " + employee.lastName}
-                        </option>
+                        <div key={employee.id} className="radio-option">
+                            <input
+                                type="radio"
+                                id={`employee-${employee.id}`}
+                                name="employee"
+                                value={employee.id}
+                                checked={employeeId === employee.id.toString()}
+                                onChange={(e) => setEmployeeId(e.target.value)}
+                            />
+                            <label htmlFor={`employee-${employee.id}`}>
+                                {employee.firstName} {employee.lastName}
+                            </label>
+                        </div>
                     ))}
-                </datalist>
+                </div>
                 
                 <label htmlFor="height">Рост</label>
                 <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />

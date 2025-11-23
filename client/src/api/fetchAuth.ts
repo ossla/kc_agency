@@ -20,6 +20,7 @@ class fetchAuth {
         })
 
         const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+        console.log("registration resp data: " + data)
         updateUser(data.user, data.accessToken)
         return data
     }
@@ -40,6 +41,7 @@ class fetchAuth {
         })
 
         const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+        console.log("login resp data: " + data)
         updateUser(data.user, data.accessToken)
         return data
     }
@@ -53,6 +55,7 @@ class fetchAuth {
             })
 
             const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+            console.log("auth resp data: " + data)
             updateUser(data.user, data.accessToken)
             return data
         } catch (err: any) {

@@ -21,8 +21,7 @@
     align-items: center;
     color: #4b4b4b;
     transition: opacity .2s;
-    max-width: 300px;
-    min-width: 220px
+    width: 300px;
 }
 
 .card_main:hover {
@@ -51,7 +50,22 @@
     }
 
     .card_main {
-        width: 100%;
+        width: 70%;
+        min-width: 350px;
+        min-width: unset;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .page_cards {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    .card_main {
+        width: 80%;
+        min-width: 350px;
         min-width: unset;
     }
 }
