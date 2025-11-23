@@ -7,7 +7,7 @@ import userRouter from "./userRouter"
 const router: Express = express()
 
 router.use('/actor', actorRouter)
-router.use('/emloyee', employeeRouter)
+router.use('/employee', employeeRouter)
 router.use('/relevant', relevantRouter)
 router.use('/auth', userRouter)
 
