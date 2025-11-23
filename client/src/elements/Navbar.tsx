@@ -39,7 +39,7 @@ export default function Navbar() {
             </div>
 
             <Link to={HOME} className="logo-mobile">
-                <img src={logo} alt="Logo" />
+                <img src="/bereg_logo.png" alt="Logo" />
             </Link>
 
             <ul className={`menu ${menuOpen ? "open" : ""}`}>
@@ -47,7 +47,7 @@ export default function Navbar() {
                 
                 <li className="logo-desktop">
                     <Link to={HOME} onClick={handleLinkClick}>
-                        <img src="bereg_logo.png" alt="Logo" />
+                        <img src="/bereg_logo.png" alt="Logo" />
                     </Link>
                 </li>
                 
