@@ -7,7 +7,7 @@ import { filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } fro
 class fetchActors {
     // ================== CREATE ==================
     static async create(accessToken: string, reqFormData: FormData): Promise<IActor> {
-        const response = await fetch(`http://localhost:3001/api/actor/create`, {
+        const response = await fetch(`/api/actor/create`, {
             method: "POST",
             body: reqFormData,
             headers: {
