@@ -1,42 +1,8 @@
 import { useEffect, useState } from "react"
-import fetchAgents from "../api/fetchAgents"
-import { IShortAgent } from "../api/types/agentTypes"
+import fetchEmployees from "../api/fetchEmployees"
+import { IShortEmployee } from "../api/types/employeeTypes"
 import Card from "../elements/Card"
 import Loading from "../elements/Loading"
-
-
-// export default function AgentsList() {
-//     const [agents, setAgents] = useState<IShortAgent[]>([])
-//     const [error, setError] = useState<string | null>(null)
-
-//     useEffect(() => {
-//         async function load() {
-//             try {
-//                 const data: IShortAgent[] = await fetchAgents.getShort()
-//                 setAgents(data)
-//             } catch(e) {
-//                 setError("что-то пошло не так")
-//             }
-//         }
-//         load()
-//     }, [])
-
-//     if (agents.length === 0) {
-//         return <p>Агенты не загружены</p>
-//     }
-
-//     if (error) {
-//         return <h1>{error}</h1>
-//     }
-
-//     return (
-//         <div className="page_cards">
-//             {agents.length !== 0 &&
-//                 agents.map((agent, idx) => <Card person={agent} isActor={false} key={idx} />)
-//             }
-//         </div>
-//     )
-// }
 
 import "../styles/Cards.css";
 import "../styles/HomePage.css";

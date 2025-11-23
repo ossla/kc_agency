@@ -1,7 +1,7 @@
 import fileUpload from "express-fileupload"
 import * as path from "path"
 import * as fs from "fs"
-import { CreateAgentType } from "../agent/agentTypes"
+import { CreateEmployeeType } from "../employee/employeeTypes"
 import { CreateActorType } from "../actor/actorTypes"
 
 
@@ -48,16 +48,6 @@ export async function removePhoto(photoName: string, folderName: string = "") {
         fs.rmSync(filepath)
     }
 }
-
-// export function makeAgentPhotoName(body: CreateAgentType): string {
-//     return  (body.firstName 
-//             + 
-//             body.lastName
-//             + 
-//             body.middleName
-//             +
-//             ".jpg").replace(/\s/, '_')
-// }
 
 export function makeActorDirname(body: CreateActorType): string {
     return body.firstName + body.lastName

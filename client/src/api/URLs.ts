@@ -12,13 +12,12 @@ export const createActorURL = actorURL + "/create"
 export const deleteActorURL = actorURL + "/delete"
 export const editActorURL = actorURL + "/edit"
 
-/* agents **/
-const agentURL = serverURL + "/api/agent"
-export const getAgentURL = agentURL
-export const createAgentURL = agentURL + "/create"
-export const deleteAgentURL = agentURL + "/delete"
-export const filterAgentURL = agentURL + "/filter"
-export const editAgentURL = agentURL + "/edit"
+const employeeURL = serverURL + "/api/employee"
+export const getEmployeeURL = employeeURL
+export const createEmployeeURL = employeeURL + "/create"
+export const deleteEmployeeURL = employeeURL + "/delete"
+export const filterEmployeeURL = employeeURL + "/filter"
+export const editEmployeeURL = employeeURL + "/edit"
 
 /* relevant **/
 const relevantURL = serverURL + "/api/relevant"

@@ -4,8 +4,8 @@ import Loading from "../elements/Loading"
 import Card from "../elements/Card"
 import fetchFavorites from "../api/fetchFavorites"
 import { IShortActor } from "../api/types/actorTypes"
-import AgentAdmin from "./AgentAdmin"
 import { Link } from "react-router-dom"
+import { ACTOR_ADMIN, EMPLOYEE_ADMIN } from "../routes"
 
 
 export default function User() {
@@ -44,8 +44,8 @@ export default function User() {
                     {
                         user.isAdmin &&
                         <div style={{"display": "flex", "flexDirection": "column", "marginTop": 10, "borderTop": "1px solid black"}}>
-                            <Link to="/agent_admin_panel/">Создать агента</Link>
-                            <Link to="/actor_admin_panel/">Создать актера</Link>
+                            <Link to={EMPLOYEE_ADMIN}>Создать агента</Link>
+                            <Link to={ACTOR_ADMIN}>Создать актера</Link>
                         </div>
                     }
                 </div>

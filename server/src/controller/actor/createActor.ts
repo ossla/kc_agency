@@ -9,7 +9,7 @@ import { createActorSchema, CreateActorType, GenderEnum } from "./actorTypes"
 import { Language } from "../../models/language.entity"
 import { EyeColor } from "../../models/eyeColor.entity"
 import { City } from "../../models/city.entity"
-import { getAgent } from "../agent/getAgent"
+import { getEmployee } from "../employee/getEmployee"
 import ApiError from "../../error/apiError"
 
 
@@ -54,7 +54,7 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
 
 // заполнение полей (помимо photos) и связей с другими таблицами
 async function fillActor(actor: Actor, body: CreateActorType) {                         
-    actor.agent = await getAgent(Number(body.agentId))
+    actor.employee = await getEmployee(Number(body.employeeId))
     actor.firstName = body.firstName
     actor.lastName  = body.lastName
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {

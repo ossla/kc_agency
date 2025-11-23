@@ -6,7 +6,7 @@ export const createActorSchema = z.object({
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
-    agentId: z.string().min(1),
+    employeeId: z.string().min(1),
     gender: z.string(),
 
     middleName: z.string().optional(),
@@ -35,7 +35,7 @@ export const editActorSchema = z.object({
     firstName: z.string().min(1).optional(),
     lastName: z.string().min(1).optional(),
     middleName: z.string().optional(),
-    agentId: z.string().min(1).optional(),
+    employeeId: z.string().min(1).optional(),
     gender: z.string().optional(),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()).optional(),
     city: z.string().optional(),
@@ -53,7 +53,7 @@ export type EditActorType = z.infer<typeof editActorSchema>
 
 export const filterActorSchema = z.object({
     search: z.string().optional(),
-    agentId: z.preprocess((val) => Number(val), z.number()).optional(),
+    employeeId: z.preprocess((val) => Number(val), z.number()).optional(),
     minAge: z.preprocess((val) => Number(val), z.number()).optional(),
     maxAge: z.preprocess((val) => Number(val), z.number()).optional(),
     minHeight: z.preprocess((val) => Number(val), z.number()).optional(),

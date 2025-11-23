@@ -10,43 +10,52 @@ import { appDataSource } from "./data-source"
 import router from "./route/router"
 import { errorMiddleware } from "./middleware/errorMiddleware"
 
-
-/* Configuration */
-const app = express()
+// Configuration
 dotenv.config()
-const PORT = process.env.PORT || 3000
+const app = express()
+const PORT = process.env.PORT || 3001
 
-/* Using */
+// Middleware
 app.use(express.json())
 app.use(express.text())
 app.use(cookieParser())
 
-// Когда фронт и бэк на разных портах, браузер требует, чтобы бэкенд отправлял заголовки CORS.
 app.use(cors({
     origin: "http://localhost:3000", // фронт
     credentials: true
 }))
-app.use(bodyParser.urlencoded({extended: false})) // Для парсинга application/xwww-form-urlencoded|multipart/form-data:
-app.use(fileUpload())        // парсинг файлов
-app.use(express.static(path.join(__dirname, "..", "static"))) // папка для хранения данных
+
+// Для парсинга форм и файлов
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(fileUpload())
+
+// Папка для хранения данных
+app.use(express.static(path.join(__dirname, "..", "static")))
+
+// API
 app.use("/api", router)
 app.use(errorMiddleware)
 
+console.log("Routes loaded")
+// передача на фронт
+app.use(express.static(path.join(__dirname, "..", "..", "client", "build")))
+app.use((req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "..", "..", "client", "build", "index.html"))
+})
 
 async function start() {
     if (!process.env.DBPASS) {
         throw new Error("Missing DBPASS in .env")
     }
 
-    await appDataSource
-        .initialize()
+    await appDataSource.initialize()
         .then(() => {
             console.log("Data Source has been initialized!")
         })
 
     app.listen(PORT, () => {
-        console.log(`[server]: Server is running at http://localhost:${PORT}`);
-    });
+        console.log(`[server]: Server is running at http://localhost:${PORT}`)
+    })
 }
 
 start()

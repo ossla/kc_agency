@@ -2,7 +2,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import dotenv from "dotenv"
 
-import { Agent } from "./models/agent.entity"
+import { Employee } from "./models/employee.entity"
 import { Actor } from "./models/actor.entity"
 import { EyeColor } from "./models/eyeColor.entity"
 import { City } from "./models/city.entity"
@@ -27,7 +27,7 @@ export const appDataSource = new DataSource({
     database: process.env.DBNAME,
     synchronize: true,
     logging: false,
-    entities: [Agent, Actor, User, RefreshToken, EyeColor, City, Language, Favorite],
+    entities: [Employee, Actor, User, RefreshToken, EyeColor, City, Language, Favorite],
     migrations: [],
     subscribers: [],
 })

@@ -76,7 +76,7 @@ export async function deletePhoto(req: Request, res: Response, next: NextFunctio
     try {
         const { id, photoIdx } = req.body
         if (!id || photoIdx === undefined) {
-            throw new Error("deletePhoto: не указано поле agentId или photoIdx")
+            throw new Error("deletePhoto: не указано поле employeeId или photoIdx")
         }
         const actor: Actor = await getActor(id)
         const index: number = Number(photoIdx)

@@ -8,8 +8,8 @@ import { GenderEnum } from "../api/types/enums"
 import fetchActors from "../api/fetchActors"
 import { ICity, IEyeColor, ILanguage } from "../api/types/relevantTypes"
 import fetchRelevant from "../api/fetchRelevant"
-import fetchAgents from "../api/fetchAgents"
-import { IShortAgent } from "../api/types/agentTypes"
+import fetchEmployees from "../api/fetchEmployees"
+import { IShortEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
 
 
@@ -33,8 +33,8 @@ export default function ActorAdmin() {
     const [photos, setPhotos] = useState<File[]>([])
 
     // relations
-    const [agentId, setAgentId] = useState<string>()
-    const [loadedAgents, setLoadedAgents] = useState<IShortAgent[]>([])
+    const [employeeId, setEmployeeId] = useState<string>()
+    const [loadedEmployees, setLoadedEmployees] = useState<IShortEmployee[]>([])
 
     const [city, setCity] = useState<string>()
     const [loadedCities, setLoadedCities] = useState<ICity[]>([])
@@ -92,19 +92,19 @@ export default function ActorAdmin() {
             setLoadedCities(await fetchRelevant.getCities())
             setLoadedEyeColors(await fetchRelevant.getEyeColors())
             setLoadedLanguages(await fetchRelevant.getLanguages())
-            setLoadedAgents(await fetchAgents.getShort())
+            setLoadedEmployees(await fetchEmployees.getShort())
         }
         f()
     }, [])
 
 
     const createClick = async () => {
-        if (firstName && lastName && agentId && gender && dateOfbirth && avatar && photos.length != 0) {
+        if (firstName && lastName && employeeId && gender && dateOfbirth && avatar && photos.length != 0) {
             const reqFormData: FormData = new FormData()
 
             reqFormData.append("firstName", firstName)
             reqFormData.append("lastName", lastName)
-            reqFormData.append("agentId", agentId)
+            reqFormData.append("employeeId", employeeId)
             reqFormData.append("gender", gender)
             reqFormData.append("dateOfBirth", dateOfbirth.toDateString())
             reqFormData.append("avatar", avatar)
@@ -193,17 +193,17 @@ export default function ActorAdmin() {
                 </div>
 
                 {/* ===== Agent ===== */}
-                <label htmlFor="agent-list">Агент*</label>
+                <label htmlFor="employee-list">Агент*</label>
                 <input
-                    list="agent-list"
-                    value={agentId}
-                    onChange={e => setAgentId(e.target.value)}
+                    list="employee-list"
+                    value={employeeId}
+                    onChange={e => setEmployeeId(e.target.value)}
                     placeholder="Начните вводить имя агента..."
                 />
                 <datalist id="agent-list">
-                    {loadedAgents.map((agent) => (
-                        <option key={agent.id} value={agent.id}>
-                            {agent.firstName + " " + agent.lastName}
+                    {loadedEmployees.map((employee) => (
+                        <option key={employee.id} value={employee.id}>
+                            {employee.firstName + " " + employee.lastName}
                         </option>
                     ))}
                 </datalist>
@@ -285,7 +285,3 @@ export default function ActorAdmin() {
         </div>
     )
 }
-
-// async function createAgent(newAgent: CreateAgentType) {
-
-// } 

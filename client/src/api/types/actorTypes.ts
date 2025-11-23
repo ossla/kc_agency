@@ -1,7 +1,7 @@
 import { serverURL } from "../URLs";
-import { IAgent } from "./agentTypes";
+import { IEmployee } from "./employeeTypes"
 import { GenderEnum } from "./enums"
-import { ICity, IEyeColor, ILanguage } from "./relevantTypes";
+import { ICity, IEyeColor, ILanguage } from "./relevantTypes"
 
 // Типы для api хранятся в данном файле:
 // * REQUEST для формирования запроса
@@ -12,7 +12,7 @@ export interface CreateActorType {
     firstName: string;
     lastName: string;
     dateOfBirth: Date;
-    agentId: number;
+    employeeId: number;
     gender: GenderEnum;
 
     middleName?: string;
@@ -34,7 +34,7 @@ export interface EditActorType {
     firstName?: string;
     lastName?: string;
     middleName?: string;
-    agentId?: number;
+    employeeId?: number;
     gender?: GenderEnum;
     dateOfBirth?: Date;
     city?: string;
@@ -51,7 +51,7 @@ export interface EditActorType {
 
 export interface FilterActorType {
     search?: string;
-    agentId?: number;
+    employeeId?: number;
     minAge?: number;
     maxAge?: number;
     minHeight?: number;
@@ -81,7 +81,7 @@ export interface IActor {
     linkToFilmTools?: string;
     linkToKinopoisk?: string;
     videoCode?: string;
-    agent: IAgent;
+    employee: IEmployee;
     eyeColor?: IEyeColor;
     city?: ICity;
     languages?: ILanguage[];
@@ -107,7 +107,7 @@ export function toIActor(raw: any): IActor {
         linkToFilmTools: raw.linkToFilmTools ?? undefined,
         linkToKinopoisk: raw.linkToKinopoisk ?? undefined,
         videoCode: raw.videoCode ?? undefined,
-        agent: raw.agent ?? undefined,
+        employee: raw.employee ?? undefined,
         eyeColor: raw.eyeColor ?? undefined,
         city: raw.city ?? undefined,
         languages: raw.languages ?? [],

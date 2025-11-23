@@ -26,9 +26,9 @@ export async function getOneActor(req: Request, res: Response, next: NextFunctio
         if (!id || !Number.isInteger(idNum)) {
             throw new ApiError(400, "укажите корректный id")
         }
-        const agent = await getActor(Number(id))
+        const employee = await getActor(Number(id))
         
-        res.status(200).json(agent)
+        res.status(200).json(employee)
         
     } catch (error: unknown) {
         processApiError(error, next)

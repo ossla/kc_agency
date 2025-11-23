@@ -4,8 +4,8 @@ import { appDataSource } from "../../data-source"
 import { getActor } from "./getActor"
 import { Actor } from "../../models/actor.entity"
 import processApiError from "../../error/processError"
-import { getAgent } from "../agent/getAgent"
-import { Agent } from "../../models/agent.entity"
+import { getEmployee } from "../employee/getEmployee"
+import { Employee } from "../../models/employee.entity"
 import { editActorSchema, EditActorType, GenderEnum } from "./actorTypes"
 import { saveCity, saveColor, saveLanguages } from "./createActor"
 
@@ -44,10 +44,10 @@ function setLinks(actor: Actor, links: ILinks) {
     }
 }
 
-async function setAgent(actor: Actor, agentId: any) {
-    if (agentId) {
-        const agent: Agent = await getAgent(Number(agentId))
-        actor.agent = agent
+async function setEmployee(actor: Actor, employeeId: any) {
+    if (employeeId) {
+        const employee: Employee = await getEmployee(Number(employeeId))
+        actor.employee = employee
     }
 }
 
@@ -105,7 +105,7 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
         setVideo(actor, body.video)
         setDescription(actor, body.description)
 
-        await setAgent(actor, body.agentId)
+        await setEmployee(actor, body.employeeId)
         await saveCity(actor, body.city)
         await saveColor(actor, body.eyeColor)
         await saveLanguages(actor, body.languages)

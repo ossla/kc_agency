@@ -15,9 +15,9 @@ function filterSearch(qb: SelectQueryBuilder<Actor>, search: any) {
     }
 }
 
-function filterByAgent(qb: SelectQueryBuilder<Actor>, agent: any) {
-    if (agent) {
-        qb.andWhere("actor.agent.id = :agentId", { agentId: Number(agent) })
+function filterByEmployee(qb: SelectQueryBuilder<Actor>, employee: any) {
+    if (employee) {
+        qb.andWhere("actor.employee.id = :employeeId", { employeeId: Number(employee) })
     }
 }
 
@@ -105,7 +105,7 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
             .leftJoin("actor.languages", "language")
 
         filterSearch(qb, body.search)
-        filterByAgent(qb, body.agentId)
+        filterByEmployee(qb, body.employeeId)
         filterByCities(qb, body.cityIds)
         filterByEyeColors(qb, body.eyeIds)
         filterByGender(qb, body.gender)
@@ -126,6 +126,7 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
 
         const actors = await qb.getMany()
         res.json(actors)
+
     } catch (error: unknown) {
         processApiError(error, next)
     }

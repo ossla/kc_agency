@@ -1,4 +1,4 @@
-import { Agent } from "./agent.entity"
+import { Employee } from "./employee.entity"
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -61,13 +61,13 @@ export class Actor {
     @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
     photos!: string[]            // фото помимо аватарки
 
-    @ManyToOne(() => Agent, agent => agent.actors, {
+    @ManyToOne(() => Employee, employee => employee.actors, {
         onDelete: "SET NULL",
         eager: true,
         nullable: false
     })
-    @JoinColumn({ name: "agent_id" })
-    agent!: Agent                // к какому агенту относятся
+    @JoinColumn({ name: "employee_id" })
+    employee!: Employee                // к какому агенту относятся
 
     @ManyToOne(() => EyeColor, { eager: true, nullable: true })
     @JoinColumn({ name: "eye_color_id" })
