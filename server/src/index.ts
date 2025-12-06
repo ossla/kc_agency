@@ -10,12 +10,10 @@ import { appDataSource } from "./data-source"
 import router from "./route/router"
 import { errorMiddleware } from "./middleware/errorMiddleware"
 
-// Configuration
 dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Middleware
 app.use(express.json())
 app.use(express.text())
 app.use(cookieParser())
@@ -37,11 +35,12 @@ app.use("/api", router)
 app.use(errorMiddleware)
 
 console.log("Routes loaded")
-// передача на фронт
-app.use(express.static(path.join(__dirname, "..", "..", "client", "build")))
-app.use((req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, "..", "..", "client", "build", "index.html"))
-})
+
+/* production */
+// app.use(express.static(path.join(__dirname, "..", "..", "client", "build")))
+// app.use((req: Request, res: Response) => {
+//     res.sendFile(path.join(__dirname, "..", "..", "client", "build", "index.html"))
+// })
 
 async function start() {
     if (!process.env.DBPASS) {

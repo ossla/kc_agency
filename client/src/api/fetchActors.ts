@@ -32,7 +32,7 @@ class fetchActors {
         const response = await fetch(
                     gender === GenderEnum.man ? getMenActorsURL : getWomenActorsURL
                     , {method: "GET"})
-        const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)
+        const actors: IShortActor[] = await ResponseHandlerMap<IShortActor>(response, toIShortActor)            
         console.log("getShort data: " + JSON.stringify(actors))
         return actors
     }

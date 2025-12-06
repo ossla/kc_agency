@@ -11,6 +11,7 @@ import fetchRelevant from "../api/fetchRelevant"
 import fetchEmployees from "../api/fetchEmployees"
 import { IShortEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
+import { ACTORS, ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 
 
 export default function ActorAdmin() {
@@ -126,7 +127,7 @@ export default function ActorAdmin() {
                 throw new Error("Авторизуйтесь")
             }
             await fetchActors.create(accessToken, reqFormData)
-            navigator("/actors/")
+            navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
 
         } else {
             throw new Error("Необходимо заполнить все обязательные поля!")

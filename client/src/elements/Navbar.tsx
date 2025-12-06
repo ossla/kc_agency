@@ -4,16 +4,15 @@ import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
 import { useState } from "react"
-import logo from "../assets/bereg_logo.png"
 
 
-function AuthEl(props: { user: IUser | null; classn: string; onClick?: () => void }) {
+function AuthEl(props: { user: IUser | null; classn: string }) {
     return (
         <div className={props.classn}>
             {props.user ? (
-                <Link to="/profile" onClick={props.onClick}>{props.user.name}</Link>
+                <Link to="/profile">{props.user.name}</Link>
             ) : (
-                <Link to="/login" onClick={props.onClick}>Войти</Link>
+                <Link to="/login">Войти</Link>
             )}
         </div>
     )
@@ -23,40 +22,65 @@ export default function Navbar() {
     const { user } = useUser()
     const [menuOpen, setMenuOpen] = useState(false)
 
-    const handleLinkClick = () => {
-        setMenuOpen(false)
-    }
-
     const toggleMenu = () => {
         setMenuOpen(prev => !prev)
     }
 
+    const handleLinkClick = () => {
+        setMenuOpen(false)
+    }
+
     return (
         <nav className="navbar">
-            {/* скрытый чекбокс больше не нужен */}
-            <div className="menu-icon" onClick={toggleMenu}>
-                <span className="navicon"></span>
+
+            {/* ЛЕВАЯ ЧАСТЬ — БРЕНД */}
+            <div className="nav-left">
+                <Link to={HOME} className="brand">
+                <img src="/logo_small.png" className="brand-logo" />
+
+                <div className="brand-text">
+                    <div className="brand-main">
+                    <span className="brand-title">БЕРЕГ</span>
+                    <span className="brand-subtitle">кино</span>
+                    </div>
+
+                    <div className="brand-tagline">
+                    АЛЬЯНС АКТЕРСКИХ АГЕНТОВ
+                    </div>
+                </div>
+                </Link>
             </div>
 
-            <Link to={HOME} className="logo-mobile">
-                <img src="/bereg_logo.png" alt="Logo" />
-            </Link>
+            {/* ПРАВАЯ ЧАСТЬ */}
+            <div className="nav-right">
 
-            <ul className={`menu ${menuOpen ? "open" : ""}`}>
-                <li><Link to={ACTORS_MEN} onClick={handleLinkClick}>Актёры</Link></li>
-                
-                <li className="logo-desktop">
-                    <Link to={HOME} onClick={handleLinkClick}>
-                        <img src="/bereg_logo.png" alt="Logo" />
-                    </Link>
+                {/* ГАМБУРГЕР */}
+                <div className="menu-icon" onClick={toggleMenu}>
+                <span className="navicon"></span>
+                </div>
+
+                {/* МЕНЮ */}
+                <ul className={`menu ${menuOpen ? "open" : ""}`}>
+                <li>
+                    <Link to={ACTORS_MEN} onClick={handleLinkClick}>Актёры</Link>
                 </li>
-                
-                <li><Link to={ACTORS_WOMEN} onClick={handleLinkClick}>Актрисы</Link></li>
+                <li>
+                    <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>Актрисы</Link>
+                </li>
+                <li>
+                    <Link to="/about" onClick={handleLinkClick}>О нас</Link>
+                </li>
 
-            </ul>
-            <AuthEl classn="auth-mobile" user={user} onClick={handleLinkClick} />
+                {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}
+                <li className="auth-mobile">
+                    <AuthEl classn="" user={user} />
+                </li>
+                </ul>
 
-            <AuthEl classn="auth-deskop" user={user} />
+                {/* АВТОРИЗАЦИЯ НА ДЕСКТОПЕ */}
+                <AuthEl classn="auth-deskop" user={user} />
+
+            </div>
         </nav>
     )
 }
