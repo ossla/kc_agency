@@ -56,7 +56,6 @@
 .card_name_overlay {
   color: white;
   font-size: 18px;
-  font-weight: bold;
   margin: 0;
   pointer-events: none;
 }

@@ -39,7 +39,7 @@ export default function Card(props: ICardProps) {
             </h1>
             <img
               className="card_video_icon"
-              src="/video-icon.svg"
+              src="/video-icon.png"
               alt="Video Icon"
               onClick={openVideo}
             />
@@ -54,14 +54,14 @@ export default function Card(props: ICardProps) {
             className="video_modal_content"
             onClick={(e) => e.stopPropagation()}
           >
+            
             <iframe
-              width="800"
-              height="450"
-              src={props.videoUrl}
-              title="Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+                width="720"
+                height="405"
+                src="https://rutube.ru/play/embed/599a9d86449fd170f1a2db5434fe8660"
+                style={{border: "none"}}
+                allow="clipboard-write; autoplay"
+                allowFullScreen
             ></iframe>
             <button className="video_modal_close" onClick={closeVideo}>
               ×

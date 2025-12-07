@@ -36,7 +36,7 @@ export default function Navbar() {
             {/* ЛЕВАЯ ЧАСТЬ — БРЕНД */}
             <div className="nav-left">
                 <Link to={HOME} className="brand">
-                <img src="/logo_small.png" className="brand-logo" />
+                <img src="/logo_small.svg" className="brand-logo" />
 
                 <div className="brand-text">
                     <div className="brand-main">
