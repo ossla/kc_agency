@@ -81,9 +81,32 @@
 }
 
 .menu a {
+    font-weight: 600;
+    color: #68645a;
     text-decoration: none;
-    color: #000;
-    font-weight: 500;
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #32302b;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.menu a:hover::after {
+    width: 100%;
+}
+
+.menu a:hover {
+    color: #000000; 
 }
 
 /* ===== АВТОРИЗАЦИЯ ===== */

@@ -62,13 +62,13 @@ export default function Navbar() {
                 {/* МЕНЮ */}
                 <ul className={`menu ${menuOpen ? "open" : ""}`}>
                 <li>
-                    <Link to={ACTORS_MEN} onClick={handleLinkClick}>Актёры</Link>
+                    <Link to={ACTORS_MEN} onClick={handleLinkClick}>АКТЁРЫ</Link>
                 </li>
                 <li>
-                    <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>Актрисы</Link>
+                    <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>АКТРИСЫ</Link>
                 </li>
                 <li>
-                    <Link to="/about" onClick={handleLinkClick}>О нас</Link>
+                    <Link to="/about" onClick={handleLinkClick}>О НАС</Link>
                 </li>
 
                 {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}
