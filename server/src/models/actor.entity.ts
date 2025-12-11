@@ -30,7 +30,7 @@ export class Actor {
     @Column({ type: "varchar", length: 40, nullable: true })
     middleName?: string         // отчество
 
-    @Column({ type: "varchar", length: 40, nullable: true })
+    @Column({ type: "text", nullable: true })
     education?: string         // образование
 
     @Column({ type: "character" })

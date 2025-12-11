@@ -1,7 +1,7 @@
 import { serverURL } from "../URLs";
 import { IEmployee } from "./employeeTypes"
 import { GenderEnum } from "./enums"
-import { ICity, IEyeColor, ILanguage } from "./relevantTypes"
+import { ICity, IEyeColor, IHairColor, ILanguage } from "./relevantTypes"
 
 // Типы для api хранятся в данном файле:
 // * REQUEST для формирования запроса
@@ -80,10 +80,13 @@ export interface IActor {
     linkToKinoTeatr?: string;
     linkToFilmTools?: string;
     linkToKinopoisk?: string;
-    videoCode?: string;
+    videoURL: string;
     employee: IEmployee;
+    education: string;
+    hairColor?: IHairColor;
     eyeColor?: IEyeColor;
     city?: ICity;
+    skills?: string[];
     languages?: ILanguage[];
     photos: string[];
     createdAt: Date;
@@ -97,6 +100,7 @@ export function toIActor(raw: any): IActor {
         lastName: raw.lastName,
         middleName: raw.middleName ?? undefined,
         gender: raw.gender,
+        education: raw.education,
         dateOfBirth: new Date(raw.dateOfBirth),
         height: raw.height ?? undefined,
         clothesSize: raw.clothesSize,
@@ -106,10 +110,11 @@ export function toIActor(raw: any): IActor {
         linkToKinoTeatr: raw.linkToKinoTeatr ?? undefined,
         linkToFilmTools: raw.linkToFilmTools ?? undefined,
         linkToKinopoisk: raw.linkToKinopoisk ?? undefined,
-        videoCode: raw.videoCode ?? undefined,
+        videoURL: raw.videoCode ?? undefined,
         employee: raw.employee ?? undefined,
         eyeColor: raw.eyeColor ?? undefined,
         city: raw.city ?? undefined,
+        skills: raw.skills ?? undefined,
         languages: raw.languages ?? [],
         photos: raw.photos ?? [],
         createdAt: new Date(raw.createdAt),

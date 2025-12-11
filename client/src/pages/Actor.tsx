@@ -1,122 +1,118 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import fetchActors from "../api/fetchActors"
-import Loading from "../elements/Loading"
-import { serverURL } from "../api/URLs"
-import "../styles/Actor.css"
-import "react-photo-view/dist/react-photo-view.css"
-import { PhotoProvider, PhotoView } from "react-photo-view"
-import { IActor } from "../api/types/actorTypes"
+import React, { useEffect, useState } from "react";
+import "../styles/Actor.css";
+import { IActor } from "../api/types/actorTypes";
+import { useParams } from "react-router-dom";
+import fetchActors from "../api/fetchActors";
+import Loading from "../elements/Loading";
+import { ILanguage } from "../api/types/relevantTypes";
 
-export default function Actor() {
+
+export default function ActorPage() {
+
     const { id } = useParams()
     const [actor, setActor] = useState<IActor>()
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const loadData = async () => { 
-                try {
-                    setActor(await fetchActors.getActor(Number(id)))
-                } catch (e: any) {
-                    setError("Не удалось загрузить актёра")
-                }
+        const loadData = async () => {
+            try {
+                setActor(await fetchActors.getActor(Number(id)));
+            } catch {
+                setError("Не удалось загрузить актёра");
             }
-        loadData()
-    }, [])
+        };
+        loadData();
+    }, []);
 
-    if (!actor) {
-        return <Loading />
-    }
-
-    if (error) {
-        return <h1>{error}</h1>
-    }
+    if (!actor) return <Loading />;
+    if (error) return <h1>{error}</h1>;
 
     return (
-        <div className="actor_container">
-            <div className="actor_avatar_section">
-                <PhotoProvider>
-                    <PhotoView src={actor.url + "/avatar.jpg"}>
-                        <img className="actor_avatar" src={actor.url + "/avatar.jpg"} />
-                    </PhotoView>
-                </PhotoProvider>
-                <h1 className="actor_name">{actor.firstName} {actor.lastName}</h1>
+        <div className="actor_page_wrapper">
+            <div className="actor_grid">
+            
+                {/* Левая часть===================================== */}
+                <div className="actor_left">
+                    <img
+                        className="actor_avatar"
+                        src={actor.url + "/avatar.jpg"}
+                        alt="avatar"
+                    />
 
-                <div className="actor_album">
-                    <PhotoProvider>
-                        {actor.photos.map((p, idx) => 
-                            <PhotoView key={idx} src={actor.url + '/' + p}>
-                                <img className="actor_photo" src={actor.url + '/' + p}/>
-                            </PhotoView>
+                    <div className="floating_block">
+                        {actor.languages && (
+                            <div className="actor_block">
+                                <h3 className="actor_block_title">Языки</h3>
+                                <ul>
+                                    {actor.languages.map((l: ILanguage) => (
+                                        <li key={l.id}>{l.name}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         )}
-                    </PhotoProvider>
+
+                        {actor.skills && (
+                            <div className="actor_block">
+                                <h3 className="actor_block_title">Навыки</h3>
+                                <ul>
+                                    {actor.skills.map((s, i) => (
+                                        <li key={i}>{s}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Правая часть===================================== */}
+                <div className="actor_right">
+                    <div className="floating_block">
+                        <h1 className="actor_fio">
+                            {actor.lastName} {actor.firstName} {actor.middleName}
+                        </h1>
+
+                        <div className="actor_parameters">
+                            {actor.dateOfBirth && (
+                                <p>Дата рождения: {actor.dateOfBirth.toString()}</p>
+                            )}
+                            {actor.height && <p>Рост: {actor.height} см</p>}
+                            {actor.description && <p>{actor.description}</p>}
+                        </div>
+                        {actor.education && (
+                            <div className="actor_block">
+                                <h2 className="actor_section_title">Образование</h2>
+                                <p>{actor.education}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="floating_block">
+                        <iframe
+                            width="720"
+                            height="405"
+                            src={actor.videoURL}
+                            style={{ border: "none" }}
+                            allow="autoplay; fullscreen"
+                        ></iframe>
+
+                        <div className="actor_block">
+                            <h2 className="actor_section_title">Фотогалерея</h2>
+
+                            <div className="actor_gallery">
+                                {actor.photos.map((p, i) => (
+                                    <img
+                                        key={i}
+                                        src={actor.url + "/" + p}
+                                        className="actor_gallery_photo"
+                                        alt="gallery"
+                                    />
+                                ))}
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div className="actor_about_section">
-                <table className="actor_table">
-                    <tbody>
-                        <tr>
-                            <th>Фамилия</th>
-                            <td>{actor.lastName}</td>
-                        </tr>
-                        <tr>
-                            <th>Имя</th>
-                            <td>{actor.firstName}</td>
-                        </tr>
-                        {actor.middleName && (
-                            <tr>
-                                <th>Отчество</th>
-                                <td>{actor.middleName}</td>
-                            </tr>
-                        )}
-                        <tr>
-                            <th>Пол</th>
-                            <td>{actor.gender}</td>
-                        </tr>
-                        <tr>
-                            <th>Дата рождения</th>
-                            <td>{new Date(actor.dateOfBirth).toLocaleDateString()}</td>
-                        </tr>
-                        {actor.height && (
-                            <tr>
-                                <th>Рост</th>
-                                <td>{actor.height} см</td>
-                            </tr>
-                        )}
-                        {actor.clothesSize && (
-                            <tr>
-                                <th>Размер одежды</th>
-                                <td>{actor.clothesSize}</td>
-                            </tr>
-                        )}
-                        {actor.city && (
-                            <tr>
-                                <th>Город</th>
-                                <td>{actor.city.name}</td>
-                            </tr>
-                        )}
-                        {actor.eyeColor && (
-                            <tr>
-                                <th>Цвет глаз</th>
-                                <td>{actor.eyeColor.name}</td>
-                            </tr>
-                        )}
-                        {actor.languages && actor.languages.length > 0 && (
-                            <tr>
-                                <th>Языки</th>
-                                <td>{actor.languages.map(l => l.name).join(", ")}</td>
-                            </tr>
-                        )}
-                        {actor.description && (
-                            <tr>
-                                <th>Описание</th>
-                                <td>{actor.description}</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
         </div>
-    )
+    );
 }

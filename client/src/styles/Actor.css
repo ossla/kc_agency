@@ -1,79 +1,98 @@
-.actor_container {
+.actor_page_wrapper {
+    width: 100%;
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    justify-content: center;
+    padding: 40px 0;
+    font-size: 18px;
 }
 
-/* Аватар + альбом */
-.actor_avatar_section {
+.actor_grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    column-gap: 60px;
+    width: 1200px;
+}
+
+/* LEFT COLUMN */
+.actor_left {
     display: flex;
     flex-direction: column;
-    width: 300px;
-    margin-left: 20px;
-    margin-top: 20px;
+    gap: 35px;
 }
 
 .actor_avatar {
     width: 100%;
-    margin-bottom: 10px;
-    cursor: pointer;
     border-radius: 8px;
+    object-fit: cover;
 }
 
-.actor_album {
+/* RIGHT COLUMN */
+.actor_right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.actor_fio {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.actor_parameters {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.actor_parameters p {
+    margin: 4px 0;
+    text-align: left;
+}
+
+.actor_block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.actor_block_title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* gallery */
+.actor_gallery {
     display: flex;
     flex-wrap: wrap;
+    gap: 20px;
 }
 
-.actor_photo {
-    width: 80px;
-    border: 1px solid black;
-    margin: 5px;
+.actor_gallery_photo {
+    width: 180px;
+    object-fit: cover;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 4px;
+    transition: 0.2s;
 }
 
-.actor_name {
-    font-size: 25px;
-    margin-bottom: 10px;
+.actor_gallery_photo:hover {
+    transform: scale(1.03);
 }
 
-/* Таблица */
-.actor_about_section {
-    flex: 1;
-    min-width: 280px;
-    margin: 20px;
+.floating_block {
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius: 8px;
+    padding: 20px;
+
+    box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
+    transition: 0.25s ease;
 }
 
-.actor_table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.actor_table th {
-    text-align: left;
-    padding: 8px;
-    background: #f3f3f3;
-    width: 140px;
-}
-
-.actor_table td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-    .actor_container {
-        flex-direction: column;
-    }
-
-    .actor_avatar_section {
-        width: 100%;
-        margin-left: 0;
-    }
-
-    .actor_table th {
-        width: 40%;
-    }
+.floating_block:hover {
+    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.25);
+    transform: translateY(-3px);
 }

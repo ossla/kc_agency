@@ -47,7 +47,6 @@ export default function Card(props: ICardProps) {
         </div>
       </Link>
 
-      {/* Модальное окно для видео */}
       {isVideoOpen && (
         <div className="video_modal" onClick={closeVideo}>
           <div

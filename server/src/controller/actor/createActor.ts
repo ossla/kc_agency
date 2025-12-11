@@ -72,7 +72,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     actor.linkToKinoTeatr = body.kinoTeatr ?? null
     actor.linkToFilmTools = body.filmTools ?? null
     actor.linkToKinopoisk = body.kinopoisk ?? null
-    actor.videoURL = body.video ?? null
+    actor.videoURL = body.videoURL ?? null
 
     await saveCity(actor, body.city)
     await saveEyeColor(actor, body.eyeColor)

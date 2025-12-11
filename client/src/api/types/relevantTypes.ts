@@ -29,6 +29,16 @@ export function toIEyeColor(raw: any): IEyeColor{
     }
 }
 
+export interface IHairColor {
+    id: number,
+    name: string
+}
+export function toIHairColor(raw: any): IEyeColor{
+    return {
+        id: raw.id,
+        name: raw.name
+    }
+}
 
 export interface ILanguage {
     id: number,
