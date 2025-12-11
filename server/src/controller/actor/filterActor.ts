@@ -49,12 +49,6 @@ function filterByGender(qb: SelectQueryBuilder<Actor>, gender: any) {
     }
 }
 
-function filterByClothesSize(qb: SelectQueryBuilder<Actor>, clothesSize: any) {
-    if (clothesSize) {
-        qb.andWhere("actor.clothesSize = :clothesSize", { clothesSize })
-    }
-}
-
 function filterByHeight(qb: SelectQueryBuilder<Actor>, minHeight: any, maxHeight: any) {
     if (minHeight || maxHeight) {
         if (minHeight && maxHeight) {
@@ -109,7 +103,6 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
         filterByCities(qb, body.cityIds)
         filterByEyeColors(qb, body.eyeIds)
         filterByGender(qb, body.gender)
-        filterByClothesSize(qb, body.clothesSize)
         filterByHeight(qb, body.minHeight, body.maxHeight)
         filterByAge(qb, body.minAge, body.maxAge)
         

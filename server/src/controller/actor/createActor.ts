@@ -11,6 +11,7 @@ import { EyeColor } from "../../models/eyeColor.entity"
 import { City } from "../../models/city.entity"
 import { getEmployee } from "../employee/getEmployee"
 import ApiError from "../../error/apiError"
+import { HairColor } from "../../models/hairColor.entity"
 
 
 export async function createActor(req: ICustomRequest, res: Response, next: NextFunction) {
@@ -63,17 +64,19 @@ async function fillActor(actor: Actor, body: CreateActorType) {
         throw new ApiError(400, `create: Неверно указан пол актера: ${body.gender}`)
     }
     actor.middleName = body.middleName ?? null
-    actor.dateOfBirth = body.dateOfBirth;
+    actor.education = body.education
+    saveSkills(actor, body.skills)
+    actor.dateOfBirth = body.dateOfBirth
     actor.height = body.height ? Number(body.height) : null
-    actor.clothesSize = body.clothesSize ?? null
     actor.description = body.description ?? null
     actor.linkToKinoTeatr = body.kinoTeatr ?? null
     actor.linkToFilmTools = body.filmTools ?? null
     actor.linkToKinopoisk = body.kinopoisk ?? null
-    actor.videoCode = body.video ?? null
+    actor.videoURL = body.video ?? null
 
     await saveCity(actor, body.city)
-    await saveColor(actor, body.eyeColor)
+    await saveEyeColor(actor, body.eyeColor)
+    await saveHairColor(actor, body.eyeColor)
     await saveLanguages(actor, body.languages)
 }
 
@@ -94,7 +97,7 @@ export async function saveCity(actor: Actor, rawCity: string | undefined) {
 }
 
 // экспорт для editActor
-export async function saveColor(actor: Actor, rawColor: string | undefined) {
+export async function saveEyeColor(actor: Actor, rawColor: string | undefined) {
     if (typeof rawColor === 'string' && rawColor.length) {
         let eyeColor: EyeColor | null = await appDataSource.getRepository(EyeColor)
         .findOne({where: {name: rawColor}})
@@ -105,6 +108,20 @@ export async function saveColor(actor: Actor, rawColor: string | undefined) {
         }
 
         actor.eyeColor = eyeColor
+    }
+}
+
+export async function saveHairColor(actor: Actor, rawColor: string | undefined) {
+    if (typeof rawColor === 'string' && rawColor.length) {
+        let hairColor: HairColor | null = await appDataSource.getRepository(HairColor)
+        .findOne({where: {name: rawColor}})
+        if (!hairColor) {     
+            hairColor = new HairColor()
+            hairColor.name = rawColor
+            await appDataSource.getRepository(HairColor).save(hairColor)
+        }
+
+        actor.hairColor = hairColor
     }
 }
 
@@ -143,5 +160,29 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
         langsArr.push(lang)
     }
     actor.languages = langsArr
+
+}
+
+export async function saveSkills(actor: Actor, rawLanguages: string[] | string | undefined) {
+    if (!rawLanguages) {
+        return;
+    }
+
+    let rawLangsArr: string[]
+    if (typeof rawLanguages === 'string' && rawLanguages.length) {
+        try {
+            rawLangsArr = JSON.parse(rawLanguages)
+            if (!Array.isArray(rawLangsArr)) throw new Error()
+        } catch {
+            throw new ApiError(400, "Некорректный JSON в поле languages")
+        }
+
+    } else if (Array.isArray(rawLanguages)) {
+        rawLangsArr = rawLanguages
+    } else {
+        throw new ApiError(400, "languages должен быть или string или string[]")
+    }
+
+    actor.skills = rawLangsArr
 
 }

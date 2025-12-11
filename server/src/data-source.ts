@@ -10,6 +10,7 @@ import { Language } from "./models/language.entity"
 import { User } from "./models/user.entity"
 import { RefreshToken } from "./models/refreshToken.entity"
 import { Favorite } from "./models/favorite.entity"
+import { HairColor } from "./models/hairColor.entity"
 
 
 dotenv.config()
@@ -27,7 +28,7 @@ export const appDataSource = new DataSource({
     database: process.env.DBNAME,
     synchronize: true,
     logging: false,
-    entities: [Employee, Actor, User, RefreshToken, EyeColor, City, Language, Favorite],
+    entities: [Employee, Actor, User, RefreshToken, EyeColor, HairColor, City, Language, Favorite],
     migrations: [],
     subscribers: [],
 })

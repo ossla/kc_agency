@@ -13,6 +13,8 @@ import {
 import { EyeColor } from "./eyeColor.entity"
 import { City } from "./city.entity"
 import { Language } from "./language.entity"
+import { HairColor } from "./hairColor.entity"
+
 
 @Entity()
 export class Actor {
@@ -28,17 +30,17 @@ export class Actor {
     @Column({ type: "varchar", length: 40, nullable: true })
     middleName?: string         // отчество
 
+    @Column({ type: "varchar", length: 40, nullable: true })
+    education?: string         // образование
+
     @Column({ type: "character" })
-    gender!: string
+    gender!: string             // пол
 
     @Column({ type: "date", nullable: false })
     dateOfBirth!: Date           // дата рождения
 
     @Column({ type: "int", default: 0, nullable: true })
     height?: number             // рост в см
-
-    @Column({ type: "int", default: 0, nullable: true })
-    clothesSize?: number        // размер одежды
 
     @Column({ type: "text", nullable: true })
     description?: string        // описание
@@ -47,7 +49,7 @@ export class Actor {
     directory!: string           // путь к папке с файлами
 
     @Column({ type: "varchar", length: 255, nullable: true })
-    linkToKinoTeatr?: string    // kino-teatr.ru
+    linkToKinoTeatr?: string    // kino-teatr
 
     @Column({ type: "varchar", length: 255, nullable: true })
     linkToFilmTools?: string    // filmtools
@@ -56,10 +58,13 @@ export class Actor {
     linkToKinopoisk?: string    // кинопоиск
 
     @Column({ type: "text", default: "", nullable: true })
-    videoCode?: string          // видеовизитка (код вставки?) 
+    videoURL?: string          // видеовизитка (url)
 
     @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
-    photos!: string[]            // фото помимо аватарки
+    photos!: string[]            // фотогалерея (помимо аватара)
+
+    @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
+    skills!: string[]           // навыки
 
     @ManyToOne(() => Employee, employee => employee.actors, {
         onDelete: "SET NULL",
@@ -67,11 +72,15 @@ export class Actor {
         nullable: false
     })
     @JoinColumn({ name: "employee_id" })
-    employee!: Employee                // к какому агенту относятся
+    employee!: Employee                // актерский агент
 
     @ManyToOne(() => EyeColor, { eager: true, nullable: true })
     @JoinColumn({ name: "eye_color_id" })
     eyeColor?: EyeColor         // цвет глаз
+
+    @ManyToOne(() => HairColor, { eager: true, nullable: true })
+    @JoinColumn({ name: "hair_color_id" })
+    hairColor?: HairColor         // цвет волос
 
     @ManyToOne(() => City, { eager: true, nullable: true })
     @JoinColumn({ name: "city_id" })
