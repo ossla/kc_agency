@@ -7,7 +7,7 @@ import { ACTORS, EMPLOYEES } from "../routes";
 interface ICardProps {
   person: IShortActor | IShortEmployee;
   isActor: boolean;
-  videoUrl?: string; // URL YouTube для видео
+  videoURL?: string; // URL YouTube для видео
 }
 
 export default function Card(props: ICardProps) {
@@ -39,7 +39,7 @@ export default function Card(props: ICardProps) {
             </h1>
             <img
               className="card_video_icon"
-              src="/video-icon.png"
+              src="/icons/video-icon.png"
               alt="Video Icon"
               onClick={openVideo}
             />
@@ -47,27 +47,33 @@ export default function Card(props: ICardProps) {
         </div>
       </Link>
 
-      {isVideoOpen && (
+      {isVideoOpen && 
+        (
         <div className="video_modal" onClick={closeVideo}>
           <div
             className="video_modal_content"
             onClick={(e) => e.stopPropagation()}
           >
+            {props.videoURL ?
+              <iframe
+                  width="720"
+                  height="405"
+                  src={props.videoURL}
+                  style={{border: "none"}}
+                  allow="clipboard-write; autoplay"
+                  allowFullScreen
+              ></iframe>
+              :
+              <p>видео не найдено</p>
+            }
             
-            <iframe
-                width="720"
-                height="405"
-                src="https://rutube.ru/play/embed/599a9d86449fd170f1a2db5434fe8660"
-                style={{border: "none"}}
-                allow="clipboard-write; autoplay"
-                allowFullScreen
-            ></iframe>
             <button className="video_modal_close" onClick={closeVideo}>
               ×
             </button>
           </div>
         </div>
-      )}
+      )
+    }
     </>
   );
 }

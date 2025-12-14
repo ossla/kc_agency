@@ -6,6 +6,9 @@ import fetchActors from "../api/fetchActors";
 import Loading from "../elements/Loading";
 import { ILanguage } from "../api/types/relevantTypes";
 
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
+
 
 export default function ActorPage() {
 
@@ -33,11 +36,16 @@ export default function ActorPage() {
             
                 {/* Левая часть===================================== */}
                 <div className="actor_left">
-                    <img
-                        className="actor_avatar"
-                        src={actor.url + "/avatar.jpg"}
-                        alt="avatar"
-                    />
+                    <PhotoProvider>
+                        <PhotoView src={actor.url + "/avatar.jpg"}>
+                            <img
+                                className="actor_avatar"
+                                src={actor.url + "/avatar.jpg"}
+                                alt="avatar"
+                            />
+                        </PhotoView>
+                    </PhotoProvider>
+
                     <div className="actor_actions">
                         {actor.linkToFilmTools && 
                             <a href={actor.linkToFilmTools}>
@@ -106,7 +114,7 @@ export default function ActorPage() {
                     <div className="floating_block">
                         {actor.languages && (
                             <div className="actor_block">
-                                <h3 className="actor_block_title">Языки</h3>
+                                <h3>Языки</h3>
                                 <ul>
                                     {actor.languages.map((l: ILanguage) => (
                                         <li key={l.id}>{l.name}</li>
@@ -119,7 +127,7 @@ export default function ActorPage() {
 
                         {actor.skills && (
                             <div className="actor_block">
-                                <h3 className="actor_block_title">Навыки</h3>
+                                <h3>Навыки</h3>
                                 <ul>
                                     {actor.skills.map((s, i) => (
                                         <li key={i}>{s}</li>
@@ -132,7 +140,7 @@ export default function ActorPage() {
                     <div className="floating_block">
                     {actor.videoURL && (
                         <div className="actor_block">
-                            <h3 className="actor_block_title">Видеовизитка</h3>
+                            <h3>Видеовизитка</h3>
                             <iframe
                                 width="720"
                                 height="405"
@@ -144,18 +152,23 @@ export default function ActorPage() {
                     )}
 
                     <div className="actor_block">
-                        <h3 className="actor_block_title">Фотогалерея</h3>
-
-                        <div className="actor_gallery">
-                            {actor.photos.map((p, i) => (
-                                <img
-                                    key={i}
-                                    src={actor.url + "/" + p}
-                                    className="actor_gallery_photo"
-                                    alt="gallery"
-                                />
-                            ))}
-                        </div>
+                        <h3>Фотогалерея</h3>
+                        <PhotoProvider>
+                            <div className="actor_gallery">
+                                {actor.photos.map((p, i) => (
+                                    <PhotoView
+                                        key={i}
+                                        src={actor.url + "/" + p}
+                                    >
+                                        <img
+                                            src={actor.url + "/" + p}
+                                            className="actor_gallery_photo"
+                                            alt="gallery"
+                                        />
+                                    </PhotoView>
+                                ))}
+                            </div>
+                        </PhotoProvider>
                     </div>
                     </div>
                 </div>

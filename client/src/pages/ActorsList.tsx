@@ -54,9 +54,9 @@ export default function ActorsList(props: ActorListProps) {
             <Filters setFilters={handleFiltersChange} />
 
             <div className="page_cards">
-                {kljdfjl.length !== 0 &&
+                {/* {kljdfjl.length !== 0 &&
                     kljdfjl.map((actor, idx) => <Card person={actor} isActor={true} key={idx} />)
-                }
+                } */}
                 {actors.length !== 0 &&
                     actors.map((actor, idx) => <Card person={actor} isActor={true} key={idx} />) 
                 }
