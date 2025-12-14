@@ -16,16 +16,16 @@ export default function ActorPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                setActor(await fetchActors.getActor(Number(id)));
+                setActor(await fetchActors.getActor(Number(id)))
             } catch {
-                setError("Не удалось загрузить актёра");
+                setError("Не удалось загрузить актёра")
             }
         };
-        loadData();
+        loadData()
     }, []);
 
-    if (!actor) return <Loading />;
-    if (error) return <h1>{error}</h1>;
+    if (error) return <h1>{error}</h1>
+    if (!actor) return <Loading />    
 
     return (
         <div className="actor_page_wrapper">
@@ -38,6 +38,70 @@ export default function ActorPage() {
                         src={actor.url + "/avatar.jpg"}
                         alt="avatar"
                     />
+                    <div className="actor_actions">
+                        {actor.linkToFilmTools && 
+                            <a href={actor.linkToFilmTools}>
+                                <img src="/icons/filmtoolz_icon.png" alt="icon2" />
+                            </a>
+                        }
+                        {actor.linkToKinoTeatr && 
+                            <a href={actor.linkToKinoTeatr}>
+                                <img src="/icons/kinoteatr_icon.png" alt="icon3" />
+                            </a>
+                        }
+                        {actor.linkToKinopoisk && 
+                            <a href={actor.linkToKinopoisk}>
+                                <img src="/icons/kinopoisk_icon.png" alt="icon1" />
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                {/* Правая часть===================================== */}
+                <div className="actor_right">
+                    <div className="floating_block">
+                    <h1 className="actor_fio">
+                        {actor.lastName} {actor.firstName} {actor.middleName}
+                    </h1>
+
+                    <div className="actor_parameters">
+                        <div className="actor_param">
+                            <h4>Дата рождения</h4>
+                            <p>{actor.dateOfBirth.getFullYear()}.{actor.dateOfBirth.getMonth() + 1}.{actor.dateOfBirth.getDate()}</p>
+                        </div>
+                        <div className="actor_param">
+                            <h4>Рост</h4>
+                            <p>{actor.height} см</p>
+                        </div>
+                        <div className="actor_param">
+                            <h4>Город</h4>
+                            <p>{actor.city.name}</p>
+                        </div>
+                        <div className="actor_param">
+                            <h4>Цвет глаз</h4>
+                            <p>{actor.eyeColor.name}</p>
+                        </div>
+                        <div className="actor_param">
+                            <h4>Натуральный цвет волос</h4>
+                            <p>{actor.hairColor.name}</p>
+                        </div>
+                        
+                        { actor.education &&
+                            <div className="actor_param">
+                                <h4 className="actor_section_title">Образование</h4>
+                                <p>{actor.education}</p>
+                            </div>
+                        }
+                    </div>
+                    </div>
+
+
+                    <div className="floating_block">
+                    <div className="actor_block">
+                        <p id="quote">❝</p>
+                        <p>{actor.description}</p>
+                    </div>
+                    </div>
 
                     <div className="floating_block">
                         {actor.languages && (
@@ -51,6 +115,8 @@ export default function ActorPage() {
                             </div>
                         )}
 
+                        <div className="line"/>
+
                         {actor.skills && (
                             <div className="actor_block">
                                 <h3 className="actor_block_title">Навыки</h3>
@@ -62,54 +128,35 @@ export default function ActorPage() {
                             </div>
                         )}
                     </div>
-                </div>
-
-                {/* Правая часть===================================== */}
-                <div className="actor_right">
-                    <div className="floating_block">
-                        <h1 className="actor_fio">
-                            {actor.lastName} {actor.firstName} {actor.middleName}
-                        </h1>
-
-                        <div className="actor_parameters">
-                            {actor.dateOfBirth && (
-                                <p>Дата рождения: {actor.dateOfBirth.toString()}</p>
-                            )}
-                            {actor.height && <p>Рост: {actor.height} см</p>}
-                            {actor.description && <p>{actor.description}</p>}
-                        </div>
-                        {actor.education && (
-                            <div className="actor_block">
-                                <h2 className="actor_section_title">Образование</h2>
-                                <p>{actor.education}</p>
-                            </div>
-                        )}
-                    </div>
 
                     <div className="floating_block">
-                        <iframe
-                            width="720"
-                            height="405"
-                            src={actor.videoURL}
-                            style={{ border: "none" }}
-                            allow="autoplay; fullscreen"
-                        ></iframe>
-
+                    {actor.videoURL && (
                         <div className="actor_block">
-                            <h2 className="actor_section_title">Фотогалерея</h2>
-
-                            <div className="actor_gallery">
-                                {actor.photos.map((p, i) => (
-                                    <img
-                                        key={i}
-                                        src={actor.url + "/" + p}
-                                        className="actor_gallery_photo"
-                                        alt="gallery"
-                                    />
-                                ))}
-                            </div>
-
+                            <h3 className="actor_block_title">Видеовизитка</h3>
+                            <iframe
+                                width="720"
+                                height="405"
+                                src={actor.videoURL}
+                                style={{ border: "none" }}
+                                allow="autoplay; fullscreen"
+                            ></iframe>
                         </div>
+                    )}
+
+                    <div className="actor_block">
+                        <h3 className="actor_block_title">Фотогалерея</h3>
+
+                        <div className="actor_gallery">
+                            {actor.photos.map((p, i) => (
+                                <img
+                                    key={i}
+                                    src={actor.url + "/" + p}
+                                    className="actor_gallery_photo"
+                                    alt="gallery"
+                                />
+                            ))}
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

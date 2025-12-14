@@ -36,7 +36,7 @@ export default function Navbar() {
             {/* ЛЕВАЯ ЧАСТЬ — БРЕНД */}
             <div className="nav-left">
                 <Link to={HOME} className="brand">
-                <img src="/logo_small.svg" className="brand-logo" />
+                <img src="/logo/logo_small.svg" className="brand-logo" />
 
                 <div className="brand-text">
                     <div className="brand-main">
@@ -68,7 +68,7 @@ export default function Navbar() {
                     <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>АКТРИСЫ</Link>
                 </li>
                 <li>
-                    <Link to="/about" onClick={handleLinkClick}>О НАС</Link>
+                    <Link to={HOME} onClick={handleLinkClick}>О НАС</Link>
                 </li>
 
                 {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}

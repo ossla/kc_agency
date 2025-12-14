@@ -16,7 +16,7 @@ export default function App() {
             <UserProvider>
                 <div className="page-wrapper"
                 style={{
-                    backgroundImage: `url("/bg_transparent.svg")`,
+                    backgroundImage: `url("/bg/bg_transparent.svg")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundAttachment: "fixed",

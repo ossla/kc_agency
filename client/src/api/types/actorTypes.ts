@@ -69,28 +69,28 @@ export interface IActor {
     id: number;
     firstName: string;
     lastName: string;
-    middleName?: string;
     gender: string;
     dateOfBirth: Date;
-    height?: number;
-    clothesSize?: number;
-    description?: string;
+    height: number;
     directory: string;
     url: string;
-    linkToKinoTeatr?: string;
-    linkToFilmTools?: string;
-    linkToKinopoisk?: string;
     videoURL: string;
     employee: IEmployee;
-    education: string;
-    hairColor?: IHairColor;
-    eyeColor?: IEyeColor;
-    city?: ICity;
-    skills?: string[];
-    languages?: ILanguage[];
+    hairColor: IHairColor;
+    eyeColor: IEyeColor;
+    city: ICity;
+    skills: string[];
+    languages: ILanguage[];
     photos: string[];
     createdAt: Date;
     updatedAt: Date;
+    
+    middleName?: string;
+    description?: string;
+    education?: string;
+    linkToKinoTeatr?: string;
+    linkToFilmTools?: string;
+    linkToKinopoisk?: string;
 }
 
 export function toIActor(raw: any): IActor {
@@ -98,27 +98,28 @@ export function toIActor(raw: any): IActor {
         id: Number(raw.id),
         firstName: raw.firstName,
         lastName: raw.lastName,
-        middleName: raw.middleName ?? undefined,
         gender: raw.gender,
-        education: raw.education,
         dateOfBirth: new Date(raw.dateOfBirth),
-        height: raw.height ?? undefined,
-        clothesSize: raw.clothesSize,
-        description: raw.description ?? undefined,
+        height: raw.height,
         directory: raw.directory,
         url: serverURL + "/" + raw.directory,
-        linkToKinoTeatr: raw.linkToKinoTeatr ?? undefined,
-        linkToFilmTools: raw.linkToFilmTools ?? undefined,
-        linkToKinopoisk: raw.linkToKinopoisk ?? undefined,
-        videoURL: raw.videoCode ?? undefined,
-        employee: raw.employee ?? undefined,
-        eyeColor: raw.eyeColor ?? undefined,
-        city: raw.city ?? undefined,
-        skills: raw.skills ?? undefined,
+        videoURL: raw.videoURL,
+        employee: raw.employee,
+        eyeColor: raw.eyeColor,
+        hairColor: raw.hairColor,
+        city: raw.city,
+        skills: raw.skills,
         languages: raw.languages ?? [],
         photos: raw.photos ?? [],
         createdAt: new Date(raw.createdAt),
-        updatedAt: new Date(raw.updatedAt)
+        updatedAt: new Date(raw.updatedAt),
+
+        description: raw.description ?? undefined,
+        middleName: raw.middleName ?? undefined,
+        education: raw.education ?? undefined,
+        linkToKinoTeatr: raw.linkToKinoTeatr ?? undefined,
+        linkToFilmTools: raw.linkToFilmTools ?? undefined,
+        linkToKinopoisk: raw.linkToKinopoisk ?? undefined
     }
 }
 
