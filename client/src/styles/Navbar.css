@@ -5,6 +5,7 @@
     padding: 0.8rem 1.5rem;
     position: relative;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background: #f8f7f3;
     z-index: 1000;
 }
 
@@ -52,12 +53,12 @@
     font-size: 1.45rem;
     font-weight: 600;
     letter-spacing: 2px;
-    color: #da4444;
+    color: #ed1c24;
 }
 
 .brand-subtitle {
     font-size: 1rem;
-    color: #4ba6f6;
+    color: #0181b4;
     position: relative;
     bottom: 2px;
 }
@@ -160,7 +161,6 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: #fff;
         flex-direction: column;
         text-align: center;
         max-height: 0;

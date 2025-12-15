@@ -3,7 +3,6 @@ import { IEmployee } from "./employeeTypes"
 import { GenderEnum } from "./enums"
 import { ICity, IEyeColor, IHairColor, ILanguage } from "./relevantTypes"
 
-// Типы для api хранятся в данном файле:
 // * REQUEST для формирования запроса
 // * RESPONSE для парсинга входящих данных
 
@@ -13,19 +12,21 @@ export interface CreateActorType {
     lastName: string;
     dateOfBirth: Date;
     employeeId: number;
-    gender: GenderEnum;
-
+    gender: string;
+    hairColor: IHairColor;
+    city: ICity;
+    eyeColor: IEyeColor;
+    height: number;
+    languages: ILanguage[];
+    skills: string[];
+    
     middleName?: string;
-    city?: string;
-    eyeColor?: string;
-    height?: number;
-    clothesSize?: number;
-    video?: string;
-    languages?: string[];
+    videoURL?: string;
     description?: string;
-    kinoTeatr?: string;
-    filmTools?: string;
-    kinopoisk?: string;
+    education?: string;
+    linkToKinoTeatr?: string;
+    linkToFilmTools?: string;
+    linkToKinopoisk?: string;
 }
 
 export interface EditActorType {
@@ -40,8 +41,7 @@ export interface EditActorType {
     city?: string;
     eyeColor?: string;
     height?: number;
-    clothesSize?: number;
-    video?: string;
+    videoURL?: string;
     languages?: string[];
     description?: string;
     kinoTeatr?: string;
@@ -74,7 +74,6 @@ export interface IActor {
     height: number;
     directory: string;
     url: string;
-    videoURL: string;
     employee: IEmployee;
     hairColor: IHairColor;
     eyeColor: IEyeColor;
@@ -86,6 +85,7 @@ export interface IActor {
     updatedAt: Date;
     
     middleName?: string;
+    videoURL?: string;
     description?: string;
     education?: string;
     linkToKinoTeatr?: string;
@@ -103,7 +103,6 @@ export function toIActor(raw: any): IActor {
         height: raw.height,
         directory: raw.directory,
         url: serverURL + "/" + raw.directory,
-        videoURL: raw.videoURL,
         employee: raw.employee,
         eyeColor: raw.eyeColor,
         hairColor: raw.hairColor,
@@ -113,7 +112,8 @@ export function toIActor(raw: any): IActor {
         photos: raw.photos ?? [],
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
-
+        
+        videoURL: raw.videoURL ?? undefined,
         description: raw.description ?? undefined,
         middleName: raw.middleName ?? undefined,
         education: raw.education ?? undefined,
@@ -129,6 +129,7 @@ export interface IShortActor {
     lastName: string,
     directory: string,
     avatarUrl: string
+    videoURL?: string
 }
 
 export function toIShortActor(raw: any): IShortActor{
@@ -137,6 +138,7 @@ export function toIShortActor(raw: any): IShortActor{
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
-        avatarUrl: `${serverURL}/${raw.directory}/avatar.jpg`
+        avatarUrl: `${serverURL}/${raw.directory}/avatar.jpg`,
+        videoURL: raw.videoURL ?? undefined
     }
 }

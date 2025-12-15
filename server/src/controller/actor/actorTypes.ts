@@ -6,22 +6,22 @@ export const createActorSchema = z.object({
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
-    employeeId: z.string().min(1),
-    gender: z.string(),
-
-    education: z.string(),
-    middleName: z.string(),
-    hairColor: z.string(),
-    city: z.string(),
-    eyeColor: z.string(),
+    employeeId: z.preprocess((val) => Number(val), z.number()),
+    gender: z.string().min(1),
+    hairColor: z.string().min(1),
+    city: z.string().min(1),
+    eyeColor: z.string().min(1),
     height: z.preprocess((val) => Number(val), z.number()),
-    videoURL: z.string(),
-    languages: z.string(),
-    skills: z.string(),
-    description: z.string(),
-    kinoTeatr: z.string(),
-    filmTools: z.string(),
-    kinopoisk: z.string(),
+    languages: z.string().min(1),
+    skills: z.string().min(1),
+
+    middleName: z.string().optional(),
+    videoURL: z.string().optional(),
+    description: z.string().optional(),
+    education: z.string().optional(),
+    linkToKinoTeatr: z.string().optional(),
+    linkToFilmTools: z.string().optional(),
+    linkToKinopoisk: z.string().optional()
 })
 export type CreateActorType = z.infer<typeof createActorSchema>
 
@@ -45,7 +45,7 @@ export const editActorSchema = z.object({
     linkToFilmTools: z.string().optional(),
     linkToKinopoisk: z.string().optional(),
 
-    skills: z.array(z.string()).optional(), // new skills, изменение массива на клиенте
+    skills: z.array(z.string()).optional(),
     height: z.preprocess((val) => Number(val), z.number()).optional(),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()).optional(),
     // relations

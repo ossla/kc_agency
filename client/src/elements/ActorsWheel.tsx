@@ -53,7 +53,7 @@ export default function ActorsWheel() {
             <div className="actors_wheel_inner">
                 {actors.map((actor, idx) => (
                     <div className="actor_item" key={idx}>
-                        <Card person={actor} isActor={true} />
+                        <Card actor={actor} isActor={true} />
                     </div>
                 ))}
             </div>

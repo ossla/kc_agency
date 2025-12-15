@@ -10,21 +10,28 @@ class fetchRelevant {
         const response = await fetch(cityURL, { method: "GET" })
         console.log(response);
         const data = await response.json()
-        console.log("getCities data: " + data)
+        console.log("getCities data: " + JSON.stringify(data))
         return data.map(toICity)
     }
 
     static async getEyeColors() : Promise<IEyeColor[]> {
         const response = await fetch(eyeURL, { method: "GET" })
         const data = await response.json()
-        console.log("getColors data: " + data)
+        console.log("getColors data: " + JSON.stringify(data))
+        return data.map(toIEyeColor)
+    }
+
+    static async getHairColors() : Promise<IEyeColor[]> {
+        const response = await fetch(eyeURL, { method: "GET" })
+        const data = await response.json()
+        console.log("getColors data: " + JSON.stringify(data))
         return data.map(toIEyeColor)
     }
 
     static async getLanguages() : Promise<ILanguage[]> {
         const response = await fetch(languageURL, { method: "GET" })
         const data = await response.json()
-        console.log("getLanguages data: " + data)
+        console.log("getLanguages data: " + JSON.stringify(data))
         return data.map(toILanguage)
     }
 }

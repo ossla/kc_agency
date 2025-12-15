@@ -1,260 +1,232 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import "../styles/Admin.css"
-import fetchAuth from "../api/fetchAuth"
+
 import { useUser } from "../context/UserContext"
-import { useNavigate } from "react-router-dom"
-import { GenderEnum } from "../api/types/enums"
+import fetchAuth from "../api/fetchAuth"
 import fetchActors from "../api/fetchActors"
-import { ICity, IEyeColor, ILanguage } from "../api/types/relevantTypes"
 import fetchRelevant from "../api/fetchRelevant"
 import fetchEmployees from "../api/fetchEmployees"
+
+import { GenderEnum } from "../api/types/enums"
+import { ICity, IEyeColor, ILanguage } from "../api/types/relevantTypes"
 import { IShortEmployee } from "../api/types/employeeTypes"
+
 import ImageCropper from "../utils/ImageCropper"
-import { ACTORS, ACTORS_MEN, ACTORS_WOMEN } from "../routes"
+import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 
-
-export default function ActorAdmin() {
+export default function ActorAdminNew() {
     const { accessToken } = useUser()
-    const navigator = useNavigate()
+    const navigate = useNavigate()
 
-    // basic data
-    const [firstName, setFirstName] = useState<string>()
-    const [lastName, setLastName] = useState<string>()
-    const [dateOfbirth, setDateOfbirth] = useState<Date>(new Date("1992-01-01"))
-    const [gender, setGender] = useState<GenderEnum>()
-    const [height, setHeight] = useState<string>()
-    const [clothesSize, setClothesSize] = useState<string>()
-    const [description, setDescription] = useState<string>()
-    const [middleName, setMiddleName] = useState<string>()
+    /* обязательнне */
+    const [firstName, setFirstName] = useState("")
+    const [middleName, setMiddleName] = useState("")
+    const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
+    const [gender, setGender] = useState<GenderEnum | null>(null)
+    const [employeeId, setEmployeeId] = useState("")
+    const [height, setHeight] = useState("")
+    const [city, setCity] = useState("")
+    const [eyeColor, setEyeColor] = useState("")
+    const [hairColor, setHairColor] = useState("")
+    const [languages, setLanguages] = useState<string[]>([])
+    const [skills, setSkills] = useState<string[]>([])
 
-    // files
-    const [avatar, setAvatar] = useState<File>()
-    const [tempAvatar, setTempAvatar] = useState<File>()
+    /* необязательные */
+    const [videoURL, setVideoURL] = useState("")
+    const [description, setDescription] = useState("")
+    const [education, setEducation] = useState("")
+    const [linkToKinoTeatr, setLinkToKinoTeatr] = useState("")
+    const [linkToFilmTools, setLinkToFilmTools] = useState("")
+    const [linkToKinopoisk, setLinkToKinopoisk] = useState("")
+
+    /* файлы */
+    const [avatar, setAvatar] = useState<File | null>(null)
+    const [tempAvatar, setTempAvatar] = useState<File | null>(null)
     const [photos, setPhotos] = useState<File[]>([])
 
-    // relations
-    const [employeeId, setEmployeeId] = useState<string>()
-    const [loadedEmployees, setLoadedEmployees] = useState<IShortEmployee[]>([])
-
-    const [city, setCity] = useState<string>()
-    const [loadedCities, setLoadedCities] = useState<ICity[]>([])
-
-    const [eyeColor, setEyeColor] = useState<string>()
-    const [loadedEyeColors, setLoadedEyeColors] = useState<IEyeColor[]>([])
-
-    const [languages, setLanguages] = useState<string[]>([])
+    /* связи с другими таблицами */
     const [loadedLanguages, setLoadedLanguages] = useState<ILanguage[]>([])
-
-
-    const uploadAvatar = (event: React.FormEvent) => {
-        const files = (event.target as HTMLInputElement).files
-
-        if (files && files.length > 0) {
-            setTempAvatar(files[0])
-        }
-    }
-
-    const uploadPhotos = (event: React.FormEvent) => {
-        const files = (event.target as HTMLInputElement).files
-
-        if (files && files.length > 0) {
-            const filesArray = Array.from(files)
-            setPhotos(filesArray)
-        }
-    }
-
-    const handleSelectLanguage = (languageName: string) => {
-        setLanguages(prev => {
-            if (!prev.includes(languageName)) {
-                return [...prev, languageName]
-            }
-            return prev
-        })
-    }
-    const handleAddNewLanguage = (newLanguage: string) => {
-        const trimmed = newLanguage.trim()
-        if (!trimmed) return
-
-        setLanguages(prev => {
-            if (!prev.includes(trimmed)) {
-                return [...prev, trimmed]
-            }
-            return prev
-        })
-    }
-    const handleRemoveLanguage = (languageName: string) => {
-        setLanguages(prev => prev.filter(l => l !== languageName))
-    }
-
+    const [employees, setEmployees] = useState<IShortEmployee[]>([])
+    const [cities, setCities] = useState<ICity[]>([])
+    const [eyeColors, setEyeColors] = useState<IEyeColor[]>([])
+    const [hairColors, setHairColors] = useState<IEyeColor[]>([])
+    const [languagesDict, setLanguagesDict] = useState<ILanguage[]>([])
 
     useEffect(() => {
-        async function f() {
-            setLoadedCities(await fetchRelevant.getCities())
-            setLoadedEyeColors(await fetchRelevant.getEyeColors())
-            setLoadedLanguages(await fetchRelevant.getLanguages())
-            setLoadedEmployees(await fetchEmployees.getShort())
+        async function load() {
+            setEmployees(await fetchEmployees.getShort())
+            setCities(await fetchRelevant.getCities())
+            setEyeColors(await fetchRelevant.getEyeColors())
+            setHairColors(await fetchRelevant.getHairColors())
+            setLanguagesDict(await fetchRelevant.getLanguages())
         }
-        f()
+        load()
     }, [])
 
-
-    const createClick = async () => {
-        if (firstName && lastName && employeeId && gender && dateOfbirth && avatar && photos.length != 0) {
-            const reqFormData: FormData = new FormData()
-
-            reqFormData.append("firstName", firstName)
-            reqFormData.append("lastName", lastName)
-            reqFormData.append("employeeId", employeeId)
-            reqFormData.append("gender", gender)
-            reqFormData.append("dateOfBirth", dateOfbirth.toDateString())
-            reqFormData.append("avatar", avatar)
-            Array.from(photos).forEach((file) => {
-                reqFormData.append("photos", file)
-            })
-
-            // необязательные поля
-            if (height) reqFormData.append("height", height)
-            if (clothesSize) reqFormData.append("clothesSize", clothesSize)
-            if (eyeColor) reqFormData.append("eyeColor", eyeColor)
-            if (city) reqFormData.append("city", city)
-            if (languages) {
-                reqFormData.append("languages", JSON.stringify(languages))
-            }
-
-            await fetchAuth.auth()
-            if (!accessToken) {
-                throw new Error("Авторизуйтесь")
-            }
-            await fetchActors.create(accessToken, reqFormData)
-            navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
-
-        } else {
-            throw new Error("Необходимо заполнить все обязательные поля!")
+    const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files?.[0]) {
+            setTempAvatar(e.target.files[0])
         }
+    }
+
+    const uploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setPhotos(Array.from(e.target.files))
+        }
+    }
+
+    const handleSelectLanguage = (name: string) => {
+        setLanguages(prev =>
+            prev.includes(name)
+                ? prev.filter(l => l !== name)
+                : [...prev, name]
+        )
+    }
+
+    const handleAddNewLanguage = (value: string) => {
+        const v = value.trim()
+        if (!v) return
+
+        setLanguages(prev => {
+            if (prev.includes(v)) return prev
+            return [...prev, v]
+        })
+    }
+
+    const addSkill = (value: string) => {
+        const v = value.trim()
+        if (v && !skills.includes(v)) {
+            setSkills(prev => [...prev, v])
+        }
+    }
+
+    const removeSkill = (s: string) => {
+        setSkills(prev => prev.filter(x => x !== s))
+    }
+
+    const createActor = async () => {
+        if (
+            !firstName ||
+            !dateOfBirth ||
+            !gender ||
+            !employeeId ||
+            !hairColor ||
+            !city ||
+            !eyeColor ||
+            !height ||
+            languages.length === 0 ||
+            skills.length === 0 ||
+            !avatar ||
+            photos.length === 0
+        ) {
+            throw new Error("Не заполнены обязательные поля")
+        }
+
+        const fd = new FormData()
+
+        fd.append("firstName", firstName)
+        fd.append("middleName", middleName)
+        fd.append("dateOfBirth", dateOfBirth.toISOString())
+        fd.append("gender", gender)
+        fd.append("employeeId", employeeId)
+        fd.append("hairColor", hairColor)
+        fd.append("city", city)
+        fd.append("eyeColor", eyeColor)
+        fd.append("height", height)
+        fd.append("languages", JSON.stringify(languages))
+        fd.append("skills", JSON.stringify(skills))
+        fd.append("avatar", avatar)
+
+        photos.forEach(p => fd.append("photos", p))
+
+        if (videoURL) fd.append("videoURL", videoURL)
+        if (description) fd.append("description", description)
+        if (education) fd.append("education", education)
+        if (linkToKinoTeatr) fd.append("linkToKinoTeatr", linkToKinoTeatr)
+        if (linkToFilmTools) fd.append("linkToFilmTools", linkToFilmTools)
+        if (linkToKinopoisk) fd.append("linkToKinopoisk", linkToKinopoisk)
+
+        await fetchAuth.auth()
+        if (!accessToken) throw new Error("Нет авторизации")
+
+        await fetchActors.create(accessToken, fd)
+
+        navigate(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
     }
 
     return (
         <div className="container">
             <div className="admin">
-                <h1>Админ-актёр</h1>
+                <h1>Новый актёр</h1>
 
-                <label htmlFor="avatar">Аватар актёра*</label>
-                <>
-                    <input type="file" onChange={uploadAvatar} />
-
-                    {tempAvatar && (
+                <label>Аватар*</label>
+                <input type="file" onChange={uploadAvatar} />
+                {tempAvatar && (
                     <ImageCropper
                         imageFile={tempAvatar}
                         aspect={4 / 5}
-                        onCropped={(cropped) => {
-                        setAvatar(cropped);
-                        setTempAvatar(undefined);
+                        onCropped={f => {
+                            setAvatar(f)
+                            setTempAvatar(null)
                         }}
-                        onCancel={() => setTempAvatar(undefined)}
+                        onCancel={() => setTempAvatar(null)}
                     />
-                    )}
-                </>
+                )}
 
-                <label htmlFor="photos">Фото актёра*</label>
-                <input 
-                    type="file" 
-                    id="photos" 
-                    placeholder="Загрузите фото"
-                    onChange={uploadPhotos} 
-                    multiple 
-                />
+                <label>Фото*</label>
+                <input type="file" multiple onChange={uploadPhotos} />
 
-                <label htmlFor="firstName">Имя*</label>
-                <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
+                <label>Имя*</label>
+                <input value={firstName} onChange={e => setFirstName(e.target.value)} />
 
-                <label htmlFor="lastName">Фамилия*</label>
-                <input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Фамилия" />
+                <label>Отчество</label>
+                <input value={middleName} onChange={e => setMiddleName(e.target.value)} />
 
-                <label htmlFor="middleName">Отчество</label>
-                <input type="text" id="middleName" value={middleName} onChange={e => setMiddleName(e.target.value)} placeholder="Отчетство" />
+                <label>Дата рождения*</label>
+                <input type="date" onChange={e => setDateOfBirth(new Date(e.target.value))} />
 
-                <label htmlFor="dateOfBirth">Дата рождения*</label>
-                <input type="date" onChange={(e) => setDateOfbirth(new Date(e.target.value))} />
-
-                <label htmlFor="gender">Пол*</label>
-                <div id="gender" className="gender-selector">
-                    <button
-                        className={gender === GenderEnum.man ? "selected" : ""}
-                        onClick={() => setGender(GenderEnum.man)}
-                    >
-                        Мужской
-                    </button>
-                    <button
-                        className={gender === GenderEnum.woman ? "selected" : ""}
-                        onClick={() => setGender(GenderEnum.woman)}
-                    >
-                        Женский
-                    </button>
+                <label>Пол*</label>
+                <div className="gender-selector">
+                    <button onClick={() => setGender(GenderEnum.man)} className={gender === GenderEnum.man ? "selected" : ""}>М</button>
+                    <button onClick={() => setGender(GenderEnum.woman)} className={gender === GenderEnum.woman ? "selected" : ""}>Ж</button>
                 </div>
 
-                {/* ===== Agent ===== */}
                 <label>Агент*</label>
-                <div className="employee-radio-group">
-                    {loadedEmployees.map((employee) => (
-                        <div key={employee.id} className="radio-option">
-                            <input
-                                type="radio"
-                                id={`employee-${employee.id}`}
-                                name="employee"
-                                value={employee.id}
-                                checked={employeeId === employee.id.toString()}
-                                onChange={(e) => setEmployeeId(e.target.value)}
-                            />
-                            <label htmlFor={`employee-${employee.id}`}>
-                                {employee.firstName} {employee.lastName}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-                
-                <label htmlFor="height">Рост</label>
-                <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />
+                {employees.map(e => (
+                    <label key={e.id}>
+                        <input type="radio" value={e.id} checked={employeeId === String(e.id)} onChange={ev => setEmployeeId(ev.target.value)} />
+                        {e.firstName} {e.lastName}
+                    </label>
+                ))}
 
-                <label htmlFor="clothesSize">Размер одежды</label>
-                <input type="number" id="clothesSize" value={clothesSize} onChange={e => setClothesSize(e.target.value)} placeholder="Размер одежды" />
+                <label>Рост*</label>
+                <input type="number" value={height} onChange={e => setHeight(e.target.value)} />
 
-                {/* ===== City ===== */}
-                <label htmlFor="city-list">Город</label>
-                <input
-                    list="city-list"
-                    value={city}
-                    onChange={e => setCity(e.target.value)}
-                    placeholder="Введите город..."
-                />
-                <datalist id="city-list">
-                    {loadedCities.map((c) => (
-                        <option key={c.id} value={c.name} />
-                    ))}
+                <label>Город*</label>
+                <input list="cities" value={city} onChange={e => setCity(e.target.value)} />
+                <datalist id="cities">
+                    {cities.map(c => <option key={c.id} value={c.name} />)}
                 </datalist>
 
-                {/* ===== Eye Color ===== */}
-                <label htmlFor="color-list">Цвет глаз</label>  
-                <input
-                    list="color-list"
-                    value={eyeColor}
-                    onChange={e => setEyeColor(e.target.value)}
-                    placeholder="Введите цвет глаз..."
-                />
-                <datalist id="color-list">
-                    {loadedEyeColors.map((color) => (
-                        <option key={color.id} value={color.name} />
-                    ))}
+                <label>Цвет глаз*</label>
+                <input list="eyes" value={eyeColor} onChange={e => setEyeColor(e.target.value)} />
+                <datalist id="eyes">
+                    {eyeColors.map(c => <option key={c.id} value={c.name} />)}
                 </datalist>
 
-                {/* ===== Languages ===== */}
-                <div id="languages" className="languages">
-                    <label htmlFor="languages">Языки</label>
+                <label>Цвет волос*</label>
+                <input value={hairColor} onChange={e => setHairColor(e.target.value)} />
+
+                <label>Языки*</label>
+                <div className="languages">
                     {loadedLanguages.map(lang => (
                         <button
                             key={lang.id}
+                            type="button"
                             onClick={() => handleSelectLanguage(lang.name)}
-                            style={{ margin: 4, background: languages.includes(lang.name) ? 'lightblue' : 'white' }}
+                            className={languages.includes(lang.name) ? "selected" : ""}
                         >
                             {lang.name}
                         </button>
@@ -264,28 +236,62 @@ export default function ActorAdmin() {
                         type="text"
                         placeholder="Добавить новый язык"
                         onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                            handleAddNewLanguage(e.currentTarget.value);
-                            e.currentTarget.value = '';
-                        }
+                            if (e.key === "Enter") {
+                                handleAddNewLanguage(e.currentTarget.value)
+                                e.currentTarget.value = ""
+                            }
                         }}
                     />
 
-                    <p>Выбранные языки:</p>
-                    <ul>
-                        {languages.map(lang => (
-                        <li key={lang}>
-                            {lang}
-                            <button onClick={() => handleRemoveLanguage(lang)}>×</button>
-                        </li>
-                        ))}
-                    </ul>
+                    {languages.length > 0 && (
+                        <ul>
+                            {languages.map(l => (
+                                <li key={l}>
+                                    {l}
+                                    <button type="button" onClick={() => handleSelectLanguage(l)}>×</button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
-                <label htmlFor="description">Описание / доп. данные</label>
-                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Описание" />
+                <label>Навыки*</label>
+                <input
+                    placeholder="Enter — добавить"
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            addSkill(e.currentTarget.value)
+                            e.currentTarget.value = ""
+                        }
+                    }}
+                />
+                <ul>
+                    {skills.map(s => (
+                        <li key={s}>
+                            {s} <button onClick={() => removeSkill(s)}>×</button>
+                        </li>
+                    ))}
+                </ul>
 
-                <button onClick={createClick}>Создать актёра</button>
+                <label>Видео</label>
+                <input value={videoURL} onChange={e => setVideoURL(e.target.value)} />
+
+                <label>Описание</label>
+                <textarea value={description} onChange={e => setDescription(e.target.value)} />
+
+                <label>Образование</label>
+                <input value={education} onChange={e => setEducation(e.target.value)} />
+
+                <label>Kino-Teatr</label>
+                <input value={linkToKinoTeatr} onChange={e => setLinkToKinoTeatr(e.target.value)} />
+
+                <label>FilmToolz</label>
+                <input value={linkToFilmTools} onChange={e => setLinkToFilmTools(e.target.value)} />
+
+                <label>Кинопоиск</label>
+                <input value={linkToKinopoisk} onChange={e => setLinkToKinopoisk(e.target.value)} />
+
+                <button onClick={createActor}>Создать</button>
             </div>
         </div>
     )

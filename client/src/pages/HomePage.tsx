@@ -32,7 +32,7 @@ import ActorsWheel from "../elements/ActorsWheel"
 //     return (
 //         <div className="page_cards">
 //             {agents.length !== 0 &&
-//                 agents.map((agent, idx) => <Card person={agent} isActor={false} key={idx} />)
+//                 agents.map((agent, idx) => <Card actor={agent} isActor={false} key={idx} />)
 //             }
 //         </div>
 //     )

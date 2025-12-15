@@ -53,33 +53,34 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
     return dirname
 }
 
-// заполнение полей (помимо photos) и связей с другими таблицами
+// заполнение полей (помимо файлов)
 async function fillActor(actor: Actor, body: CreateActorType) {                         
-    actor.employee = await getEmployee(Number(body.employeeId))
+    // обязательные поля
     actor.firstName = body.firstName
     actor.lastName  = body.lastName
+    actor.dateOfBirth = body.dateOfBirth
+    actor.employee = await getEmployee(Number(body.employeeId))
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
         throw new ApiError(400, `create: Неверно указан пол актера: ${body.gender}`)
     }
-    actor.middleName = body.middleName ?? null
-    actor.education = body.education
-    saveSkills(actor, body.skills)
-    actor.dateOfBirth = body.dateOfBirth
-    actor.height = body.height ? Number(body.height) : null
-    actor.description = body.description ?? null
-    actor.linkToKinoTeatr = body.kinoTeatr ?? null
-    actor.linkToFilmTools = body.filmTools ?? null
-    actor.linkToKinopoisk = body.kinopoisk ?? null
-    actor.videoURL = body.videoURL ?? null
-
-    await saveCity(actor, body.city)
     await saveEyeColor(actor, body.eyeColor)
-    await saveHairColor(actor, body.eyeColor)
+    await saveCity(actor, body.city)
+    await saveHairColor(actor, body.hairColor)
+    actor.height = Number(body.height)
     await saveLanguages(actor, body.languages)
-}
+    saveSkills(actor, body.skills)
 
+    // необязательные
+    actor.middleName = body.middleName ?? null
+    actor.videoURL = body.videoURL ?? null
+    actor.description = body.description ?? null
+    actor.education = body.education ?? null
+    actor.linkToKinoTeatr = body.linkToKinoTeatr ?? null
+    actor.linkToFilmTools = body.linkToFilmTools ?? null
+    actor.linkToKinopoisk = body.linkToKinopoisk ?? null
+}
 
 // экспорт для editActor
 export async function saveCity(actor: Actor, rawCity: string | undefined) {

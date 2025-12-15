@@ -20,3 +20,36 @@ employee_id     | 1
 eye_color_id    | 1
 hair_color_id   | 1
 city_id         | 1
+
+
+=====================================
+
+Create actor:
+
+
+* обязательные поля:
+
+firstName
+lastName
+dateOfBirth
+employeeId
+gender
+hairColor
+city
+eyeColor
+height
+languages
+skills
+
+
+* необязательные поля:
+
+middleName
+videoURL
+description
+education
+linkToKinoTeatr
+linkToFilmTools
+linkToKinopoisk
+
+=====================================

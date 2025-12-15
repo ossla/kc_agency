@@ -49,7 +49,7 @@ export async function getShortActors(req: Request, res: Response, next: NextFunc
     try {
         const actors = await appDataSource.getRepository(Actor)
             .createQueryBuilder("actor")
-            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
             .orderBy("LOWER(actor.lastName)", "ASC")
             .getMany()
 
