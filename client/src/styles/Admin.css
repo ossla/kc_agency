@@ -3,7 +3,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 1000px;
+    background-color: #ffffff;
+    margin-bottom: 40px;
+}
+
+.admin label {
+    font-weight: 700;
 }
 
 .admin h1{
@@ -179,4 +185,22 @@ select {
 
 .cropper-button-cancel:hover {
   background-color: #9ca3af; /* gray-400 */
+}
+
+.employee-choice {
+  display: flex;
+  flex-direction: row;
+}
+
+.error {
+  width: 50%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #bd5c5c;
+  border: 1px solid #db3737;
+  color: white;
 }

@@ -23,6 +23,7 @@ export const editEmployeeURL = employeeURL + "/edit"
 const relevantURL = serverURL + "/api/relevant"
 export const cityURL = relevantURL + "/city"
 export const eyeURL = relevantURL + "/eye"
+export const hairURL = relevantURL + "/hair"
 export const languageURL = relevantURL + "/language"
 
 /* user */

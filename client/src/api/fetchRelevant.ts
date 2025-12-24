@@ -1,5 +1,5 @@
-import { ICity, IEyeColor, ILanguage, toICity, toIEyeColor, toILanguage } from "./types/relevantTypes"
-import { cityURL, eyeURL, languageURL } from "./URLs"
+import { ICity, IEyeColor, ILanguage, toICity, toIEyeColor, toIHairColor, toILanguage } from "./types/relevantTypes"
+import { cityURL, eyeURL, hairURL, languageURL } from "./URLs"
 
 class fetchRelevant {
     // ================== CREATE ==================
@@ -22,10 +22,10 @@ class fetchRelevant {
     }
 
     static async getHairColors() : Promise<IEyeColor[]> {
-        const response = await fetch(eyeURL, { method: "GET" })
+        const response = await fetch(hairURL, { method: "GET" })
         const data = await response.json()
         console.log("getColors data: " + JSON.stringify(data))
-        return data.map(toIEyeColor)
+        return data.map(toIHairColor)
     }
 
     static async getLanguages() : Promise<ILanguage[]> {

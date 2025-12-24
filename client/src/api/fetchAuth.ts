@@ -55,7 +55,7 @@ class fetchAuth {
             })
 
             const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
-            console.log("auth resp data: " + data)
+            console.log("auth resp data: " + JSON.stringify(data))
             updateUser(data.user, data.accessToken)
             return data
         } catch (err: any) {

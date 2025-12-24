@@ -11,14 +11,15 @@ export interface CreateActorType {
     firstName: string;
     lastName: string;
     dateOfBirth: Date;
-    employeeId: number;
     gender: string;
+    height: number;
+    skills: string[];
+    
+    employeeId: number;
+    eyeColor: IEyeColor;
     hairColor: IHairColor;
     city: ICity;
-    eyeColor: IEyeColor;
-    height: number;
     languages: ILanguage[];
-    skills: string[];
     
     middleName?: string;
     videoURL?: string;
