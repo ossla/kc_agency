@@ -4,7 +4,7 @@ import { NextFunction } from "express"
 export default function processApiError(error: unknown, next: NextFunction) {
     if (error instanceof ApiError) {
         console.error(error.message)
-        next(error)
+        next(error.message)
     } else if (error instanceof Error) {
         console.error(error.message)
         next(new ApiError(500, error.message))

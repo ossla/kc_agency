@@ -64,7 +64,7 @@ async function getShortByGender(res: Response, gender: GenderEnum, next: NextFun
     try {
         const actors = await appDataSource.getRepository(Actor)
             .createQueryBuilder("actor")
-            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
             .where("actor.gender = :gender", { gender })
             .getMany()
 

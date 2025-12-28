@@ -43,20 +43,11 @@ export default function ActorsList(props: ActorListProps) {
         return <p>Актёры не загружены</p>
     }
 
-    const test = [
-        {"id":14324,"firstName":"ads","lastName":"Actor","directory":"adsActor","avatarUrl":"http://localhost:3001/testActor/avatar.jpg"},
-        {"id":231234,"firstName":"ads","lastName":"Actor","directory":"adsActor","avatarUrl":"http://localhost:3001/testActor/avatar.jpg"},
-        {"id":123,"firstName":"ads","lastName":"Actor","directory":"adsActor","avatarUrl":"http://localhost:3001/testActor/avatar.jpg"},
-    ]
-
     return (
         <>
             <Filters setFilters={handleFiltersChange} />
 
             <div className="page_cards">
-                {test.length !== 0 &&
-                    test.map((actor, idx) => <Card actor={actor} isActor={true} key={idx} />)
-                }
                 {actors.length !== 0 &&
                     actors.map((actor, idx) => <Card actor={actor} isActor={true} key={idx} />) 
                 }
