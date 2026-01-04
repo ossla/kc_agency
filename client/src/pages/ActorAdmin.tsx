@@ -11,15 +11,14 @@ import fetchRelevant from "../api/fetchRelevant"
 import fetchEmployees from "../api/fetchEmployees"
 import { IShortEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
-import { ACTORS, ACTORS_MEN, ACTORS_WOMEN } from "../routes"
+import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()
     const navigator = useNavigate()
 
-    const [error, setError] = useState<string>()
-    const [isError, setIsError] = useState<boolean>()
+    const [error, setError] = useState<string | null>()
 
     // basic data
     const [firstName, setFirstName] = useState<string>()
@@ -145,19 +144,16 @@ export default function ActorAdmin() {
         const emptyField = fields.find(f => !f.value)
 
         if (emptyField) {
-            setIsError(true)
             setError(`Поле "${emptyField.label}" обязательно для заполнения`)
             return
         }
 
         if (photos.length === 0) {
-            setIsError(true)
             setError('Поле "Фотографии" не должно быть пустым')
             return
         }
 
-        setIsError(false)
-
+        setError(null)
         const reqFormData = new FormData()
 
         reqFormData.append("firstName", firstName!)
@@ -187,7 +183,6 @@ export default function ActorAdmin() {
 
         await fetchAuth.auth()
         if (!accessToken) {
-            setIsError(true)
             setError("Авторизуйтесь")
             return
         }
@@ -406,7 +401,7 @@ export default function ActorAdmin() {
                 <input type="text" id="linkToKinoTeatr" value={linkToKinoTeatr} onChange={e => setLinkToKinoTeatr(e.target.value)} placeholder="Ссылка" />
 
                 {
-                    isError &&
+                    error !== null &&
                     <p className="error">{error}</p>
                 }
 

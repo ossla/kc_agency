@@ -6,6 +6,7 @@ import { ACTORS, EMPLOYEES } from "../routes";
 interface ICardProps {
     actor: IShortActor;
     isActor: boolean;
+    showVideo: boolean;
 }
 
 export default function Card(props: ICardProps) {
@@ -36,7 +37,7 @@ export default function Card(props: ICardProps) {
                 {props.actor.firstName} {props.actor.lastName}
                 </h1>
 
-                {props.actor.videoURL &&
+                { props.showVideo && props.actor.videoURL && 
                     <img
                         className="card_video_icon"
                         src="/icons/video-icon.png"

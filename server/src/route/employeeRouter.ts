@@ -7,12 +7,13 @@ import { editEmployee } from "../controller/employee/editEmployee"
 import { authMiddleware } from "../middleware/authMiddleware"
 
 const EmployeeRouter: Express = express()
-
+ 
 // EmployeeRouter.post("/create", authMiddleware, checkMiddleware, createEmployee)
 EmployeeRouter.post("/create", createEmployee)
 EmployeeRouter.delete("/delete/:id", authMiddleware, checkMiddleware, removeEmployee)
 EmployeeRouter.post("/edit", authMiddleware, checkMiddleware, editEmployee)
 
+EmployeeRouter.get("/full", getAllEmployees)
 EmployeeRouter.get("/:id", getOneEmployee)
 EmployeeRouter.get("/", getShortEmployees)
 

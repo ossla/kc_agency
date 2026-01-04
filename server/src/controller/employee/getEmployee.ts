@@ -27,7 +27,7 @@ export async function getOneEmployee(req: Request, res: Response, next: NextFunc
             throw new ApiError(400, "укажите корректный id")
         }
         const employee: Employee = await getEmployee(Number(id))
-        
+
         res.status(200).json(instanceToPlain(employee)) // @exclude hash password поле
 
     } catch (error: unknown) {

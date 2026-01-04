@@ -1,101 +1,52 @@
 import { useEffect, useState } from "react"
-import fetchEmployees from "../api/fetchEmployees"
-import { IShortEmployee } from "../api/types/employeeTypes"
-import Card from "../elements/Card"
-import Loading from "../elements/Loading"
 import ActorsWheel from "../elements/ActorsWheel"
-
-// export default function AgentsList() {
-//     const [agents, setAgents] = useState<IShortAgent[]>([])
-//     const [error, setError] = useState<string | null>(null)
-
-//     useEffect(() => {
-//         async function load() {
-//             try {
-//                 const data: IShortAgent[] = await fetchAgents.getShort()
-//                 setAgents(data)
-//             } catch(e) {
-//                 setError("что-то пошло не так")
-//             }
-//         }
-//         load()
-//     }, [])
-
-//     if (agents.length === 0) {
-//         return <p>Агенты не загружены</p>
-//     }
-
-//     if (error) {
-//         return <h1>{error}</h1>
-//     }
-
-//     return (
-//         <div className="page_cards">
-//             {agents.length !== 0 &&
-//                 agents.map((agent, idx) => <Card actor={agent} isActor={false} key={idx} />)
-//             }
-//         </div>
-//     )
-// }
 
 import "../styles/Cards.css";
 import "../styles/HomePage.css";
+import { Link } from "react-router-dom";
+import { ACTORS_MEN, ACTORS_WOMEN, WRITER } from "../routes";
+import fetchEmployees from "../api/fetchEmployees";
+import { IEmployee } from "../api/types/employeeTypes";
+import { EmployeeCards } from "../elements/EmployeeCard";
 
 
 export default function HomePage() {
 
-    useEffect(() => {
-        const elements = document.querySelectorAll(".animate-on-scroll");
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("show");
-                    }
-                });
-            },
-            { threshold: 0.2 }
-        );
-
-        elements.forEach((el) => observer.observe(el));
-
-        return () => observer.disconnect();
-    }, [])
-
     return (
-       <main className="home_page">
+       <main className="container animate-on-load">
 
-            <section className="hero_section animate-on-scroll">
-                <img className="hero_logo" src="/white_logo.png" alt="Logo" />
-                <div className="hero_text">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Suspendisse hendrerit, velit ut volutpat placerat...
-                    </p>
+            <section className="hero_section ">
+                <img src="/logo/logo.svg" className="hero_logo" />
+            </section>
+
+            <section className="home_navigation ">
+                <div className="home_navigation_side">
+                    <Link to="#">МЕДИА</Link>
+                </div>
+                <span className="home_navigation_line"/>
+                <div className="home_navigation_side">
+                    <Link to={ACTORS_MEN}>АКТЁРЫ</Link>
+                    <Link to={ACTORS_WOMEN}>АКТРИСЫ</Link>
+                    <Link to={WRITER}>СЦЕНАРИСТЫ</Link>
                 </div>
             </section>
 
-            <section className="actors_section animate-on-scroll">
-                <h2>Наши актёры</h2>
+            <section className="agents_section">
+                <h2 className="home_title">Наша команда</h2>
+                <EmployeeCards />
+            </section>
+
+            <section className="actors_section">
+                <h2 className="home_title">Наши актёры</h2>
                 <ActorsWheel />
             </section>
 
-            <section className="agents_section animate-on-scroll">
-                <h2>Наши агенты</h2>
-                <div className="agents_grid"></div>
-            </section>
+            <section className="screenwriters_section">
+                <h2 className="home_title">Сценаристы</h2>
+                {
 
-            <section className="contact_section animate-on-scroll">
-                <h2>Связаться с нами</h2>
-                <form className="contact_form">
-                    <input type="text" placeholder="Ваше имя" />
-                    <input type="email" placeholder="Email" />
-                    <textarea placeholder="Сообщение" />
-                    <button type="submit">Отправить</button>
-                </form>
+                }
             </section>
-
         </main>
     )
 }

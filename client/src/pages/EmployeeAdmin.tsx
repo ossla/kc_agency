@@ -73,7 +73,7 @@ export default function EmployeeAdmin() {
                 <label htmlFor="middleName">Отчество</label>
                 <input type="text" id="middleName" value={middleName} onChange={e => setMiddleName(e.target.value)} placeholder="Отчество" />
                 
-                <label htmlFor="avatar">Аватар актёра*</label>
+                <label htmlFor="avatar">Аватар агента*</label>
                 <>
                     <input type="file" onChange={uploadAvatar} />
 

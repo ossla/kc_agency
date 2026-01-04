@@ -157,6 +157,9 @@ h3 {
     transform: scale(1.1);
 }
 
+.description {
+    white-space: pre-line;
+}
 
 @media (max-width: 1200px) {
     .actor_grid {

@@ -13,4 +13,6 @@ export const PROFILE = "/profile"
 export const EMPLOYEE_ADMIN="/employee_admin_panel"
 export const ACTOR_ADMIN="/actor_admin_panel"
 
+export const WRITER="/screenwriters"
+
 export const HOME = "/"

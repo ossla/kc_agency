@@ -1,7 +1,7 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler"
 import { IEmployee, IShortEmployee, toIEmployee, toIShortEmployee } from "./types/employeeTypes"
 import { GenderEnum } from "./types/enums"
-import { createEmployeeURL, getEmployeeURL, serverURL } from "./URLs"
+import { createEmployeeURL, getEmployeeURL, getFullEmployee, serverURL } from "./URLs"
 
 class fetchEmployees {
     // ================== CREATE ==================
@@ -23,7 +23,14 @@ class fetchEmployees {
     static async getShort(): Promise<IShortEmployee[]> {
         const response = await fetch(getEmployeeURL, {method: "GET"})
         const employees: IShortEmployee[] = await ResponseHandlerMap<IShortEmployee>(response, toIShortEmployee)
-        console.log("getShortEmpl data: " + JSON.stringify(employees))
+        console.log("getShort data: " + JSON.stringify(employees))
+        return employees
+    }
+
+    static async getFull(): Promise<IEmployee[]> {
+        const response = await fetch(getFullEmployee, {method: "GET"})
+        const employees: IEmployee[] = await ResponseHandlerMap<IEmployee>(response, toIEmployee)
+        console.log("getFull data: " + JSON.stringify(employees))
         return employees
     }
 

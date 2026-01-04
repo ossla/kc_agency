@@ -167,6 +167,7 @@
         overflow: hidden;
         transition: max-height 0.3s ease;
         box-shadow: 0 5px 10px rgba(0,0,0,.15);
+        background-color: #f4f1ec;
         z-index: 1000;
     }
 

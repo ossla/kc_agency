@@ -1,18 +1,18 @@
-/* ==== Анимация появления ==== */
+/* анимация появления */
 
-.animate-on-scroll {
+.animate-on-load {
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    animation: fadeUp 0.8s ease-out forwards;
 }
 
-.animate-on-scroll.show {
-    opacity: 1;
-    transform: translateY(0);
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-
-/* home-page */
 .home_page {
     width: 100%;
     display: flex;
@@ -20,21 +20,8 @@
     align-items: center;
 }
 
-/* черный фон */
-.hero_section {
-    width: 100%;
-    padding: 120px 20px 160px;
-    position: relative;
-    background: black;
-    color: white;
-
-    /* диагональ */
-    clip-path: polygon(0 0, 100% 0, 100% 65%, 0 100%);
-}
-
 .hero_logo {
     display: block;
-    width: 180px;
     margin: 0 auto 40px;
 }
 
@@ -50,18 +37,12 @@
     opacity: 0.9;
 }
 
-.actors_section,
-.agents_section,
-.contact_section {
-    width: 100%;
-    max-width: 1000px;
-    padding: 80px 20px;
+.actors_section {
+    max-width: 1200px;
     margin: auto;
 }
 
-.actors_section h2,
-.agents_section h2,
-.contact_section h2 {
+.home_title {
     font-size: 30px;
     text-align: center;
     margin-bottom: 30px;
@@ -101,4 +82,58 @@
 }
 .contact_form button:hover {
     background: #efefef;
+}
+
+.home_navigation a {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #68645a;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.home_navigation a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #32302b;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.home_navigation a:hover::after {
+    width: 100%;
+}
+
+.home_navigation {
+    width: 60%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+
+.home_navigation_side {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home_navigation_line {
+    width: 3px;
+    background: #fc7f7f;
+    align-self: stretch;
+}
+
+.actors_section,
+.agents_section,
+.screenwriters_section {
+    margin-bottom: 80px;
 }

@@ -25,7 +25,8 @@ export interface IEmployee {
     phone: string,
     photo: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+
     // необязательные поля
     middleName?: string,
     description?: string,

@@ -14,6 +14,7 @@ export const editActorURL = actorURL + "/edit"
 
 const employeeURL = serverURL + "/api/employee"
 export const getEmployeeURL = employeeURL
+export const getFullEmployee = employeeURL + "/full"
 export const createEmployeeURL = employeeURL + "/create"
 export const deleteEmployeeURL = employeeURL + "/delete"
 export const filterEmployeeURL = employeeURL + "/filter"

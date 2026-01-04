@@ -33,6 +33,7 @@ export async function ResponseHandler<T>(response: Response
     return toT(data)
 }
 
+// если массив
 export async function ResponseHandlerMap<T>(response: Response
                             , toT: (arg: any) => T): Promise<T[]> {
     let data

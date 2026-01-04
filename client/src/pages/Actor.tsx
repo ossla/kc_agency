@@ -69,7 +69,7 @@ export default function ActorPage() {
                 <div className="actor_right">
                     <div className="floating_block">
                     <h1 className="actor_fio">
-                        {actor.lastName} {actor.firstName} {actor.middleName}
+                        {actor.lastName} {actor.firstName} {actor.middleName && actor.middleName}
                     </h1>
 
                     <div className="actor_parameters">
@@ -103,13 +103,16 @@ export default function ActorPage() {
                     </div>
                     </div>
 
-
-                    <div className="floating_block">
-                    <div className="actor_block">
-                        <p id="quote">❝</p>
-                        <p>{actor.description}</p>
-                    </div>
-                    </div>
+                    {
+                        actor.description && (
+                            <div className="floating_block">
+                            <div className="actor_block">
+                                <p id="quote">❝</p>
+                                <p className="description">{actor.description}</p>
+                            </div>
+                            </div>
+                        )
+                    }
 
                     <div className="floating_block">
                         {actor.languages && (
