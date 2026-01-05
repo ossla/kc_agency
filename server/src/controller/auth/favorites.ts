@@ -10,18 +10,8 @@ import processApiError from "../../error/processError"
 import { getUr } from "./getUser"
 
 
-function checkIdentificators(param1?: string, param2?: string): void {
-    if (!param1 || !param2) {
-        throw new ApiError(400, "необходимо указать userId & actorId")
-    }
-
-    if (isNaN(Number(param1)) || isNaN(Number(param2))) {
-        throw new ApiError(400, "userId & actorId должны быть числами")
-    }
-}
-
-async function getActor(actorId: number): Promise<Actor> {
-    const actor = await appDataSource.getRepository(Actor).findOne({ where: { id: Number(actorId) }})
+async function getActor(actorId: string): Promise<Actor> {
+    const actor = await appDataSource.getRepository(Actor).findOne({ where: { id: actorId }})
     if (!actor) {
         throw new ApiError(404, "не найден пользователь")
     }
@@ -31,17 +21,19 @@ async function getActor(actorId: number): Promise<Actor> {
 export async function addFavorite(req: ICustomRequest, res: Response, next: NextFunction) {
     try {
         const { userId, actorId } = req.params
-        checkIdentificators(userId, actorId)
-        if (Number(userId) != req.user.id) {
+        if (!userId || !actorId) {
+            throw new ApiError(400, "необходимо указать userId & actorId")
+        }
+        if (userId != req.user.id) {
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const user = await getUr(Number(userId))
-        const actor = await getActor(Number(actorId))
+        const user = await getUr(userId)
+        const actor = await getActor(actorId)
 
         const exist = await appDataSource.getRepository(Favorite).findOneBy({ 
-            user: { id: Number(userId) },
-            actor: { id: Number(actorId) }
+            user: { id: userId },
+            actor: { id: actorId }
         })
         console.log(exist);
         if (exist) {
@@ -63,17 +55,19 @@ export async function addFavorite(req: ICustomRequest, res: Response, next: Next
 export async function removeFavorite(req: ICustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
         const { userId, actorId } = req.params
-        checkIdentificators(userId, actorId)
-        if (Number(userId) != req.user.id) {
+        if (!userId || !actorId) {
+            throw new ApiError(400, "необходимо указать userId & actorId")
+        }
+        if (userId != req.user.id) {
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const _ = await getUr(Number(userId))
-        const __ = await getActor(Number(actorId))
+        const _ = await getUr(userId)
+        const __ = await getActor(actorId)
 
         await appDataSource.getRepository(Favorite).delete({
-            user: { id: Number(userId) },
-            actor: { id: Number(actorId) }
+            user: { id: userId },
+            actor: { id: actorId }
         })
 
         res.status(200).json(true)
@@ -86,14 +80,14 @@ export async function removeFavorite(req: ICustomRequest, res: Response, next: N
 export async function getFavorites(req: ICustomRequest, res: Response, next: NextFunction) {
     try {
         const { userId } = req.params
-        if (!userId || isNaN(Number(userId))) {
-            throw new ApiError(400, "необходимо указать userId (в формате числа)")
+        if (!userId) {
+            throw new ApiError(400, "необходимо указать userId")
         }
-        if (Number(userId) != req.user.id) {
+        if (userId != req.user.id) {
             throw new ApiError(403, "Доступ к панели избранного другого пользователя запрещён")
         }
 
-        const user = await getUr(Number(userId))
+        const user = await getUr(userId)
 
         res.status(200).json(
             user.favorites.map((fav) => ({

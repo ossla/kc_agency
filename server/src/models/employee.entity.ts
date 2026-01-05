@@ -12,8 +12,8 @@ import { Actor } from "./actor.entity"
 
 @Entity()
 export class Employee {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id!: string
 
     @Column({ type: "varchar", length: 40, nullable: false })
     firstName: string       // имя

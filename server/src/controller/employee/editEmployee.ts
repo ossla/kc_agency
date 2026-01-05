@@ -35,8 +35,7 @@ function setEmployeeStringField<T extends keyof Employee>(employee: Employee, fi
 export async function editEmployee(req: Request, res: Response, next: NextFunction) {
     try {    
         const { id } = req.body
-        const idNum = Number(id)
-        if (!id || !Number.isInteger(idNum)) {
+        if (!id) {
             throw new ApiError(400, "укажите корректный id")
         }
         const {
@@ -51,7 +50,7 @@ export async function editEmployee(req: Request, res: Response, next: NextFuncti
         } = req.body
 
 
-        let employee: Employee = await getEmployee(Number(id))
+        let employee: Employee = await getEmployee(id)
         setName(employee, {first: firstName, last: lastName, middle: middleName})
         setEmployeeStringField(employee, "email", email)
         setEmployeeStringField(employee, "phone", phone)

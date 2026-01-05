@@ -9,11 +9,10 @@ export async function removeUser(req: Request, res: Response, next: NextFunction
                                                         : Promise<void> {
     try {
         const { id } = req.body
-        const idNum = Number(id)
-        if (!id || !Number.isInteger(idNum)) {
+        if (!id) {
             throw new ApiError(400, "укажите корректный id")
         }
-        const user: User = await appDataSource.getRepository(User).findOneBy({id: Number(id)})
+        const user: User = await appDataSource.getRepository(User).findOneBy({id})
         await appDataSource.getRepository(User).delete({ id: user.id })
 
         res.status(200).json(true)

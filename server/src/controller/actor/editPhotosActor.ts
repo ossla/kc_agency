@@ -14,7 +14,7 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
         const newAvatar: CustomFileType = req.files?.newAvatar
         if (!newAvatar) throw new Error("changeAvatar: не найдено поле newAvatar")
 
-        const actor: Actor = await getActor(Number(id))
+        const actor: Actor = await getActor(id)
 
         await changePhoto(newAvatar, "avatar.jpg", actor.directory)
         res.status(200).json(true)
@@ -37,7 +37,7 @@ export async function changeOrder(req: Request, res: Response, next: NextFunctio
             throw new Error("changeOrder: не найдено поле id")
         }
 
-        let actor: Actor = await getActor(Number(id))
+        let actor: Actor = await getActor(id)
         if (!actor.photos || actor.photos.length <= 0) {
             throw new Error("changeOrder: у актера нет фото")
         }

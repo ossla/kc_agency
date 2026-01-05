@@ -29,10 +29,6 @@ export async function createActor(req: ICustomRequest, res: Response, next: Next
         res.status(201).json(actor)
 
     } catch (error: unknown) {
-        // если папка другого актера существует, dirname == "", удалять ее не надо
-        if (dirname != "") {
-            await removeActorFolder(dirname)
-        }
         processApiError(error, next)
     }
 } // create
@@ -40,17 +36,28 @@ export async function createActor(req: ICustomRequest, res: Response, next: Next
 // получение avatar.jpg и фотографий для альбома актера.
 async function processActorFiles(req: ICustomRequest, body: CreateActorType, actor: Actor)
                                                             : Promise<string> {
-    let dirname: string;
-    const avatar: CustomFileType = req.files?.avatar
-    if (!avatar) throw new ApiError(400, 'Нужно добавить аватарку актера')
-    const photos: CustomFileType = req.files?.photos
-    if (!photos) throw new ApiError(400, 'Нужно добавить хотя бы одно фото')
+    let dirname: string
+    try {
+        const avatar: CustomFileType = req.files?.avatar
+        if (!avatar) throw new ApiError(400, 'Нужно добавить аватарку актера')
+        const photos: CustomFileType = req.files?.photos
+        if (!photos) throw new ApiError(400, 'Нужно добавить хотя бы одно фото')
 
-    dirname = await makeActorDirectory(body)
-    actor.directory = dirname
-    await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
-    actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
-    return dirname
+        dirname = await makeActorDirectory(body)
+        actor.directory = dirname
+
+        await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
+        actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
+
+        return dirname
+
+    } catch (error: unknown) {
+         if (dirname != "") {
+            await removeActorFolder(dirname)
+        }
+        throw error
+    }
+    
 }
 
 // заполнение полей (помимо файлов)
@@ -59,7 +66,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     actor.firstName = body.firstName
     actor.lastName  = body.lastName
     actor.dateOfBirth = body.dateOfBirth
-    actor.employee = await getEmployee(Number(body.employeeId))
+    actor.employee = await getEmployee(body.employeeId)
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
@@ -161,7 +168,6 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
         langsArr.push(lang)
     }
     actor.languages = langsArr
-
 }
 
 export async function saveSkills(actor: Actor, rawLanguages: string[] | string | undefined) {

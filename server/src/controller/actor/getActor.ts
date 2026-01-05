@@ -7,7 +7,7 @@ import { GenderEnum } from "./actorTypes"
 import ApiError from "../../error/apiError"
 
 
-export async function getActor(id: number): Promise<Actor> {
+export async function getActor(id: string): Promise<Actor> {
     const actor: Actor | null = await appDataSource
                                             .getRepository(Actor)
                                             .findOne({where: { id }})
@@ -21,12 +21,11 @@ export async function getActor(id: number): Promise<Actor> {
 export async function getOneActor(req: Request, res: Response, next: NextFunction) {
     try {
         const { id } = req.params
-        const idNum = Number(id)
 
-        if (!id || !Number.isInteger(idNum)) {
-            throw new ApiError(400, "укажите корректный id")
+        if (!id) {
+            throw new ApiError(400, "не найден id")
         }
-        const employee = await getActor(Number(id))
+        const employee = await getActor(id)
         
         res.status(200).json(employee)
         

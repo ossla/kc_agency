@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 
 import "../styles/Admin.css"
+import "../styles/Main.css"
+
 import fetchAuth from "../api/fetchAuth"
 import { useUser } from "../context/UserContext"
 import { useNavigate } from "react-router-dom"
@@ -12,7 +14,6 @@ import fetchEmployees from "../api/fetchEmployees"
 import { IShortEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
 import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
-
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()

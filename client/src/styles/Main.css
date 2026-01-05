@@ -132,3 +132,15 @@ html, body {
     width: 100%;
     overflow-x: hidden;
 }
+
+.error {
+  width: 90%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: #d19c9c;
+  border: 1px solid #db3737;
+  color: white;
+}

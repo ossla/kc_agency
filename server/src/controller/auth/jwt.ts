@@ -14,14 +14,14 @@ export function hashToken(token: string) {
 }
 
 export interface IJwtAccessPayload {
-    id: number;
+    id: string;
     name: string;
     email: string;
     isAdmin: boolean;
 }
 
 export interface IJwtRefreshPayload {
-    id: number;
+    id: string;
     email: string;
     deviceId: string;
 }

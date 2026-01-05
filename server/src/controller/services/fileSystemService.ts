@@ -54,11 +54,11 @@ export function makeActorDirname(body: CreateActorType): string {
 }
 
 export async function makeActorDirectory(body: CreateActorType): Promise<string> {
-    const dirname: string = makeActorDirname(body)
+    const dirname: string = crypto.randomUUID()
     const dirPath: string = path.join(returnStaticPath(), dirname)
     
     if (fs.existsSync(dirPath)) {
-        throw new Error("makeActorDirectory: папка с таким именем существует: " + dirPath)
+        throw new Error("makeActorDirectory: папка с таким именем существует: " + dirPath) // :)
     }
 
     fs.mkdirSync(dirPath)
@@ -68,6 +68,9 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
 
 export async function removeActorFolder(dirname: string): Promise<void> {
     const dirPath: string = path.join(returnStaticPath(), dirname)
+
+    console.log("path: " + dirPath)
+
     if (!fs.existsSync(dirPath)) {
         console.error("removeActorFolder: нет такой папки: ", dirPath)
     } else {
@@ -88,8 +91,8 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
         await photos.mv(path.join(dirPath, filename))
         filenames.push(filename)
     } else {
-        if (photos.length > 20) {
-            throw new Error("saveActorPhotos: Загружено более 20 фото")
+        if (photos.length > 40) {
+            throw new Error("saveActorPhotos: Загружено более 40 фото")
         }
 
         for (let i = 0; i < photos.length; i++) {

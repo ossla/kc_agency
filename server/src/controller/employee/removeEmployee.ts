@@ -12,12 +12,11 @@ export async function removeEmployee(req: Request, res: Response, next: NextFunc
                                                         : Promise<void> {
     try {
         const { id } = req.params
-        const idNum = Number(id)
-        if (!id || !Number.isInteger(idNum)) {
+        if (!id) {
             throw new ApiError(400, "укажите корректный id")
         }
 
-        const employee: Employee = await getEmployee(Number(id))
+        const employee: Employee = await getEmployee(id)
         await removePhoto(employee.photo)
         await appDataSource.getRepository(Employee).delete({ id: employee.id })
 

@@ -13,8 +13,8 @@ import { Favorite } from "./favorite.entity"
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn("uuid")
+    id!: string
 
     @Column({ type: "varchar", length: 40, nullable: false })
     name!: string            // имя

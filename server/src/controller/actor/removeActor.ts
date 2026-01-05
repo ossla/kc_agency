@@ -11,12 +11,11 @@ import ApiError from "../../error/apiError"
 export async function removeActor(req: Request, res: Response, next: NextFunction) : Promise<void> {
     try {
         const { id } = req.params
-        const idNum = Number(id)
 
-        if (!id || !Number.isInteger(idNum)) {
-            throw new ApiError(400, "укажите корректный id")
+        if (!id) {
+            throw new ApiError(400, "не найден id")
         }
-        const actor = await getActor(Number(id))
+        const actor = await getActor(id)
 
         await removeActorFolder(actor.directory)
         await appDataSource.getRepository(Actor).delete({ id: actor.id })

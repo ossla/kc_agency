@@ -18,7 +18,7 @@ function setActorField<T extends keyof Actor>(actor: Actor, field: T, value: Act
 
 async function setEmployee(actor: Actor, employeeId: any) {
     if (employeeId) {
-        const employee: Employee = await getEmployee(Number(employeeId))
+        const employee: Employee = await getEmployee(employeeId)
         actor.employee = employee
     }
 }

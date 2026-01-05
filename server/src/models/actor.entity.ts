@@ -18,8 +18,8 @@ import { HairColor } from "./hairColor.entity"
 
 @Entity()
 export class Actor {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn("uuid")
+    id!: string
 
     @Column({ type: "varchar", length: 40, nullable: false })
     firstName!: string           // имя

@@ -6,7 +6,7 @@ export const createActorSchema = z.object({
     firstName: z.string().min(1),
     lastName: z.string().min(1),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()),
-    employeeId: z.preprocess((val) => Number(val), z.number()),
+    employeeId: z.string().optional(),
     gender: z.string().min(1),
     hairColor: z.string().min(1),
     city: z.string().min(1),
@@ -32,7 +32,7 @@ export enum GenderEnum {
 
 // edit
 export const editActorSchema = z.object({
-    id: z.preprocess((val) => Number(val), z.number()),
+    id: z.string(),
 
     firstName: z.string().optional(),
     lastName: z.string().optional(),

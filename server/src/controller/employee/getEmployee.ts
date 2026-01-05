@@ -7,7 +7,7 @@ import { appDataSource } from "../../data-source"
 import ApiError from "../../error/apiError"
 
 
-export async function getEmployee(id: number): Promise<Employee> {
+export async function getEmployee(id: string): Promise<Employee> {
     const employee: Employee | null = await appDataSource
                                             .getRepository(Employee)
                                             .findOne({where: { id }})
@@ -22,11 +22,10 @@ export async function getOneEmployee(req: Request, res: Response, next: NextFunc
                                                         : Promise<void> {
     try {
         const { id } = req.params
-        const idNum = Number(id)
-        if (!id || !Number.isInteger(idNum)) {
-            throw new ApiError(400, "укажите корректный id")
+        if (!id) {
+            throw new ApiError(400, "не указан id")
         }
-        const employee: Employee = await getEmployee(Number(id))
+        const employee: Employee = await getEmployee(id)
 
         res.status(200).json(instanceToPlain(employee)) // @exclude hash password поле
 
