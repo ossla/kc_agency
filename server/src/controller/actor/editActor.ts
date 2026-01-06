@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express"
 import { appDataSource } from "../../data-source"
 import { getActor } from "./getActor"
 import { Actor } from "../../models/actor.entity"
-import processApiError from "../../error/processError"
 import { getEmployee } from "../employee/getEmployee"
 import { Employee } from "../../models/employee.entity"
 import { editActorSchema, EditActorType, GenderEnum } from "./actorTypes"
@@ -34,33 +33,30 @@ function setGender(actor: Actor, gender: any) {
 }
 
 export async function editActor(req: Request, res: Response, next: NextFunction) {
-    try {    
-        const body: EditActorType = editActorSchema.parse(req.body)
-        
-        let actor: Actor = await getActor(body.id)
-        setActorField(actor, "firstName", body.firstName)
-        setActorField(actor, "lastName", body.lastName)
-        setActorField(actor, "middleName", body.middleName)
-        setActorField(actor, "education", body.education)
-        setActorField(actor, "description", body.description)
-        setActorField(actor, "linkToFilmTools", body.linkToFilmTools)
-        setActorField(actor, "linkToKinoTeatr", body.linkToKinoTeatr)
-        setActorField(actor, "linkToKinopoisk", body.linkToKinopoisk)
-        setActorField(actor, "videoURL", body.videoURL)
+    const body: EditActorType = editActorSchema.parse(req.body)
+    
+    let actor: Actor = await getActor(body.id)
+    setActorField(actor, "firstName", body.firstName)
+    setActorField(actor, "lastName", body.lastName)
+    setActorField(actor, "middleName", body.middleName)
+    setActorField(actor, "education", body.education)
+    setActorField(actor, "description", body.description)
+    setActorField(actor, "linkToFilmTools", body.linkToFilmTools)
+    setActorField(actor, "linkToKinoTeatr", body.linkToKinoTeatr)
+    setActorField(actor, "linkToKinopoisk", body.linkToKinopoisk)
+    setActorField(actor, "videoURL", body.videoURL)
+    setGender(actor, body.gender)
 
-        setActorField(actor, "skills", body.skills)
-        setActorField(actor, "height", body.height)
-        setActorField(actor, "dateOfBirth", body.dateOfBirth)
+    setActorField(actor, "skills", body.skills)
+    setActorField(actor, "height", body.height)
+    setActorField(actor, "dateOfBirth", body.dateOfBirth)
 
-        await setEmployee(actor, body.employeeId)
-        await saveCity(actor, body.city)
-        await saveEyeColor(actor, body.eyeColor)
-        await saveHairColor(actor, body.hairColor)
-        await saveLanguages(actor, body.languages)
+    await setEmployee(actor, body.employeeId)
+    await saveCity(actor, body.city)
+    await saveEyeColor(actor, body.eyeColor)
+    await saveHairColor(actor, body.hairColor)
+    await saveLanguages(actor, body.languages)
 
-        await appDataSource.getRepository(Actor).save(actor)
-        res.json(actor)
-    } catch (error: unknown) {
-        processApiError(error, next)
-    }
+    await appDataSource.getRepository(Actor).save(actor)
+    res.json(actor)
 }

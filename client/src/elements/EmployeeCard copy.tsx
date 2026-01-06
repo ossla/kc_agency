@@ -9,43 +9,32 @@ interface IEmployeeCard {
 
 export function EmployeeCard({ employee }: IEmployeeCard) {
     return (
-        <div className="employee-card-wrapper">
         <div className="employee-card">
-            <div className='employee-main'>
-                <Link to={EMPLOYEES + '/' + employee.id}>
-                    <div className="employee-avatar">
-                        <img
-                            src={employee.avatarUrl}
-                            alt={`${employee.firstName} ${employee.lastName}`}
-                        />
-                    </div>
-                </Link>
-
-                <div className="employee-info">
-                    <div>
-                        <Link to={EMPLOYEES + '/' + employee.id}>
-                        <h1 className="employee-name">
-                            {employee.lastName} {employee.firstName}
-                        </h1>
-                        </Link>
-
-                        <div className="employee-description">
-                            {employee.description}
-                        </div>
-                    </div>
-                    <div className="employee-contacts">
-                        <h4 className="employee-phone">
-                            • {employee.phone}
-                        </h4>
-
-                        <h4 className="employee-email">
-                            • {employee.email}
-                        </h4>
-                    </div>
+            <Link to={EMPLOYEES + '/' + employee.id} className='employee-main'>
+                <div className="employee-avatar">
+                    <img
+                        src={employee.avatarUrl}
+                        alt={`${employee.firstName} ${employee.lastName}`}
+                    />
                 </div>
 
-            </div> {/* employee-main */}
+                <div className="employee-info">
+                    <h1 className="employee-name">
+                        {employee.lastName} {employee.firstName}
+                    </h1>
 
+                    <div className="employee-description">
+                        {employee.description}
+                    </div>
+
+                    <div className="employee-phone">
+                        {employee.phone}
+                    </div>
+                    <div className="employee-phone">
+                        {employee.email}
+                    </div>
+                </div>
+            </Link>
             <div className="employee-links">
                 {employee.vk &&
                     <div className="employee-link" style={{marginTop: "40px"}}>
@@ -68,7 +57,6 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
                     </div>
                 }
             </div>
-        </div>     
         </div>
     )
 }

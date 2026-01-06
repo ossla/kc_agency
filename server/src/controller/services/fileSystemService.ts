@@ -3,6 +3,7 @@ import * as path from "path"
 import * as fs from "fs"
 import { CreateEmployeeType } from "../employee/employeeTypes"
 import { CreateActorType } from "../actor/actorTypes"
+import ApiError from "../../error/apiError"
 
 
 // код для работы с файлами на сервере (server/static)
@@ -25,15 +26,15 @@ export async function savePhoto(photo: CustomFileType
 
     const filepath: string = path.join(folderName, photoName)
     if (fs.existsSync(filepath)) {
-        throw new Error("savePhoto: Фото с таким именем уже существует: " + photoName)
+        throw ApiError.badRequest("savePhoto: Фото с таким именем уже существует: " + photoName)
     }
     if (photo) {
         if (Array.isArray(photo)) {
-            throw new Error("savePhoto: загрузите только 1 файл")
+            throw ApiError.badRequest("savePhoto: загрузите только 1 файл")
         }
-        photo.mv(filepath)
+        await photo.mv(filepath)
     } else {
-        throw new Error("savePhoto: загрузите фото")
+        throw ApiError.badRequest("savePhoto: загрузите фото")
     }
 }
 
@@ -58,7 +59,7 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
     const dirPath: string = path.join(returnStaticPath(), dirname)
     
     if (fs.existsSync(dirPath)) {
-        throw new Error("makeActorDirectory: папка с таким именем существует: " + dirPath) // :)
+        throw ApiError.badRequest("makeActorDirectory: папка с таким именем существует: " + dirPath) // :)
     }
 
     fs.mkdirSync(dirPath)
@@ -68,8 +69,6 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
 
 export async function removeActorFolder(dirname: string): Promise<void> {
     const dirPath: string = path.join(returnStaticPath(), dirname)
-
-    console.log("path: " + dirPath)
 
     if (!fs.existsSync(dirPath)) {
         console.error("removeActorFolder: нет такой папки: ", dirPath)
@@ -92,7 +91,7 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
         filenames.push(filename)
     } else {
         if (photos.length > 40) {
-            throw new Error("saveActorPhotos: Загружено более 40 фото")
+            throw ApiError.badRequest("saveActorPhotos: Загружено более 40 фото")
         }
 
         for (let i = 0; i < photos.length; i++) {
@@ -110,13 +109,13 @@ export async function changePhoto(newPhoto: CustomFileType, filename: string, di
         : path.join(returnStaticPath(), filename)
 
     if (!fs.existsSync(filepath)) {
-        throw new Error(`changePhoto: Файл ${filepath} не существует`)
+        throw ApiError.badRequest(`changePhoto: Файл ${filepath} не существует`)
     }
 
     if (!Array.isArray(newPhoto)) {
         fs.rmSync(filepath)
         await newPhoto.mv(filepath)
     } else {
-        throw new Error("changePhoto: ожидался одиночный файл")
+        throw ApiError.badRequest("changePhoto: ожидался одиночный файл")
     }
 }

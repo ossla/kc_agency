@@ -8,6 +8,8 @@ export const createEmployeeSchema = z.object({
 
     middleName: z.string().optional(),
     description: z.string().optional(),
+    instagram: z.string().optional(),
+    facebook: z.string().optional(),
     telegram: z.string().optional(),
     vk: z.string().optional()
 })

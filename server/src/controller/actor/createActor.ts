@@ -4,7 +4,6 @@ import { ICustomRequest } from "../../middleware/authMiddleware"
 import { CustomFileType, makeActorDirectory, removeActorFolder, saveActorPhotos, savePhoto } from "../services/fileSystemService"
 import { Actor } from "../../models/actor.entity"
 import { appDataSource } from "../../data-source"
-import processApiError from "../../error/processError"
 import { createActorSchema, CreateActorType, GenderEnum } from "./actorTypes"
 import { Language } from "../../models/language.entity"
 import { EyeColor } from "../../models/eyeColor.entity"
@@ -15,22 +14,16 @@ import { HairColor } from "../../models/hairColor.entity"
 
 
 export async function createActor(req: ICustomRequest, res: Response, next: NextFunction) {
-    let dirname: string = ""
-    try {
-        console.log("create actor controller starts...")
-        const actor: Actor = new Actor()
-        const body: CreateActorType = createActorSchema.parse(req.body)
+    console.log("create actor controller starts...")
+    const actor: Actor = new Actor()
+    const body: CreateActorType = createActorSchema.parse(req.body)
 
-        dirname = await processActorFiles(req, body, actor)
-        await fillActor(actor, body)
+    const dirname = await processActorFiles(req, body, actor)
+    await fillActor(actor, body)
 
-        await appDataSource.getRepository(Actor).save(actor)
+    await appDataSource.getRepository(Actor).save(actor)
 
-        res.status(201).json(actor)
-
-    } catch (error: unknown) {
-        processApiError(error, next)
-    }
+    res.status(201).json(actor)
 } // create
 
 // получение avatar.jpg и фотографий для альбома актера.
@@ -39,25 +32,25 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
     let dirname: string
     try {
         const avatar: CustomFileType = req.files?.avatar
-        if (!avatar) throw new ApiError(400, 'Нужно добавить аватарку актера')
+        if (!avatar) throw ApiError.badRequest('Нужно добавить аватарку актера')
         const photos: CustomFileType = req.files?.photos
-        if (!photos) throw new ApiError(400, 'Нужно добавить хотя бы одно фото')
+        if (!photos) throw ApiError.badRequest('Нужно добавить хотя бы одно фото')
 
         dirname = await makeActorDirectory(body)
         actor.directory = dirname
 
         await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
+        
         actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
 
         return dirname
 
     } catch (error: unknown) {
-         if (dirname != "") {
+        if (dirname != "") {
             await removeActorFolder(dirname)
         }
         throw error
     }
-    
 }
 
 // заполнение полей (помимо файлов)
@@ -70,7 +63,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
-        throw new ApiError(400, `create: Неверно указан пол актера: ${body.gender}`)
+        throw ApiError.badRequest(`Неверно указан пол актера: ${body.gender}`)
     }
     await saveEyeColor(actor, body.eyeColor)
     await saveCity(actor, body.city)
@@ -145,13 +138,13 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
             rawLangsArr = JSON.parse(rawLanguages)
             if (!Array.isArray(rawLangsArr)) throw new Error()
         } catch {
-            throw new ApiError(400, "Некорректный JSON в поле languages")
+            throw ApiError.badRequest("Некорректный JSON в поле languages")
         }
 
     } else if (Array.isArray(rawLanguages)) {
         rawLangsArr = rawLanguages
     } else {
-        throw new ApiError(400, "languages должен быть или string или string[]")
+        throw ApiError.badRequest('languages должен быть или string или string[], например ["English", "Belorussian"]')
     }
 
     let langsArr: Array<Language> = new Array<Language>()
@@ -181,13 +174,13 @@ export async function saveSkills(actor: Actor, rawLanguages: string[] | string |
             rawLangsArr = JSON.parse(rawLanguages)
             if (!Array.isArray(rawLangsArr)) throw new Error()
         } catch {
-            throw new ApiError(400, "Некорректный JSON в поле languages")
+            throw ApiError.badRequest("Некорректный JSON в поле languages")
         }
 
     } else if (Array.isArray(rawLanguages)) {
         rawLangsArr = rawLanguages
     } else {
-        throw new ApiError(400, "languages должен быть или string или string[]")
+        throw ApiError.badRequest('skills должен быть или string или string[], например ["Лыжный спорт", "игра на гитаре"]')
     }
 
     actor.skills = rawLangsArr

@@ -40,7 +40,7 @@ export default function ActorsList(props: ActorListProps) {
     }
 
     if (actors.length === 0 && !isFiltered) {
-        return <p>Актёры не загружены</p>
+        return <Loading />
     }
 
     return (

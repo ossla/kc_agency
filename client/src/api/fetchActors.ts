@@ -37,7 +37,7 @@ class fetchActors {
         return actors
     }
 
-    static async getActor(id: number): Promise<IActor> {        
+    static async getActor(id: string): Promise<IActor> {        
         const response = await fetch(getActorsURL + "/" + id, {method: "GET"})
         const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
         console.log("getActor data: " + JSON.stringify(actor))

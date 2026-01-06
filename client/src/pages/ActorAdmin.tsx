@@ -11,7 +11,7 @@ import fetchActors from "../api/fetchActors"
 import { ICity, IEyeColor, ILanguage } from "../api/types/relevantTypes"
 import fetchRelevant from "../api/fetchRelevant"
 import fetchEmployees from "../api/fetchEmployees"
-import { IShortEmployee } from "../api/types/employeeTypes"
+import { IEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
 import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 
@@ -44,7 +44,7 @@ export default function ActorAdmin() {
 
     // relations
     const [employeeId, setEmployeeId] = useState<string>()
-    const [loadedEmployees, setLoadedEmployees] = useState<IShortEmployee[]>([])
+    const [loadedEmployees, setLoadedEmployees] = useState<IEmployee[]>([])
 
     const [eyeColor, setEyeColor] = useState<string>()
     const [loadedEyeColors, setLoadedEyeColors] = useState<IEyeColor[]>([])
@@ -120,7 +120,7 @@ export default function ActorAdmin() {
             setLoadedCities(await fetchRelevant.getCities())
             setLoadedEyeColors(await fetchRelevant.getEyeColors())
             setLoadedLanguages(await fetchRelevant.getLanguages())
-            setLoadedEmployees(await fetchEmployees.getShort())
+            setLoadedEmployees(await fetchEmployees.get())
             setLoadedHairColors(await fetchRelevant.getHairColors())
         }
         f()

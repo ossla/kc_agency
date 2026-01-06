@@ -18,6 +18,8 @@ export default function EmployeeAdmin() {
     const [email, setEmail] = useState<string>()
     const [phone, setPhone] = useState<string>()
     const [telegram, setTelegram] = useState<string>()
+    const [instagram, setInstagram] = useState<string>()
+    const [facebook, setFacebook] = useState<string>()
     const [vk, setVk] = useState<string>()
     const [description, setDescription] = useState<string>()
     const navigator = useNavigate()
@@ -46,6 +48,8 @@ export default function EmployeeAdmin() {
             if (middleName) reqFormData.append("middleName", middleName)
             if (description) reqFormData.append("description", description)
             if (telegram) reqFormData.append("telegram", telegram)
+            if (instagram) reqFormData.append("isntagram", instagram)
+            if (facebook) reqFormData.append("facebook", facebook)
             if (vk) reqFormData.append("vk", vk)
 
             await fetchAuth.auth()
@@ -64,10 +68,10 @@ export default function EmployeeAdmin() {
         <div className="container">
             <div className="admin">
                 <h1>Админ-агент</h1>
-                <label htmlFor="firstName">Имя</label>
+                <label htmlFor="firstName">Имя*</label>
                 <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
                 
-                <label htmlFor="lastName">Фамилия</label>
+                <label htmlFor="lastName">Фамилия*</label>
                 <input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Фамилия" />
                 
                 <label htmlFor="middleName">Отчество</label>
@@ -91,18 +95,24 @@ export default function EmployeeAdmin() {
                 </>
 
                 <h2>Данные для связи с агентом</h2>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email*</label>
                 <input type="text" id="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email" />
                 
-                <label htmlFor="phone">Телефон</label>
+                <label htmlFor="phone">Телефон*</label>
                 <input type="text" id="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="телефон" />
                 
-                <label htmlFor="telegram">Ссылка на telegram</label>
+                <label htmlFor="telegram">Ссылка на telegram: только ник, без @, для ссылки https://t.me/Введённые данные</label>
                 <input type="text" id="telegram" value={telegram} onChange={e => setTelegram(e.target.value)} placeholder="telegram" />
                 
-                <label htmlFor="vk">Ссылка на страницу ВКонтакте</label>
+                <label htmlFor="vk">Ссылка на страницу ВКонтакте, включая https://</label>
                 <input type="text" id="vk" value={vk} onChange={e => setVk(e.target.value)} placeholder="vk" />
                 
+                <label htmlFor="instagram">Ссылка на страницу instagram, включая https://</label>
+                <input type="text" id="instagram" value={instagram} onChange={e => setInstagram(e.target.value)} placeholder="instagram" />
+                
+                <label htmlFor="facebook">Ссылка на страницу facebook, включая https://</label>
+                <input type="text" id="facebook" value={facebook} onChange={e => setFacebook(e.target.value)} placeholder="facebook" />
+
                 <label htmlFor="description">(опционально) описание / доп. данные</label>
                 <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="описание..." />
 

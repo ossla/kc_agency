@@ -16,7 +16,7 @@ export default function Employee() {
     useEffect(() => {
         const loadData = async () => { 
                 try {
-                    setEmployee(await fetchEmployees.getEmployee(Number(id)))
+                    setEmployee(await fetchEmployees.getEmployee(id + ""))
                 } catch (e: any) {
                     setError("Не удалось загрузить агента")
                 }

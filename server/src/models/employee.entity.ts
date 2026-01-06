@@ -37,10 +37,16 @@ export class Employee {
     photo: string           // путь к фото на сервере
 
     @Column({ type: "varchar", length: 100, nullable: true })
-    telegram?: string       // ссылка на телегу
+    telegram?: string
 
     @Column({ type: "varchar", length: 100, nullable: true })
-    vk?: string             // ссылка на VK
+    instagram?: string
+
+    @Column({ type: "varchar", length: 100, nullable: true })
+    facebook?: string
+
+    @Column({ type: "varchar", length: 100, nullable: true })
+    vk?: string
 
     @OneToMany(() => Actor, (actor) => actor.employee)
     actors: Actor[]         // пул актеров

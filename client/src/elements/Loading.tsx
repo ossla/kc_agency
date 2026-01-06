@@ -1,3 +1,9 @@
+import "../styles/Main.css"
+
 export default function Loading() {
-    return (<img src="loading.gif" />)
+    return (
+        <div className="loading">
+            <img src="/icons/loading.gif" />
+        </div>
+    )
 }

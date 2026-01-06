@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express"
 import * as bcrypt from "bcrypt"
 
 import { appDataSource } from "../../data-source"
-import processApiError from "../../error/processError"
 import { createTokens, TokenPair } from "./jwt"
 import { User } from "../../models/user.entity"
 import ApiError from "../../error/apiError"
@@ -10,38 +9,31 @@ import { COOKIE_NAME, REFRESH_TOKEN_EXPIRES_MS } from "./config"
 import { IAuthorized, IUser } from "./authTypes"
 
 
-
-
 export async function login(req: Request, res: Response, next: NextFunction) : Promise<void> {
-    try {
-        // получение данных
-        const { email, password } = req.body
-        if (!email || !password) throw new ApiError(400, 'Нужно заполнить все поля')
-        // идентификация
-        const user = await appDataSource.getRepository(User).findOneBy({
-            email: email
-        })
-        if (!user) throw new ApiError(400, 'Пользователя с таким email не существует')
-        // проверка пароля
-        const valid: boolean = bcrypt.compareSync(password, user.hashPassword)
-        if (!valid) throw new ApiError(400, 'Неверный пароль')
+    // получение данных
+    const { email, password } = req.body
+    if (!email || !password) throw new ApiError(400, 'Нужно заполнить все поля')
+    // идентификация
+    const user = await appDataSource.getRepository(User).findOneBy({
+        email: email.trim()
+    })
+    if (!user) throw ApiError.badRequest('Пользователя с таким email не существует')
+    // проверка пароля
+    const valid: boolean = bcrypt.compareSync(password, user.hashPassword)
+    if (!valid) throw ApiError.badRequest('Неверный пароль')
 
-        // создание токена
-        const tokens: TokenPair = await createTokens(user) // + работа с entity refresh_token
+    // создание токена
+    const tokens: TokenPair = await createTokens(user) // + работа с entity refresh_token
 
-        res.cookie(COOKIE_NAME, tokens.refresh, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: REFRESH_TOKEN_EXPIRES_MS
-        })
+    res.cookie(COOKIE_NAME, tokens.refresh, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: REFRESH_TOKEN_EXPIRES_MS
+    })
 
-        const userResp: IUser = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
-        const resp: IAuthorized = { accessToken: tokens.access, user: userResp }
-        res.status(201).json(resp)
-
-    } catch (error: unknown) {
-        processApiError(error, next)
-    }
+    const userResp: IUser = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
+    const resp: IAuthorized = { accessToken: tokens.access, user: userResp }
+    res.status(201).json(resp)
 }

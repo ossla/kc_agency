@@ -1,5 +1,4 @@
 /* анимация появления */
-
 .animate-on-load {
     opacity: 0;
     transform: translateY(40px);
@@ -13,6 +12,7 @@
     }
 }
 
+
 .home_page {
     width: 100%;
     display: flex;
@@ -20,9 +20,17 @@
     align-items: center;
 }
 
+.hero_section {
+    border-bottom: 3px solid rgb(233, 147, 147);
+    padding-bottom: 0px;
+    margin: 0 auto 40px;
+    width: 70%;
+}
+
 .hero_logo {
     display: block;
-    margin: 0 auto 40px;
+    margin: 0 auto 0;
+    padding: 0;
 }
 
 .hero_text {
@@ -46,13 +54,6 @@
     font-size: 30px;
     text-align: center;
     margin-bottom: 30px;
-}
-
-/* сетка агентов */
-.agents_grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px;
 }
 
 /* форма */
@@ -110,8 +111,12 @@
     width: 100%;
 }
 
+.home_navigation a:hover {
+    bottom: 2px;
+}
+
 .home_navigation {
-    width: 60%;
+    width: 70%;
     margin: auto;
     display: flex;
     flex-direction: row;
@@ -125,15 +130,19 @@
     flex-direction: column;
     align-items: center;
 }
-
+/* 
 .home_navigation_line {
     width: 3px;
     background: #fc7f7f;
     align-self: stretch;
+} */
+
+.about_section p {
+    font-size: 18px;
 }
 
 .actors_section,
-.agents_section,
-.screenwriters_section {
+.about_section,
+.agents_section {
     margin-bottom: 80px;
 }

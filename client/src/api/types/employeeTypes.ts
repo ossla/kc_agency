@@ -3,6 +3,8 @@
 // * REQUEST для формирования запроса
 // * RESPONSE для парсинга входящих данных
 
+import { serverURL } from "../URLs"
+
 // ================================ REQUEST ================================
 // export interface CreateAgentType {
 //     firstName: string,
@@ -18,12 +20,12 @@
 
 // ================================ RESPONSE ================================
 export interface IEmployee {
-    id: number,
+    id: string,
     firstName: string,
     lastName: string,
     email: string,
     phone: string,
-    photo: string,
+    avatarUrl: string,
     createdAt: Date,
     updatedAt: Date,
 
@@ -31,7 +33,9 @@ export interface IEmployee {
     middleName?: string,
     description?: string,
     telegram?: string,
-    VK?: string,
+    instagram?: string,
+    facebook?: string,
+    vk?: string,
 }
 
 export function toIEmployee(raw: any): IEmployee {
@@ -40,7 +44,7 @@ export function toIEmployee(raw: any): IEmployee {
         firstName: raw.firstName,
         lastName: raw.lastName,
         email: raw.email,
-        photo: raw.photo,
+        avatarUrl: `${serverURL}/${raw.photo}.jpg`,
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
 
@@ -49,22 +53,8 @@ export function toIEmployee(raw: any): IEmployee {
         phone: raw.phone ?? undefined,
         description: raw.description ?? undefined,
         telegram: raw.telegram ?? undefined,
-        VK: raw.VK ?? undefined,
-    }
-}
-
-export interface IShortEmployee {
-    id: number,
-    firstName: string,
-    lastName: string,
-    avatarUrl: string
-}
-
-export function toIShortEmployee(raw: any): IShortEmployee {
-    return {
-        id: raw.id,
-        firstName: raw.firstName,
-        lastName: raw.lastName,
-        avatarUrl:`http://localhost:3001/${raw.photo}.jpg`,
+        facebook: raw.facebook ?? undefined,
+        instagram: raw.instagram ?? undefined,
+        vk: raw.vk ?? undefined,
     }
 }

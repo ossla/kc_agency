@@ -46,6 +46,10 @@ h3 {
     object-fit: cover;
 }
 
+.actor_avatar:hover {
+    cursor: pointer;
+}
+
 /* RIGHT COLUMN */
 .actor_right {
     position: relative;

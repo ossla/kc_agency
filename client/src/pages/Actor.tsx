@@ -8,6 +8,7 @@ import { ILanguage } from "../api/types/relevantTypes";
 
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
+import { processError } from "../api/apiError";
 
 
 export default function ActorPage() {
@@ -19,9 +20,10 @@ export default function ActorPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                setActor(await fetchActors.getActor(Number(id)))
-            } catch {
-                setError("Не удалось загрузить актёра")
+                if (!id) throw "не указан id";
+                setActor(await fetchActors.getActor(id))
+            } catch(e: unknown) {
+                setError(processError(e))
             }
         };
         loadData()

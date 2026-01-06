@@ -9,6 +9,8 @@ import fileUpload from "express-fileupload"
 import { appDataSource } from "./data-source"
 import router from "./route/router"
 import { errorMiddleware } from "./middleware/errorMiddleware"
+import "./error/zorErrorsLocalization"
+
 
 dotenv.config()
 const app = express()

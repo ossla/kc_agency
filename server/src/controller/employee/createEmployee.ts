@@ -4,7 +4,6 @@ import { ICustomRequest } from "../../middleware/authMiddleware"
 import { createEmployeeSchema, CreateEmployeeType } from "./employeeTypes"
 import { appDataSource } from "../../data-source"
 import { Employee } from "../../models/employee.entity"
-import processApiError from "../../error/processError"
 import { CustomFileType, /** makeEmployeePhotoName,*/ removePhoto, savePhoto } from "../services/fileSystemService"
 import ApiError from "../../error/apiError"
 
@@ -21,7 +20,7 @@ export async function createEmployee(req: ICustomRequest, res: Response, next: N
 
         const photo: CustomFileType = req.files?.photo
         if (!photo) {
-            throw new ApiError(400, "Необходимо добавить поле photo для загрузки аватара")
+            throw ApiError.badRequest("Необходимо добавить поле photo для загрузки аватара")
         }
         photoName = crypto.randomUUID()
         await savePhoto(photo, photoName + ".jpg")
@@ -36,6 +35,8 @@ export async function createEmployee(req: ICustomRequest, res: Response, next: N
         employee.photo = photoName
         employee.telegram = body.telegram ?? null
         employee.vk = body.vk ?? null
+        employee.instagram = body.vk ?? null
+        employee.facebook = body.vk ?? null
 
         await appDataSource.getRepository(Employee).save(employee)
         res.status(201).json(employee)
@@ -44,6 +45,6 @@ export async function createEmployee(req: ICustomRequest, res: Response, next: N
         if (photoName != "") {
             await removePhoto(photoName)
         }
-        processApiError(error, next)
+        throw error
     }
 } // create

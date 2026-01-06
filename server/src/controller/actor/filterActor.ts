@@ -3,7 +3,6 @@ import { SelectQueryBuilder } from "typeorm"
 
 import { appDataSource } from "../../data-source"
 import { Actor } from "../../models/actor.entity"
-import processApiError from "../../error/processError"
 import { GenderEnum, FilterActorType, filterActorSchema } from "./actorTypes"
 
 
@@ -90,37 +89,32 @@ function filterByAge(qb: SelectQueryBuilder<Actor>, minAge: any, maxAge: any) {
 }
 
 export async function filterActor(req: Request, res: Response, next: NextFunction) {
-    try {
-        const body: FilterActorType = filterActorSchema.parse(req.body)
-        
-        const actorRepo = appDataSource.getRepository(Actor)
-        const qb = actorRepo.createQueryBuilder("actor")
-            .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
-            .leftJoin("actor.languages", "language")
+    const body: FilterActorType = filterActorSchema.parse(req.body)
+    
+    const actorRepo = appDataSource.getRepository(Actor)
+    const qb = actorRepo.createQueryBuilder("actor")
+        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+        .leftJoin("actor.languages", "language")
 
-        filterSearch(qb, body.search)
-        filterByEmployee(qb, body.employeeId)
-        filterByCities(qb, body.cityIds)
-        filterByEyeColors(qb, body.eyeIds)
-        filterByGender(qb, body.gender)
-        filterByHeight(qb, body.minHeight, body.maxHeight)
-        filterByAge(qb, body.minAge, body.maxAge)
-        
-        if (body.languageIds) {
-            filterByLanguages(qb, body.languageIds)
-            qb.groupBy("actor.id")
-        }
-        if (body.cityIds && body.cityIds.length > 0) {
-           filterByCities(qb, body.cityIds)
-        }
-        if (body.eyeIds && body.eyeIds.length > 0) {
-            filterByEyeColors(qb, body.eyeIds)
-        }
-
-        const actors = await qb.getMany()
-        res.json(actors)
-
-    } catch (error: unknown) {
-        processApiError(error, next)
+    filterSearch(qb, body.search)
+    filterByEmployee(qb, body.employeeId)
+    filterByCities(qb, body.cityIds)
+    filterByEyeColors(qb, body.eyeIds)
+    filterByGender(qb, body.gender)
+    filterByHeight(qb, body.minHeight, body.maxHeight)
+    filterByAge(qb, body.minAge, body.maxAge)
+    
+    if (body.languageIds) {
+        filterByLanguages(qb, body.languageIds)
+        qb.groupBy("actor.id")
     }
+    if (body.cityIds && body.cityIds.length > 0) {
+        filterByCities(qb, body.cityIds)
+    }
+    if (body.eyeIds && body.eyeIds.length > 0) {
+        filterByEyeColors(qb, body.eyeIds)
+    }
+
+    const actors = await qb.getMany()
+    res.json(actors)
 }

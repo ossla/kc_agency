@@ -6,7 +6,7 @@ import "../styles/Main.css"
 
 import fetchAuth from "../api/fetchAuth"
 import { PROFILE } from "../routes"
-import { ProcessApiError } from "../api/apiError"
+import { processError } from "../api/apiError"
 
 
 export default function Registration() {
@@ -23,7 +23,7 @@ export default function Registration() {
             await fetchAuth.registration({ email, name, password })
             navigator(PROFILE)
         } catch (e: unknown) {
-            setError(ProcessApiError(e))
+            setError(processError(e))
         }
     }
 
@@ -48,6 +48,7 @@ export default function Registration() {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password} 
             />
+
             {
                 error !== null &&
                 <p className="error">{error}</p>

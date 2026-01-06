@@ -20,6 +20,7 @@ class fetchAuth {
         })
         
         const data: IAuthorized = await ResponseHandler<IAuthorized>(response, toIAuthorized)
+
         console.log("registration resp data: " + data)
         updateUser(data.user, data.accessToken)
         return data

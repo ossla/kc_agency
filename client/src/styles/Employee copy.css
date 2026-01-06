@@ -1,0 +1,68 @@
+.employee-card, .employee-main {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+
+    color: #272424;
+    overflow: hidden;
+}
+
+.employee-name {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.employee-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 60px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #584625;
+}
+
+.employee-link {
+    display: flex;
+    justify-content: center;
+}
+
+.employee-link img {
+    width: 50px;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.employee-link img:hover {
+    transform: scale(1.05);
+}
+
+.employee-info {
+    width: 500px;
+}
+
+.employee-description {
+    background: rgba(255, 255, 255, 0.6); /* полупрозрачный */
+    padding: 12px 16px;
+
+    color: #272424;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.employee-phone {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+@media (max-width: 480px) {
+    
+}
+
+
+/* employees list */
+
+

@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express"
-import * as fs from "fs"
 
 import { appDataSource } from "../../data-source"
 import { getEmployee } from "./getEmployee"
 import { Employee } from "../../models/employee.entity"
-import processApiError from "../../error/processError"
 import { changePhoto, CustomFileType } from "../services/fileSystemService"
 import ApiError from "../../error/apiError"
 
@@ -33,39 +31,35 @@ function setEmployeeStringField<T extends keyof Employee>(employee: Employee, fi
 }
 
 export async function editEmployee(req: Request, res: Response, next: NextFunction) {
-    try {    
-        const { id } = req.body
-        if (!id) {
-            throw new ApiError(400, "укажите корректный id")
-        }
-        const {
-            firstName,
-            lastName,
-            middleName,
-            email,
-            phone,
-            description,
-            telegram,
-            vk,
-        } = req.body
-
-
-        let employee: Employee = await getEmployee(id)
-        setName(employee, {first: firstName, last: lastName, middle: middleName})
-        setEmployeeStringField(employee, "email", email)
-        setEmployeeStringField(employee, "phone", phone)
-        setEmployeeStringField(employee, "description", description)
-        setEmployeeStringField(employee, "telegram", telegram)
-        setEmployeeStringField(employee, "vk", vk)
-
-        const newAvatar: CustomFileType = req.files?.newAvatar
-        if (newAvatar) {
-            await changePhoto(newAvatar, employee.photo)
-        }
-
-        await appDataSource.getRepository(Employee).save(employee)
-        res.json(employee)
-    } catch (error: unknown) {
-        processApiError(error, next)
+    const { id } = req.body
+    if (!id) {
+        throw ApiError.badRequest("укажите корректный id")
     }
+    const {
+        firstName,
+        lastName,
+        middleName,
+        email,
+        phone,
+        description,
+        telegram,
+        vk,
+    } = req.body
+
+
+    let employee: Employee = await getEmployee(id)
+    setName(employee, {first: firstName, last: lastName, middle: middleName})
+    setEmployeeStringField(employee, "email", email)
+    setEmployeeStringField(employee, "phone", phone)
+    setEmployeeStringField(employee, "description", description)
+    setEmployeeStringField(employee, "telegram", telegram)
+    setEmployeeStringField(employee, "vk", vk)
+
+    const newAvatar: CustomFileType = req.files?.newAvatar
+    if (newAvatar) {
+        await changePhoto(newAvatar, employee.photo)
+    }
+
+    await appDataSource.getRepository(Employee).save(employee)
+    res.json(employee)
 }

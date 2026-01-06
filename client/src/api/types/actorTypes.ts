@@ -31,7 +31,7 @@ export interface CreateActorType {
 }
 
 export interface EditActorType {
-    id: number;
+    id: string;
 
     firstName?: string;
     lastName?: string;
@@ -67,7 +67,7 @@ export interface FilterActorType {
 
 // ================================ RESPONSE ================================
 export interface IActor {
-    id: number;
+    id: string;
     firstName: string;
     lastName: string;
     gender: string;
@@ -96,7 +96,7 @@ export interface IActor {
 
 export function toIActor(raw: any): IActor {
     return {
-        id: Number(raw.id),
+        id: raw.id,
         firstName: raw.firstName,
         lastName: raw.lastName,
         gender: raw.gender,
@@ -125,7 +125,7 @@ export function toIActor(raw: any): IActor {
 }
 
 export interface IShortActor {
-    id: number,
+    id: string,
     firstName: string,
     lastName: string,
     directory: string,
@@ -135,7 +135,7 @@ export interface IShortActor {
 
 export function toIShortActor(raw: any): IShortActor{
     return {
-        id: Number(raw.id),
+        id: raw.id,
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
