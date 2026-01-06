@@ -48,7 +48,7 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
 
             <div className="employee-links">
                 {employee.vk &&
-                    <div className="employee-link" style={{marginTop: "40px"}}>
+                    <div className="employee-link">
                         <a href={employee.vk} ><img src="/icons/vk.svg" alt='vk'/></a>
                     </div>
                 }
@@ -63,7 +63,7 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
                     </div>
                 }
                 {employee.facebook &&
-                    <div className="employee-link" style={{marginBottom: "40px"}}>
+                    <div className="employee-link">
                         <a href={employee.facebook} ><img src="/icons/facebook.svg" alt='facebook'/></a>
                     </div>
                 }

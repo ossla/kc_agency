@@ -43,6 +43,8 @@ export async function editEmployee(req: Request, res: Response, next: NextFuncti
         phone,
         description,
         telegram,
+        instagram,
+        facebook,
         vk,
     } = req.body
 
@@ -53,6 +55,8 @@ export async function editEmployee(req: Request, res: Response, next: NextFuncti
     setEmployeeStringField(employee, "phone", phone)
     setEmployeeStringField(employee, "description", description)
     setEmployeeStringField(employee, "telegram", telegram)
+    setEmployeeStringField(employee, "instagram", instagram)
+    setEmployeeStringField(employee, "facebook", facebook)
     setEmployeeStringField(employee, "vk", vk)
 
     const newAvatar: CustomFileType = req.files?.newAvatar
