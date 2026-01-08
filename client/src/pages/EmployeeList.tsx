@@ -10,22 +10,23 @@ export function EmployeesList() {
     const [employees, setEmployees]  = useState<IEmployee[]>([])
 
     useEffect(() => {
-        try {
-            const f = async () => {
+        const f = async () => {
+            try {
                 const data: IEmployee[] = await fetchEmployees.get()
                 setError(null)
                 setEmployees(data)
+                
+            } catch (error: unknown) {
+                setError(processError(error))
             }
-    
-            f()
-        } catch (error: unknown) {
-            setError(processError(error))
         }
+        f()
+
     }, [])
+    
+    if (error) return <div>{error}</div>
 
     if (employees.length === 0) return <Loading />
-
-    if (error) return <div>{error}</div>
 
     return (
         <>

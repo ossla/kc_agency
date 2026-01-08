@@ -5,7 +5,7 @@ import fetchActors from "../api/fetchActors"
 import { FilterActorType, IShortActor } from "../api/types/actorTypes"
 import Loading from "../elements/Loading"
 import { GenderEnum } from "../api/types/enums"
-import "../styles/Cards.css"
+import "../styles/Actor.css"
 
 interface ActorListProps {
     gender: GenderEnum;
@@ -49,7 +49,7 @@ export default function ActorsList(props: ActorListProps) {
 
             <div className="page_cards">
                 {actors.length !== 0 &&
-                    actors.map((actor, idx) => <Card actor={actor} isActor={true} key={idx} showVideo={true} />) 
+                    actors.map((actor, idx) => <Card actor={actor} key={idx} showVideo={true} />) 
                 }
             </div>
         </>

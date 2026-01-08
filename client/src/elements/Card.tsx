@@ -5,7 +5,6 @@ import { ACTORS, EMPLOYEES } from "../routes";
 
 interface ICardProps {
     actor: IShortActor;
-    isActor: boolean;
     showVideo: boolean;
 }
 
@@ -23,7 +22,7 @@ export default function Card(props: ICardProps) {
     return (
         <>
         <Link
-            to={`${props.isActor ? ACTORS : EMPLOYEES}/${props.actor.id}`}
+            to={`${ACTORS}/${props.actor.id}`}
             className="card_main"
         >
             <div className="card_image_wrapper">
@@ -72,5 +71,5 @@ export default function Card(props: ICardProps) {
         )
         }
         </>
-    );
+    )
 }

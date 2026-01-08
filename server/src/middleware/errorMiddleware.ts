@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express"
+import { Request, Response, NextFunction } from "express"
 import ApiError from "../error/apiError"
 import { ZodError } from "zod"
 
@@ -27,21 +27,23 @@ export function errorMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    console.error("errorMiddleware starts...");
     
     if (err instanceof ZodError) {
         const message = err.errors
-        .map(e => e.message)
+        .map(e => "ZOD " + e.message)
         .join(", ")
         
+        console.error("[error]: " + message)
         res.status(400).json({
             message
         })
-    } else if (err instanceof ApiError) {        
+    } else if (err instanceof ApiError) {
+        console.error("[error]: " + err.message)
         res.status(err.status).json({
             message: err.message
         })
-    } else res.status(500).json({
-        message: "Непредвиденная ошибка",
-    })
+    } else {
+        console.error("[error]: Непредвиденная ошибка")
+        res.status(500).json({message: "Непредвиденная ошибка"})
+    }
 }

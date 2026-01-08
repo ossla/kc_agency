@@ -9,6 +9,8 @@ import { ILanguage } from "../api/types/relevantTypes";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import { processError } from "../api/apiError";
+import { EmployeesList } from "./EmployeeList";
+import { EmployeeCard } from "../elements/EmployeeCard";
 
 
 export default function ActorPage() {
@@ -122,7 +124,7 @@ export default function ActorPage() {
                                 <h3>Языки</h3>
                                 <ul>
                                     {actor.languages.map((l: ILanguage) => (
-                                        <li key={l.id}>{l.name}</li>
+                                        <li key={l.id}><span style={{fontSize: "30px"}}>•</span> {l.name}</li>
                                     ))}
                                 </ul>
                             </div>
@@ -135,46 +137,49 @@ export default function ActorPage() {
                                 <h3>Навыки</h3>
                                 <ul>
                                     {actor.skills.map((s, i) => (
-                                        <li key={i}>{s}</li>
+                                        <li key={i}><span style={{fontSize: "30px"}}>•</span> {s}</li>
                                     ))}
                                 </ul>
                             </div>
                         )}
                     </div>
 
-                    <div className="floating_block">
-                    {actor.videoURL && (
-                        <div className="actor_block">
-                            <h3>Видеовизитка</h3>
-                            <iframe
-                                width="720"
-                                height="405"
-                                src={actor.videoURL}
-                                style={{ border: "none" }}
-                                allow="autoplay; fullscreen"
-                            ></iframe>
-                        </div>
-                    )}
+                    <h3 className="actor-employee-title">Агент</h3>
+                    <EmployeeCard employee={actor.employee} />
 
-                    <div className="actor_block">
-                        <h3>Фотогалерея</h3>
-                        <PhotoProvider>
-                            <div className="actor_gallery">
-                                {actor.photos.map((p, i) => (
-                                    <PhotoView
-                                        key={i}
-                                        src={actor.url + "/" + p}
-                                    >
-                                        <img
-                                            src={actor.url + "/" + p}
-                                            className="actor_gallery_photo"
-                                            alt="gallery"
-                                        />
-                                    </PhotoView>
-                                ))}
+                    <div className="floating_block">
+                        {actor.videoURL && (
+                            <div className="actor_block">
+                                <h3>Видеовизитка</h3>
+                                <iframe
+                                    width="720"
+                                    height="405"
+                                    src={actor.videoURL}
+                                    style={{ border: "none" }}
+                                    allow="autoplay; fullscreen"
+                                ></iframe>
                             </div>
-                        </PhotoProvider>
-                    </div>
+                        )}
+
+                        <div className="actor_block">
+                            <h3>Фотогалерея</h3>
+                            <PhotoProvider>
+                                <div className="actor_gallery">
+                                    {actor.photos.map((p, i) => (
+                                        <PhotoView
+                                            key={i}
+                                            src={actor.url + "/" + p}
+                                        >
+                                            <img
+                                                src={actor.url + "/" + p}
+                                                className="actor_gallery_photo"
+                                                alt="gallery"
+                                            />
+                                        </PhotoView>
+                                    ))}
+                                </div>
+                            </PhotoProvider>
+                        </div>
                     </div>
                 </div>
             </div>

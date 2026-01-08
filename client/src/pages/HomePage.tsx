@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react"
 import ActorsWheel from "../elements/ActorsWheel"
 
-import "../styles/Cards.css";
+import "../styles/Actor.css";
 import "../styles/HomePage.css";
 import { Link } from "react-router-dom";
 import { ACTORS_MEN, ACTORS_WOMEN, EMPLOYEES, WRITER } from "../routes";
-import fetchEmployees from "../api/fetchEmployees";
-import { IEmployee } from "../api/types/employeeTypes";
-import { EmployeeCard } from "../elements/EmployeeCard";
 import { EmployeesList } from "./EmployeeList";
 
 
 export default function HomePage() {
-
-
 
     return (
        <main className="container animate-on-load">

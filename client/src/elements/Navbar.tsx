@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ACTORS_MEN, ACTORS_WOMEN, HOME } from "../routes"
+import { ACTORS_MEN, ACTORS_WOMEN, EMPLOYEES, HOME } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
@@ -66,6 +66,9 @@ export default function Navbar() {
                 </li>
                 <li>
                     <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>АКТРИСЫ</Link>
+                </li>
+                <li>
+                    <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
                 </li>
                 <li>
                     <Link to={HOME} onClick={handleLinkClick}>О НАС</Link>

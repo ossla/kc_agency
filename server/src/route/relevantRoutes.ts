@@ -2,6 +2,7 @@ import express, { Express } from "express"
 import { getCities, getCity, removeCity } from "../controller/relevantControllers/citiy"
 import { getEyeColor, getEyeColors, removeEyeColor } from "../controller/relevantControllers/eyeColor"
 import { getLanguage, getLanguages, removeLanguage } from "../controller/relevantControllers/language"
+import { getHairColor, getHairColors, removeHairColor } from "../controller/relevantControllers/hair"
 
 const relevantRouter: Express = express()
 
@@ -12,6 +13,10 @@ relevantRouter.post("/city/delete", removeCity)
 relevantRouter.get("/eye", getEyeColors)
 relevantRouter.get("/eye/:id", getEyeColor)
 relevantRouter.post("/eye/delete", removeEyeColor)
+
+relevantRouter.get("/hair", getHairColors)
+relevantRouter.get("/eye/:id", getHairColor)
+relevantRouter.post("/eye/delete", removeHairColor)
 
 relevantRouter.get("/language", getLanguages)
 relevantRouter.get("/language/:id", getLanguage)

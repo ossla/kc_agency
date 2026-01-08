@@ -34,12 +34,12 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
                         </div>
                     </div>
                     <div className="employee-contacts">
-                        <h4 className="employee-phone">
-                            • {employee.phone}
+                        <h4>
+                            <span className='employee-dot'>•</span> {employee.phone}
                         </h4>
 
-                        <h4 className="employee-email">
-                            • {employee.email}
+                        <h4>
+                            <span className='employee-dot'>•</span> {employee.email}
                         </h4>
                     </div>
                 </div>

@@ -59,7 +59,7 @@ export type EditActorType = z.infer<typeof editActorSchema>
 
 export const filterActorSchema = z.object({
     search: z.string().optional(),
-    employeeId: z.preprocess((val) => Number(val), z.number()).optional(),
+    employeeId: z.string().optional(),
     minAge: z.preprocess((val) => Number(val), z.number()).optional(),
     maxAge: z.preprocess((val) => Number(val), z.number()).optional(),
     minHeight: z.preprocess((val) => Number(val), z.number()).optional(),

@@ -9,7 +9,7 @@ import fileUpload from "express-fileupload"
 import { appDataSource } from "./data-source"
 import router from "./route/router"
 import { errorMiddleware } from "./middleware/errorMiddleware"
-import "./error/zorErrorsLocalization"
+import "./error/zodErrorsLocalization"
 
 
 dotenv.config()
@@ -21,7 +21,7 @@ app.use(express.text())
 app.use(cookieParser())
 
 app.use(cors({
-    origin: "http://localhost:3000", // фронт
+    origin: "http://localhost:3000",
     credentials: true
 }))
 
@@ -55,7 +55,7 @@ async function start() {
         })
 
     app.listen(PORT, () => {
-        console.log(`[server]: Server is running at http://localhost:${PORT}`)
+        console.log(`[server]: Server is running at ${PORT}`)
     })
 }
 

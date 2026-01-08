@@ -3,6 +3,7 @@ import fetchActors from "../api/fetchActors"
 import { IShortActor } from "../api/types/actorTypes"
 import Card from "./Card"
 import "../styles/ActorsWheel.css"
+import { processError } from "../api/apiError"
 
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay } from "swiper/modules"
@@ -21,11 +22,11 @@ export default function ActorsWheel() {
                 const repeated = Array(20).fill(data).flat()
                 setActors(repeated)
             } catch (e) {
-                setError("Ошибка загрузки актёров");
+                setError(processError(e));
             }
         }
-        load();
-    }, []);
+        load()
+    }, [])
 
     if (error) return <p>{error}</p>
     if (actors.length === 0) return <p>Загрузка актёров...</p>
@@ -41,7 +42,7 @@ export default function ActorsWheel() {
         >
             {actors.map(actor => (
                 <SwiperSlide key={actor.id} style={{ width: 260 }}>
-                    <Card actor={actor} isActor={true} showVideo={false} />
+                    <Card actor={actor} showVideo={false} />
                 </SwiperSlide>
             ))}
         </Swiper>

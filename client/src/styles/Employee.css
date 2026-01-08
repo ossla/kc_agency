@@ -46,7 +46,7 @@
 
 .employee-contacts h4 {
     font-weight: 400;
-    font-size: 18px;
+    font-size: 25px;
 }
 
 .employee-links {
@@ -57,7 +57,7 @@
     width: 60px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: #584625;
+    background-color: #2e2d10;
 }
 
 .employee-link {
@@ -81,6 +81,10 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
+}
+
+.employee-dot {
+    font-size: 35px;
 }
 
 @media (max-width: 768px) {

@@ -36,7 +36,7 @@ export default function User() {
                     {
                         favorites ?
                         <div>
-                            {favorites.map((actor, idx) => <Card showVideo={true} actor={actor} isActor={true} key={idx} />)}
+                            {favorites.map((actor, idx) => <Card showVideo={true} actor={actor} key={idx} />)}
                         </div>
                         :
                         <Loading />

@@ -24,6 +24,10 @@ body {
     background-color: #f4f1ec;
 }
 
+body, html {
+    min-height: 100vh;
+}
+
 a {
     text-decoration: none;
 }
@@ -101,11 +105,15 @@ label {
 .page-wrapper {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .page-content {
-    flex: 1;
+    flex: 1
 }
+
+
+/* ===== error ===== */
 
 .error {
   width: 90%;
@@ -117,6 +125,19 @@ label {
   background-color: #d19c9c;
   border: 1px solid #db3737;
   color: white;
+}
+
+
+/* ===== loading ===== */
+
+.loading {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loading img {
+    width: 100px;
 }
 
 
@@ -152,18 +173,4 @@ label {
 .footer-small {
     font-size: 12px;
     color: #cacaca;
-}
-
-html, body {
-    width: 100%;
-}
-
-.loading {
-    margin-top: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.loading img {
-    width: 100px;
 }

@@ -14,9 +14,9 @@ function filterSearch(qb: SelectQueryBuilder<Actor>, search: any) {
     }
 }
 
-function filterByEmployee(qb: SelectQueryBuilder<Actor>, employee: any) {
-    if (employee) {
-        qb.andWhere("actor.employee.id = :employeeId", { employeeId: Number(employee) })
+function filterByEmployee(qb: SelectQueryBuilder<Actor>, employeeId: any) {
+    if (employeeId) {
+        qb.andWhere("actor.employee.id = :employeeId", { employeeId })
     }
 }
 
@@ -93,7 +93,7 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
     
     const actorRepo = appDataSource.getRepository(Actor)
     const qb = actorRepo.createQueryBuilder("actor")
-        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory"])
+        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
         .leftJoin("actor.languages", "language")
 
     filterSearch(qb, body.search)

@@ -1,5 +1,5 @@
 import { serverURL } from "../URLs";
-import { IEmployee } from "./employeeTypes"
+import { IEmployee, toIEmployee } from "./employeeTypes"
 import { GenderEnum } from "./enums"
 import { ICity, IEyeColor, IHairColor, ILanguage } from "./relevantTypes"
 
@@ -52,7 +52,7 @@ export interface EditActorType {
 
 export interface FilterActorType {
     search?: string;
-    employeeId?: number;
+    employeeId?: string;
     minAge?: number;
     maxAge?: number;
     minHeight?: number;
@@ -104,7 +104,7 @@ export function toIActor(raw: any): IActor {
         height: raw.height,
         directory: raw.directory,
         url: serverURL + "/" + raw.directory,
-        employee: raw.employee,
+        employee: toIEmployee(raw.employee),
         eyeColor: raw.eyeColor,
         hairColor: raw.hairColor,
         city: raw.city,
