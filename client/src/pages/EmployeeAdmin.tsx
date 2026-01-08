@@ -1,16 +1,20 @@
 import { useState } from "react"
 
 import "../styles/Admin.css"
+import "../styles/Main.css"
 import fetchAuth from "../api/fetchAuth"
 import fetchEmployees from "../api/fetchEmployees"
 import { useUser } from "../context/UserContext"
 import { useNavigate } from "react-router-dom"
 import ImageCropper from "../utils/ImageCropper"
 import { HOME } from "../routes"
+import { processError } from "../api/apiError"
 
 
 export default function EmployeeAdmin() {
     const { accessToken } = useUser()
+
+    const [error, setError] = useState<string | null>(null)
 
     const [firstName, setFirstName] = useState<string>()
     const [lastName, setLastName] = useState<string>()
@@ -36,31 +40,36 @@ export default function EmployeeAdmin() {
     }
 
     const createClick = async () => {
-        if (firstName && lastName && email && phone && avatar) {
-            const reqFormData: FormData = new FormData()
-
-            reqFormData.append("firstName", firstName)
-            reqFormData.append("lastName", lastName)
-            reqFormData.append("email", email)
-            reqFormData.append("phone", phone)
-            reqFormData.append("photo", avatar)
-            // необязательные поля
-            if (middleName) reqFormData.append("middleName", middleName)
-            if (description) reqFormData.append("description", description)
-            if (telegram) reqFormData.append("telegram", telegram)
-            if (instagram) reqFormData.append("isntagram", instagram)
-            if (facebook) reqFormData.append("facebook", facebook)
-            if (vk) reqFormData.append("vk", vk)
-
-            await fetchAuth.auth()
-            if (!accessToken) {
-                throw new Error("Авторизуйтесь")
+        try {
+            if (firstName && lastName && email && phone && avatar) {
+                const reqFormData: FormData = new FormData()
+    
+                reqFormData.append("firstName", firstName)
+                reqFormData.append("lastName", lastName)
+                reqFormData.append("email", email)
+                reqFormData.append("phone", phone)
+                reqFormData.append("photo", avatar)
+                // необязательные поля
+                if (middleName) reqFormData.append("middleName", middleName)
+                if (description) reqFormData.append("description", description)
+                if (telegram) reqFormData.append("telegram", telegram)
+                if (instagram) reqFormData.append("isntagram", instagram)
+                if (facebook) reqFormData.append("facebook", facebook)
+                if (vk) reqFormData.append("vk", vk)
+    
+                await fetchAuth.auth()
+                if (!accessToken) {
+                    throw new Error("Авторизуйтесь")
+                }
+                await fetchEmployees.create(accessToken, reqFormData)
+                navigator(HOME)
+    
+            } else {
+                throw new Error("Необходимо заполнить все обязательные поля!")
             }
-            await fetchEmployees.create(accessToken, reqFormData)
-            navigator(HOME)
-
-        } else {
-            throw new Error("Необходимо заполнить все обязательные поля!")
+            
+        } catch (e: unknown) {
+            setError(processError(e))
         }
     }
 
@@ -115,6 +124,11 @@ export default function EmployeeAdmin() {
 
                 <label htmlFor="description">(опционально) описание / доп. данные</label>
                 <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="описание..." />
+
+                {
+                    error !== null &&
+                    <p className="error">{error}</p>
+                }
 
                 <button onClick={createClick}>Создать агента</button>
             </div>
