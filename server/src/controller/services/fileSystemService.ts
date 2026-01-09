@@ -4,6 +4,7 @@ import * as fs from "fs"
 import { CreateEmployeeType } from "../employee/employeeTypes"
 import { CreateActorType } from "../actor/actorTypes"
 import ApiError from "../../error/apiError"
+import { resizeAndSave } from "../actor/sharp"
 
 
 // код для работы с файлами на сервере (server/static)
@@ -95,8 +96,10 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
         }
 
         for (let i = 0; i < photos.length; i++) {
-            const uuid: string = crypto.randomUUID() + ".jpg"
-            await photos[i].mv(path.join(dirPath, uuid))
+            const uuid: string = crypto.randomUUID()
+
+            await resizeAndSave(photos[i].data, dirPath, uuid)
+
             filenames.push(uuid)
         }
     }

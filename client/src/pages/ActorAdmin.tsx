@@ -14,6 +14,7 @@ import fetchEmployees from "../api/fetchEmployees"
 import { IEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
 import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
+import { processError } from "../api/apiError"
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()
@@ -127,73 +128,75 @@ export default function ActorAdmin() {
     }, [])
 
     const createClick = async () => {
-        const fields = [
-            { value: firstName, label: 'Имя' },
-            { value: lastName, label: 'Фамилия' },
-            { value: dateOfbirth, label: 'Дата рождения' },
-            { value: gender, label: 'Пол' },
-            { value: height, label: 'Рост' },
-            { value: skills, label: 'Навыки' },
-            { value: employeeId, label: 'ID сотрудника' },
-            { value: eyeColor, label: 'Цвет глаз' },
-            { value: hairColor, label: 'Цвет волос' },
-            { value: city, label: 'Город' },
-            { value: languages, label: 'Языки' },
-            { value: avatar, label: 'Аватар' },
-        ]
-
-        const emptyField = fields.find(f => !f.value)
-
-        if (emptyField) {
-            setError(`Поле "${emptyField.label}" обязательно для заполнения`)
-            return
+        try {
+            const fields = [
+                { value: firstName, label: 'Имя' },
+                { value: lastName, label: 'Фамилия' },
+                { value: dateOfbirth, label: 'Дата рождения' },
+                { value: gender, label: 'Пол' },
+                { value: height, label: 'Рост' },
+                { value: skills, label: 'Навыки' },
+                { value: employeeId, label: 'ID сотрудника' },
+                { value: eyeColor, label: 'Цвет глаз' },
+                { value: hairColor, label: 'Цвет волос' },
+                { value: city, label: 'Город' },
+                { value: languages, label: 'Языки' },
+                { value: avatar, label: 'Аватар' },
+            ]
+    
+            const emptyField = fields.find(f => !f.value)
+    
+            if (emptyField) {
+                throw new Error(`Поле "${emptyField.label}" обязательно для заполнения`)
+            }
+    
+            if (photos.length === 0) {
+                throw new Error('Поле "Фотографии" не должно быть пустым')
+            }
+    
+            if (languages.length === 0 || skills.length === 0) {
+                throw new Error("Языки и навыки тоже обязательные поля! Просьба указать хотя бы родной язык")
+            }            
+    
+            setError(null)
+            const reqFormData = new FormData()
+    
+            reqFormData.append("firstName", firstName!)
+            reqFormData.append("lastName", lastName!)
+            reqFormData.append("dateOfBirth", dateOfbirth.toDateString())
+            reqFormData.append("gender", gender!)
+            reqFormData.append("height", height!)
+            reqFormData.append("skills", JSON.stringify(skills))
+            reqFormData.append("employeeId", employeeId!)
+            reqFormData.append("eyeColor", eyeColor!)
+            reqFormData.append("hairColor", hairColor!)
+            reqFormData.append("city", city!)
+            reqFormData.append("languages", JSON.stringify(languages))
+            reqFormData.append("avatar", avatar!)
+    
+            Array.from(photos).forEach(file => {
+                reqFormData.append("photos", file)
+            })
+    
+            if (middleName) reqFormData.append("middleName", middleName)
+            if (videoURL) reqFormData.append("videoURL", videoURL)
+            if (description) reqFormData.append("description", description)
+            if (education) reqFormData.append("education", education)
+            if (linkToKinoTeatr) reqFormData.append("linkToKinoTeatr", linkToKinoTeatr)
+            if (linkToFilmTools) reqFormData.append("linkToFilmTools", linkToFilmTools)
+            if (linkToKinopoisk) reqFormData.append("linkToKinopoisk", linkToKinopoisk)
+    
+            await fetchAuth.auth()
+            if (!accessToken) {
+                throw new Error("Авторизуйтесь")
+            }
+    
+            await fetchActors.create(accessToken, reqFormData)
+            navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
+        
+        } catch (e: unknown) {
+            setError(processError(e))
         }
-
-        if (photos.length === 0) {
-            setError('Поле "Фотографии" не должно быть пустым')
-            return
-        }
-
-        if (languages.length === 0 || skills.length === 0) {
-            setError("Языки и навыки тоже обязательные поля! Просьба указать хотя бы родной язык")
-        }
-
-        setError(null)
-        const reqFormData = new FormData()
-
-        reqFormData.append("firstName", firstName!)
-        reqFormData.append("lastName", lastName!)
-        reqFormData.append("dateOfBirth", dateOfbirth.toDateString())
-        reqFormData.append("gender", gender!)
-        reqFormData.append("height", height!)
-        reqFormData.append("skills", JSON.stringify(skills))
-        reqFormData.append("employeeId", employeeId!)
-        reqFormData.append("eyeColor", eyeColor!)
-        reqFormData.append("hairColor", hairColor!)
-        reqFormData.append("city", city!)
-        reqFormData.append("languages", JSON.stringify(languages))
-        reqFormData.append("avatar", avatar!)
-
-        Array.from(photos).forEach(file => {
-            reqFormData.append("photos", file)
-        })
-
-        if (middleName) reqFormData.append("middleName", middleName)
-        if (videoURL) reqFormData.append("videoURL", videoURL)
-        if (description) reqFormData.append("description", description)
-        if (education) reqFormData.append("education", education)
-        if (linkToKinoTeatr) reqFormData.append("linkToKinoTeatr", linkToKinoTeatr)
-        if (linkToFilmTools) reqFormData.append("linkToFilmTools", linkToFilmTools)
-        if (linkToKinopoisk) reqFormData.append("linkToKinopoisk", linkToKinopoisk)
-
-        await fetchAuth.auth()
-        if (!accessToken) {
-            setError("Авторизуйтесь")
-            return
-        }
-
-        await fetchActors.create(accessToken, reqFormData)
-        navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
     }
 
 
