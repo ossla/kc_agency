@@ -154,6 +154,10 @@ export default function ActorAdmin() {
             return
         }
 
+        if (languages.length === 0 || skills.length === 0) {
+            setError("Языки и навыки тоже обязательные поля! Просьба указать хотя бы родной язык")
+        }
+
         setError(null)
         const reqFormData = new FormData()
 
@@ -215,7 +219,7 @@ export default function ActorAdmin() {
                     )}
                 </>
 
-                <label htmlFor="photos">Фотогалерея*</label>
+                <label htmlFor="photos">Фотогалерея* (файлы jpeg, jpg)</label>
                 <input 
                     type="file" 
                     id="photos" 
