@@ -14,16 +14,25 @@ import { HairColor } from "../../models/hairColor.entity"
 
 
 export async function createActor(req: ICustomRequest, res: Response, next: NextFunction) {
-    console.log("create actor controller starts...")
-    const actor: Actor = new Actor()
-    const body: CreateActorType = createActorSchema.parse(req.body)
+    let dirname: string;
+    try {
+        console.log("create actor controller starts...")
+        const actor: Actor = new Actor()
+        const body: CreateActorType = createActorSchema.parse(req.body)
 
-    const dirname = await processActorFiles(req, body, actor)
-    await fillActor(actor, body)
+        dirname = await processActorFiles(req, body, actor)
+        await fillActor(actor, body)
 
-    await appDataSource.getRepository(Actor).save(actor)
+        await appDataSource.getRepository(Actor).save(actor)
 
-    res.status(201).json(actor)
+        res.status(201).json(actor)
+
+    } catch (error: unknown) {
+        if (dirname != "") {
+            await removeActorFolder(dirname)
+        }
+        throw error
+    }
 } // create
 
 // получение avatar.jpg и фотографий для альбома актера.

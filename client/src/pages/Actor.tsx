@@ -168,10 +168,10 @@ export default function ActorPage() {
                                     {actor.photos.map((p, i) => (
                                         <PhotoView
                                             key={i}
-                                            src={actor.url + "/" + p}
+                                            src={actor.url + "/" + p + "_1600.jpg"}
                                         >
                                             <img
-                                                src={actor.url + "/" + p}
+                                                src={actor.url + "/" + p + "_400.jpg"}
                                                 className="actor_gallery_photo"
                                                 alt="gallery"
                                             />

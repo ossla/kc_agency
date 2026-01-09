@@ -27,15 +27,6 @@ export async function resizeAndSave(
 
     image
       .clone()
-      .resize(800, null, {
-        fit: 'inside',
-        kernel: sharp.kernel.lanczos3
-      })
-      .jpeg(JPEG_OPTIONS)
-      .toFile(path.join(outDir, `${uuid}_800.jpg`)),
-
-    image
-      .clone()
       .resize(1600, null, {
         fit: 'inside',
         kernel: sharp.kernel.lanczos3

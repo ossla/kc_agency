@@ -107,7 +107,7 @@ h3 {
 }
 
 .actor_gallery_photo {
-    width: 180px;
+    width: 200px;
     object-fit: cover;
     border-radius: 8px;
     cursor: pointer;

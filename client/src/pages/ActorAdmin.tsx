@@ -118,11 +118,16 @@ export default function ActorAdmin() {
 
     useEffect(() => {
         async function f() {
-            setLoadedCities(await fetchRelevant.getCities())
-            setLoadedEyeColors(await fetchRelevant.getEyeColors())
-            setLoadedLanguages(await fetchRelevant.getLanguages())
-            setLoadedEmployees(await fetchEmployees.get())
-            setLoadedHairColors(await fetchRelevant.getHairColors())
+            try {
+                setLoadedCities(await fetchRelevant.getCities())
+                setLoadedEyeColors(await fetchRelevant.getEyeColors())
+                setLoadedLanguages(await fetchRelevant.getLanguages())
+                setLoadedEmployees(await fetchEmployees.get())
+                setLoadedHairColors(await fetchRelevant.getHairColors())
+                
+            } catch (e: unknown) {
+                setError(processError(e))
+            }
         }
         f()
     }, [])

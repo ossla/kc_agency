@@ -72,7 +72,7 @@ export default function Employee() {
 
                     <div className="actor_actions empl_actions">
                         {employee.telegram &&
-                            <a href={employee.telegram}>
+                            <a href={"https://t.me/" + employee.telegram}>
                                 <img src="/icons/telegram.svg" alt="icon1" />
                             </a>
                         }
@@ -108,7 +108,7 @@ export default function Employee() {
                         </div>
                         <div className="actor_param">
                             <h4>Телефон</h4>
-                            <p>{employee.phone} см</p>
+                            <p>{employee.phone}</p>
                         </div>
                     </div>
                     </div>

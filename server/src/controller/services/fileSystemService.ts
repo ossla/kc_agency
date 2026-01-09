@@ -87,9 +87,10 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
     const filenames: string[] = []
     
     if (!Array.isArray(photos)) {
-        const filename = '1.jpg'
-        await photos.mv(path.join(dirPath, filename))
-        filenames.push(filename)
+        const uuid: string = crypto.randomUUID()
+        await resizeAndSave(photos.data, dirPath, uuid)
+
+        filenames.push(uuid)
     } else {
         if (photos.length > 40) {
             throw ApiError.badRequest("saveActorPhotos: Загружено более 40 фото")
@@ -97,7 +98,7 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
 
         for (let i = 0; i < photos.length; i++) {
             const uuid: string = crypto.randomUUID()
-
+            
             await resizeAndSave(photos[i].data, dirPath, uuid)
 
             filenames.push(uuid)
