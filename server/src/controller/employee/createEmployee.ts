@@ -23,7 +23,7 @@ export async function createEmployee(req: ICustomRequest, res: Response, next: N
             throw ApiError.badRequest("Необходимо добавить поле photo для загрузки аватара")
         }
         photoName = crypto.randomUUID()
-        await savePhoto(photo, photoName + ".jpg")
+        await savePhoto(photo, photoName)
 
         const employee: Employee = new Employee()
         employee.firstName = body.firstName
