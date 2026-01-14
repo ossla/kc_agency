@@ -268,7 +268,7 @@ export default function ActorAdmin() {
                 <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />
 
                 <>
-                    <label htmlFor="">Навыки*</label>
+                    <label htmlFor="">Навыки* (введите навык и нажмите Enter)</label>
                     <input 
                         type="text"
                         placeholder="Добавить навык"
@@ -311,7 +311,7 @@ export default function ActorAdmin() {
                 </>
 
                 <>
-                    <label htmlFor="color-list">Цвет глаз*</label> 
+                    <label htmlFor="color-list">Цвет глаз* (оставьте значение в поле)</label> 
                     <input
                         list="color-list"
                         value={eyeColor}
@@ -326,7 +326,7 @@ export default function ActorAdmin() {
                 </>
 
                 <>
-                    <label htmlFor="color-list">Натуральный цвет волос*</label> 
+                    <label htmlFor="color-list">Натуральный цвет волос* (оставьте значение в поле)</label> 
                     <input
                         list="color-list"
                         value={hairColor}
@@ -341,7 +341,7 @@ export default function ActorAdmin() {
                 </>
 
                 <>
-                    <label htmlFor="city-list">Город*</label>
+                    <label htmlFor="city-list">Город* (оставьте значение в поле)</label>
                     <input
                         list="city-list"
                         value={city}
@@ -356,7 +356,7 @@ export default function ActorAdmin() {
                 </>
 
                 <div id="languages" className="languages">
-                    <label htmlFor="languages">Языки*</label>
+                    <label htmlFor="languages">Языки* (введите язык и нажмите Enter)</label>
                     {loadedLanguages.map(lang => (
                         <button
                             key={lang.id}

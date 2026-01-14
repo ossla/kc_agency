@@ -1,7 +1,7 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler"
 import { IEmployee, toIEmployee } from "./types/employeeTypes"
 import { GenderEnum } from "./types/enums"
-import { createEmployeeURL, getEmployeeURL, serverURL } from "./URLs"
+import { createEmployeeURL, getEmployeeURL } from "./URLs"
 
 class fetchEmployees {
     // ================== CREATE ==================

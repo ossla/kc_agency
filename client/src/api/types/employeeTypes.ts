@@ -3,7 +3,6 @@
 // * REQUEST для формирования запроса
 // * RESPONSE для парсинга входящих данных
 
-import { serverURL } from "../URLs"
 
 // ================================ REQUEST ================================
 // export interface CreateAgentType {
@@ -44,7 +43,7 @@ export function toIEmployee(raw: any): IEmployee {
         firstName: raw.firstName,
         lastName: raw.lastName,
         email: raw.email,
-        avatarUrl: `${serverURL}/${raw.photo}`,
+        avatarUrl: `/${raw.photo}`,
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
 

@@ -1,7 +1,7 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
-import { createActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL, serverURL } from "./URLs";
+import { createActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
 
 
 class fetchActors {

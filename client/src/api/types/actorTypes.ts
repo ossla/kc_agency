@@ -1,4 +1,3 @@
-import { serverURL } from "../URLs";
 import { IEmployee, toIEmployee } from "./employeeTypes"
 import { GenderEnum } from "./enums"
 import { ICity, IEyeColor, IHairColor, ILanguage } from "./relevantTypes"
@@ -103,7 +102,7 @@ export function toIActor(raw: any): IActor {
         dateOfBirth: new Date(raw.dateOfBirth),
         height: raw.height,
         directory: raw.directory,
-        url: serverURL + "/" + raw.directory,
+        url: "/" + raw.directory,
         employee: toIEmployee(raw.employee),
         eyeColor: raw.eyeColor,
         hairColor: raw.hairColor,
@@ -139,7 +138,7 @@ export function toIShortActor(raw: any): IShortActor{
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
-        avatarUrl: `${serverURL}/${raw.directory}/avatar_400.jpg`,
+        avatarUrl: `/${raw.directory}/avatar_400.jpg`,
         videoURL: raw.videoURL ?? undefined
     }
 }

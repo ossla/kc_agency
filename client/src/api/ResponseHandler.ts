@@ -6,25 +6,24 @@ export interface HttpError extends Error {
 }
 
 export async function ResponseHandler<T>(response: Response
-                            , toT: (arg: any) => T): Promise<T> {
-    let data
+                                , toT: (arg: any) => T): Promise<T> {
 
-    // не json ошибка
-    try { 
-        data = await response.json()
-        
+    const text = await response.text() // ← читаем ОДИН раз
+
+    let data: any
+    try {
+        data = text ? JSON.parse(text) : null
     } catch {
         throw new ApiError(
             response.status,
-            await response.text() || "Ошибка при получении данных с сервера"
+            text || "Ошибка при получении данных с сервера"
         )
     }
 
-    // возврат ошибки json
     if (!response.ok) {
         throw new ApiError(
             response.status,
-            data.message || "Ошибка сервера"
+            data?.message || "Ошибка сервера"
         )
     }
 
@@ -32,27 +31,27 @@ export async function ResponseHandler<T>(response: Response
 }
 
 
+
 // если нужно получить и обработать массив объектов
 export async function ResponseHandlerMap<T>(response: Response
-                            , toT: (arg: any) => T): Promise<T[]> {
-    let data
+                                , toT: (arg: any) => T): Promise<T[]> {
 
-    // не json ошибка
-    try { 
-        data = await response.json()
-        
+    const text = await response.text()
+
+    let data: any
+    try {
+        data = text ? JSON.parse(text) : null
     } catch {
         throw new ApiError(
             response.status,
-            await response.text() || "Ошибка при получении данных с сервера"
+            text || "Ошибка при получении данных с сервера"
         )
     }
 
-    // возврат ошибки json
     if (!response.ok) {
         throw new ApiError(
             response.status,
-            data.message || "Ошибка сервера"
+            data?.message || "Ошибка сервера"
         )
     }
 
