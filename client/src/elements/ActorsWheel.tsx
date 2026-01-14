@@ -18,9 +18,12 @@ export default function ActorsWheel() {
         async function load() {
             try {
                 const data = await fetchActors.getShort()
-                if (data.length === 0) return
-                const repeated = Array(20).fill(data).flat()
-                setActors(repeated)
+                if (data.length < 20) {
+                    const repeated = Array(20).fill(data).flat()
+                    setActors(repeated)
+                } else {
+                    setActors(data)
+                }
             } catch (e) {
                 setError(processError(e));
             }
@@ -28,8 +31,8 @@ export default function ActorsWheel() {
         load()
     }, [])
 
-    if (error) return <p>{error}</p>
-    if (actors.length === 0) return <p>Загрузка актёров...</p>
+    if (error) return <h1>{error}</h1>
+    if (actors.length === 0) return <h1>Не найдено актёров</h1>
 
     return (
         <Swiper
@@ -40,8 +43,8 @@ export default function ActorsWheel() {
             speed={8000}
             slidesPerView="auto"
         >
-            {actors.map(actor => (
-                <SwiperSlide key={actor.id} style={{ width: 260 }}>
+            {actors.map((actor, idx) => (
+                <SwiperSlide key={idx} style={{ width: 260 }}>
                     <Card actor={actor} showVideo={false} />
                 </SwiperSlide>
             ))}

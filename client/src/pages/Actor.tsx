@@ -123,8 +123,8 @@ export default function ActorPage() {
                             <div className="actor_block">
                                 <h3>Языки</h3>
                                 <ul>
-                                    {actor.languages.map((l: ILanguage) => (
-                                        <li key={l.id}><span style={{fontSize: "30px"}}>•</span> {l.name}</li>
+                                    {actor.languages.map((l: ILanguage, idx) => (
+                                        <li key={idx}><span style={{fontSize: "30px"}}>•</span> {l.name}</li>
                                     ))}
                                 </ul>
                             </div>

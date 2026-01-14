@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import fetchEmployees from "../api/fetchEmployees"
 import { IEmployee } from "../api/types/employeeTypes"
 import { processError } from "../api/apiError"
-import Loading from "../elements/Loading"
 import { EmployeeCard } from "../elements/EmployeeCard"
 
 export function EmployeesList() {
@@ -26,7 +25,7 @@ export function EmployeesList() {
     
     if (error) return <div>{error}</div>
 
-    if (employees.length === 0) return <Loading />
+    if (employees.length === 0) return <h1>Не найдено агентов</h1>
 
     return (
         <>

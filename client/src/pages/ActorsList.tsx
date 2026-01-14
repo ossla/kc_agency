@@ -14,12 +14,15 @@ interface ActorListProps {
 export default function ActorsList(props: ActorListProps) {
     const [actors, setActors] = useState<IShortActor[]>([])
     const [isFiltered, setIsFiltered] = useState<boolean>(false)
+
     const [error, setError] = useState<string | null>(null)
+    const [loading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
         async function load() {
             try {
                 const data: IShortActor[] = await fetchActors.getShortByGender(props.gender)
+                setIsLoading(false)
                 setActors(data)
             } catch(e) {
                 setError("что-то пошло не так")
@@ -39,8 +42,12 @@ export default function ActorsList(props: ActorListProps) {
         return <h1>{error}</h1>
     }
 
-    if (actors.length === 0 && !isFiltered) {
+    if (loading) {
         return <Loading />
+    }
+
+    if (actors.length === 0 && !isFiltered) {
+        return <h1>Актёров не найдено.</h1>
     }
 
     return (

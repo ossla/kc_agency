@@ -1,23 +1,10 @@
 @echo off
-REM
 cd C:\Users\oosla\kc_agency
 
-REM Check if a commit message argument (%1) was provided
-if "%1" == "" (
-    echo Error: No commit message provided.
-    echo Usage: YOUR_SCRIPT_NAME.bat "<commit message>"
-    pause
-    exit /b 1
-)
+for /f %%i in ('powershell -NoProfile -Command "[guid]::NewGuid().ToString()"') do set COMMIT_MSG=WIP %%i
 
-REM
 git add .
-
-REM
-git commit -m "%1"
-
-REM Push changes
+git commit -m "%COMMIT_MSG%"
 git push
 
-REM Keep the window open if run by double-clicking
 pause

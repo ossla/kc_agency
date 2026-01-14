@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express"
+import express from "express"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import path from "path"
@@ -11,32 +11,31 @@ import router from "./route/router"
 import { errorMiddleware } from "./middleware/errorMiddleware"
 import "./error/zodErrorsLocalization"
 
-
 dotenv.config()
+
 const app = express()
 const PORT = process.env.PORT || 3001
+const HOST = "127.0.0.1"
 
 app.use(express.json())
 app.use(express.text())
 app.use(cookieParser())
 
+
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.PROD==="1" ? true : "http://localhost:3000",
     credentials: true
 }))
 
-// Для парсинга форм и файлов
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(fileUpload())
 
-// Папка для хранения данных
+// файлы
 app.use(express.static(path.join(__dirname, "..", "static")))
 
 // API
 app.use("/api", router)
 app.use(errorMiddleware)
-
-console.log("Routes loaded")
 
 async function start() {
     if (!process.env.DBPASS) {
@@ -44,12 +43,10 @@ async function start() {
     }
 
     await appDataSource.initialize()
-        .then(() => {
-            console.log("Data Source has been initialized!")
-        })
+    console.log("Data Source initialized")
 
-    app.listen(PORT, () => {
-        console.log(`[server]: Server is running at ${PORT}`)
+    app.listen(Number(PORT), HOST, () => {
+        console.log(`[server]: ${HOST}:${PORT}`)
     })
 }
 

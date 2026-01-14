@@ -61,10 +61,10 @@ export default function Employee() {
                 {/* Левая часть===================================== */}
                 <div className="actor_left">
                     <PhotoProvider>
-                        <PhotoView src={employee.avatarUrl}>
+                        <PhotoView src={employee.avatarUrl + "_1600.jpg"}>
                             <img
                                 className="actor_avatar"
-                                src={employee.avatarUrl}
+                                src={employee.avatarUrl + "_400.jpg"}
                                 alt="avatar"
                             />
                         </PhotoView>

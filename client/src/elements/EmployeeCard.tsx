@@ -15,7 +15,7 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
                 <Link to={EMPLOYEES + '/' + employee.id}>
                     <div className="employee-avatar">
                         <img
-                            src={employee.avatarUrl}
+                            src={employee.avatarUrl + "_400.jpg"}
                             alt={`${employee.firstName} ${employee.lastName}`}
                         />
                     </div>
