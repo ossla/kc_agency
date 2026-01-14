@@ -41,10 +41,10 @@ export default function ActorPage() {
                 {/* Левая часть===================================== */}
                 <div className="actor_left">
                     <PhotoProvider>
-                        <PhotoView src={actor.url + "/avatar.jpg"}>
+                        <PhotoView src={actor.url + "/avatar_1600.jpg"}>
                             <img
                                 className="actor_avatar"
-                                src={actor.url + "/avatar.jpg"}
+                                src={actor.url + "/avatar_400.jpg"}
                                 alt="avatar"
                             />
                         </PhotoView>

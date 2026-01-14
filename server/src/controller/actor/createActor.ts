@@ -16,15 +16,20 @@ import { HairColor } from "../../models/hairColor.entity"
 export async function createActor(req: ICustomRequest, res: Response, next: NextFunction) {
     let dirname: string;
     try {
-        console.log("create actor controller starts...")
+        console.log("[createActor] start...")
         const actor: Actor = new Actor()
         const body: CreateActorType = createActorSchema.parse(req.body)
 
         dirname = await processActorFiles(req, body, actor)
+        console.log("[createActor] files saved")
+
         await fillActor(actor, body)
+        console.log("[createActor] actor fields ")
 
         await appDataSource.getRepository(Actor).save(actor)
+        console.log("[createActor] sql fields are filled, actor saved in repository")
 
+        console.log("[createActor] end")
         res.status(201).json(actor)
 
     } catch (error: unknown) {
@@ -40,22 +45,30 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
                                                             : Promise<string> {
     let dirname: string
     try {
+        console.log(">[processActorFiles] start...")
         const avatar: CustomFileType = req.files?.avatar
         if (!avatar) throw ApiError.badRequest('Нужно добавить аватарку актера')
         const photos: CustomFileType = req.files?.photos
         if (!photos) throw ApiError.badRequest('Нужно добавить хотя бы одно фото')
 
+        console.log("[processActorFiles] avatar and photo successfully loaded")
         dirname = await makeActorDirectory(body)
+        
+        console.log("[processActorFiles] actor directory successfully created")
         actor.directory = dirname
 
-        await savePhoto(avatar, "avatar.jpg", dirname) // сохранение авы
-        
-        actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
+        await savePhoto(avatar, "avatar", dirname) // сохранение авы
+        console.log("[processActorFiles] saved avatar")
 
+        actor.photos = await saveActorPhotos(photos, actor.directory) // сохранение фото для альбома
+        console.log("[processActorFiles] photos saved in album")
+
+        console.log("[processActorFiles] end. No errors occured")
         return dirname
 
     } catch (error: unknown) {
         if (dirname != "") {
+            console.log("[processActorFiles] error occured. RemoveActorFolder")
             await removeActorFolder(dirname)
         }
         throw error
@@ -65,6 +78,7 @@ async function processActorFiles(req: ICustomRequest, body: CreateActorType, act
 // заполнение полей (помимо файлов)
 async function fillActor(actor: Actor, body: CreateActorType) {                         
     // обязательные поля
+    console.log("[fillActor] start... (filling fields in actor type)")
     actor.firstName = body.firstName
     actor.lastName  = body.lastName
     actor.dateOfBirth = body.dateOfBirth
@@ -72,7 +86,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     if (body.gender === GenderEnum.Man || body.gender === GenderEnum.Woman) {
         actor.gender = body.gender
     } else {
-        throw ApiError.badRequest(`Неверно указан пол актера: ${body.gender}`)
+        throw ApiError.badRequest(`[fillActor] Неверно указан пол актера: ${body.gender}`)
     }
     await saveEyeColor(actor, body.eyeColor)
     await saveCity(actor, body.city)
@@ -89,6 +103,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
     actor.linkToKinoTeatr = body.linkToKinoTeatr ?? null
     actor.linkToFilmTools = body.linkToFilmTools ?? null
     actor.linkToKinopoisk = body.linkToKinopoisk ?? null
+    console.log("[fillActor] end")
 }
 
 // экспорт для editActor

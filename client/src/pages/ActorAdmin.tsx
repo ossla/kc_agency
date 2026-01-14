@@ -227,12 +227,12 @@ export default function ActorAdmin() {
                     )}
                 </>
 
-                <label htmlFor="photos">Фотогалерея* (файлы jpeg, jpg)</label>
+                <label htmlFor="photos">Фотогалерея* (до 40 шт., файлы jpeg, jpg)</label>
                 <input 
                     type="file" 
-                    id="photos" 
+                    id="photos"
                     placeholder="Загрузите фото"
-                    onChange={uploadPhotos} 
+                    onChange={uploadPhotos}
                     multiple 
                 />
 

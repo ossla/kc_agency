@@ -15,7 +15,7 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
 
     const actor: Actor = await getActor(id)
 
-    await changePhoto(newAvatar, "avatar.jpg", actor.directory)
+    await changePhoto(newAvatar, "avatar", actor.directory)
     res.status(200).json(true)
 }
 

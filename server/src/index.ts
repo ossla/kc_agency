@@ -38,12 +38,6 @@ app.use(errorMiddleware)
 
 console.log("Routes loaded")
 
-/* production */
-// app.use(express.static(path.join(__dirname, "..", "..", "client", "build")))
-// app.use((req: Request, res: Response) => {
-//     res.sendFile(path.join(__dirname, "..", "..", "client", "build", "index.html"))
-// })
-
 async function start() {
     if (!process.env.DBPASS) {
         throw new Error("Missing DBPASS in .env")
