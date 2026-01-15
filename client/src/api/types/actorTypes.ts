@@ -102,7 +102,7 @@ export function toIActor(raw: any): IActor {
         dateOfBirth: new Date(raw.dateOfBirth),
         height: raw.height,
         directory: raw.directory,
-        url: "/static/" + raw.directory,
+        url: "/uploads/" + raw.directory,
         employee: toIEmployee(raw.employee),
         eyeColor: raw.eyeColor,
         hairColor: raw.hairColor,
@@ -138,7 +138,7 @@ export function toIShortActor(raw: any): IShortActor{
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
-        avatarUrl: `/static/${raw.directory}/avatar`,
+        avatarUrl: `/uploads/${raw.directory}/avatar`,
         videoURL: raw.videoURL ?? undefined
     }
 }

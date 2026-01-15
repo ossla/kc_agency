@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(fileUpload())
 
 // файлы
-app.use('/static', express.static(path.join(__dirname, "..", "static")))
+app.use('/uploads', express.static(path.join(__dirname, "..", "uploads")))
 
 // API
 app.use("/api", router)

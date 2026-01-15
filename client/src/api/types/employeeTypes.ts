@@ -43,7 +43,7 @@ export function toIEmployee(raw: any): IEmployee {
         firstName: raw.firstName,
         lastName: raw.lastName,
         email: raw.email,
-        avatarUrl: `/static/${raw.photo}`,
+        avatarUrl: `/uploads/${raw.photo}`,
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
 
