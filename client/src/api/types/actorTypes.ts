@@ -138,7 +138,7 @@ export function toIShortActor(raw: any): IShortActor{
         firstName: raw.firstName,
         lastName: raw.lastName,
         directory: raw.directory,
-        avatarUrl: `/${raw.directory}/avatar_400.jpg`,
+        avatarUrl: `/static/${raw.directory}/avatar`,
         videoURL: raw.videoURL ?? undefined
     }
 }

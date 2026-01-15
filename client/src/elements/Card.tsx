@@ -28,7 +28,7 @@ export default function Card(props: ICardProps) {
             <div className="card_image_wrapper">
             <img
                 className="card_avatar"
-                src={props.actor.avatarUrl}
+                src={props.actor.avatarUrl + "_400.jpg"}
                 alt={`${props.actor.firstName} ${props.actor.lastName}`}
             />
             <div className="card_overlay">
