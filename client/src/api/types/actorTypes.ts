@@ -102,7 +102,7 @@ export function toIActor(raw: any): IActor {
         dateOfBirth: new Date(raw.dateOfBirth),
         height: raw.height,
         directory: raw.directory,
-        url: "/" + raw.directory,
+        url: "/static/" + raw.directory,
         employee: toIEmployee(raw.employee),
         eyeColor: raw.eyeColor,
         hairColor: raw.hairColor,
