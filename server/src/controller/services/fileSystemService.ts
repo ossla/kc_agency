@@ -7,10 +7,10 @@ import ApiError from "../../error/apiError"
 import { resizeAndSave } from "../actor/sharp"
 
 
-// код для работы с файлами на сервере (server/static)
+// код для работы с файлами на сервере (server/uploads)
 
 export function returnStaticPath(): string {
-    const pathToStatic: string = path.join(__dirname, "..", "..", "..", "static")
+    const pathToStatic: string = path.join(__dirname, "..", "..", "..", "uploads")
     if (!fs.existsSync(pathToStatic)) {
         fs.mkdirSync(pathToStatic)
     }
@@ -73,7 +73,7 @@ export async function makeActorDirectory(body: CreateActorType): Promise<string>
 
     fs.mkdirSync(dirPath)
 
-    console.log("[makeActorDirectory] end. Created directory in /static: " + dirPath)
+    console.log("[makeActorDirectory] end. Created directory in /uploads: " + dirPath)
     return dirname
 }
 
