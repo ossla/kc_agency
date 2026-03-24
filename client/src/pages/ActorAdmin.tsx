@@ -134,22 +134,20 @@ export default function ActorAdmin() {
 
     const createClick = async () => {
         try {
-            const fields = [
+            const required_fields = [
                 { value: firstName, label: 'Имя' },
                 { value: lastName, label: 'Фамилия' },
                 { value: dateOfbirth, label: 'Дата рождения' },
                 { value: gender, label: 'Пол' },
                 { value: height, label: 'Рост' },
-                { value: skills, label: 'Навыки' },
                 { value: employeeId, label: 'ID сотрудника' },
                 { value: eyeColor, label: 'Цвет глаз' },
                 { value: hairColor, label: 'Цвет волос' },
                 { value: city, label: 'Город' },
-                { value: languages, label: 'Языки' },
                 { value: avatar, label: 'Аватар' },
             ]
     
-            const emptyField = fields.find(f => !f.value)
+            const emptyField = required_fields.find(f => !f.value)
     
             if (emptyField) {
                 throw new Error(`Поле "${emptyField.label}" обязательно для заполнения`)
@@ -159,8 +157,8 @@ export default function ActorAdmin() {
                 throw new Error('Поле "Фотографии" не должно быть пустым')
             }
     
-            if (languages.length === 0 || skills.length === 0) {
-                throw new Error("Языки и навыки тоже обязательные поля! Просьба указать хотя бы родной язык")
+            if (skills.length === 0) {
+                throw new Error("Навыки тоже обязательное поле! Просьба указать хотя бы 1 навык")
             }            
     
             setError(null)
@@ -268,13 +266,13 @@ export default function ActorAdmin() {
                 <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />
 
                 <>
-                    <label htmlFor="">Навыки* (введите навык и нажмите Enter)</label>
+                    <label htmlFor="">Навыки (введите навык и нажмите Enter)</label>
                     <input 
                         type="text"
                         placeholder="Добавить навык"
                         onKeyDown={e => {
                             if (e.key === 'Enter') {
-                                handleAddNewSkill(e.currentTarget.value);
+                                handleAddNewSkill(e.currentTarget.value)
                                 e.currentTarget.value = '';
                             }
                         }}
@@ -356,7 +354,7 @@ export default function ActorAdmin() {
                 </>
 
                 <div id="languages" className="languages">
-                    <label htmlFor="languages">Языки* (введите язык и нажмите Enter)</label>
+                    <label htmlFor="languages">Языки (введите язык и нажмите Enter)</label>
                     {loadedLanguages.map(lang => (
                         <button
                             key={lang.id}

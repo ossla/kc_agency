@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import { useUser } from "../context/UserContext"
-import Loading from "../elements/Loading"
-import Card from "../elements/Card"
 import fetchFavorites from "../api/fetchFavorites"
 import { IShortActor } from "../api/types/actorTypes"
 import { Link } from "react-router-dom"
 import { ACTOR_ADMIN, EMPLOYEE_ADMIN } from "../routes"
+import "../styles/Main.css"
 
 
 export default function User() {
@@ -32,7 +31,7 @@ export default function User() {
                     <h1>{user.name}</h1>
                     <h1>{user.email}</h1>
                     <br />
-                    <h1>Избранное:</h1>
+                    {/* <h1>Избранное:</h1>
                     {
                         favorites ?
                         <div>
@@ -40,12 +39,12 @@ export default function User() {
                         </div>
                         :
                         <Loading />
-                    }
+                    } */}
                     {
                         user.isAdmin &&
                         <div style={{"display": "flex", "flexDirection": "column", "marginTop": 10, "borderTop": "1px solid black"}}>
-                            <Link to={EMPLOYEE_ADMIN}>Создать агента</Link>
-                            <Link to={ACTOR_ADMIN}>Создать актера</Link>
+                            <button className="btn"><Link to={EMPLOYEE_ADMIN}>Создать агента</Link></button>
+                            <button className="btn"><Link to={ACTOR_ADMIN}>Создать актера</Link></button>
                         </div>
                     }
                 </div>

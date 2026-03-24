@@ -9,11 +9,7 @@ import { useState } from "react"
 function AuthEl(props: { user: IUser | null; classn: string }) {
     return (
         <div className={props.classn}>
-            {props.user ? (
-                <Link to="/profile">{props.user.name}</Link>
-            ) : (
-                <Link to="/login">Войти</Link>
-            )}
+            {props.user && <Link to="/profile">{props.user.name}</Link>}
         </div>
     )
 }

@@ -7,19 +7,21 @@ import { ICity, IEyeColor, IHairColor, ILanguage } from "./relevantTypes"
 
 // ================================ REQUEST ================================
 export interface CreateActorType {
+    // required
     firstName: string;
     lastName: string;
     dateOfBirth: Date;
     gender: string;
     height: number;
-    skills: string[];
     
-    employeeId: number;
+    employeeId: string;
     eyeColor: IEyeColor;
     hairColor: IHairColor;
     city: ICity;
-    languages: ILanguage[];
     
+    // unrequired
+    skills?: string[];
+    languages?: ILanguage[];
     middleName?: string;
     videoURL?: string;
     description?: string;
@@ -30,23 +32,30 @@ export interface CreateActorType {
 }
 
 export interface EditActorType {
+    // поля, которые нельзя оставлять пустыми
     id: string;
 
     firstName?: string;
     lastName?: string;
-    middleName?: string;
-    employeeId?: number;
-    gender?: GenderEnum;
-    dateOfBirth?: Date;
-    city?: string;
-    eyeColor?: string;
+    dateOfBirth: Date;
+    gender?: string;
     height?: number;
-    videoURL?: string;
+    // relations
+    employeeId?: string;
+    eyeColor?: string;
+    hairColor?: string;
+    city?: string;
+    
+    // поля, которые можно оставлять пустыми
+    skills?: string[];
     languages?: string[];
+    middleName?: string;
+    videoURL?: string;
     description?: string;
-    kinoTeatr?: string;
-    filmTools?: string;
-    kinopoisk?: string;
+    education?: string;
+    linkToKinoTeatr?: string;
+    linkToFilmTools?: string;
+    linkToKinopoisk?: string;
 }
 
 export interface FilterActorType {

@@ -12,9 +12,9 @@ export const createActorSchema = z.object({
     city: z.string().min(1),
     eyeColor: z.string().min(1),
     height: z.preprocess((val) => Number(val), z.number()),
-    languages: z.string().min(1),
     skills: z.string().min(1),
-
+    
+    languages: z.string().optional(),
     middleName: z.string().optional(),
     videoURL: z.string().optional(),
     description: z.string().optional(),

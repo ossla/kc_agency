@@ -1,7 +1,7 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
-import { createActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
+import { createActorURL, deleteActorURL, editActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
 
 
 class fetchActors {
@@ -74,6 +74,31 @@ class fetchActors {
         console.log("filtered data: " + JSON.stringify(actors))
         return actors
     }
+
+    static async editActor(accessToken: string, reqFormData: FormData): Promise<IActor> {
+        const response = await fetch(editActorURL, {
+            method: "POST",
+            body: reqFormData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+        
+        const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
+        return actor 
+    }
+
+    static async deleteActor(accessToken: string, actorID: string) {
+        const response = await fetch(deleteActorURL + "/" + actorID, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+
+        console.log(response);
+    }
+
 }
 
 export default fetchActors

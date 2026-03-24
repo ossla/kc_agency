@@ -110,7 +110,7 @@ export default function EmployeeAdmin() {
                 <label htmlFor="phone">Телефон*</label>
                 <input type="text" id="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="телефон" />
                 
-                <label htmlFor="telegram">Ссылка на telegram: только ник, без @, для ссылки https://t.me/Введённые данные</label>
+                <label htmlFor="telegram">telegram: только ник, без @, для ссылки https://t.me/Введённые данные</label>
                 <input type="text" id="telegram" value={telegram} onChange={e => setTelegram(e.target.value)} placeholder="telegram" />
                 
                 <label htmlFor="vk">Ссылка на страницу ВКонтакте, включая https://</label>
@@ -124,7 +124,6 @@ export default function EmployeeAdmin() {
 
                 <label htmlFor="description">(опционально) описание / доп. данные</label>
                 <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="описание..." />
-
                 {
                     error !== null &&
                     <p className="error">{error}</p>
