@@ -46,7 +46,7 @@ export default function ActorPage() {
     const [loadedLanguages, setLoadedLanguages] = useState<ILanguage[]>([])
     const [languages, setLanguages] = useState<string[]>([])
     const [skills, setSkills] = useState<string[]>([])
-    
+
     const startEdit = async () => {
         if (!actor) return;
 
@@ -66,6 +66,9 @@ export default function ActorPage() {
             description: actor.description,
             videoURL: actor.videoURL,
             education: actor.education || "",
+            linkToFilmTools: actor.linkToFilmTools,
+            linkToKinopoisk: actor.linkToKinopoisk,
+            linkToKinoTeatr: actor.linkToKinoTeatr,
             skills: [],
             languages: []
         })
@@ -103,25 +106,48 @@ export default function ActorPage() {
             }
         }
 
-        editData.languages = languages
-
         try {
             const formData = new FormData();
 
-            Object.entries(editData).forEach(([key, value]) => {
-                if (value === undefined || value === null) return
+            if (actor) {
+                formData.append("id", actor.id)
+            } else { setError("нет актера?"); return; }
 
-                if (Array.isArray(value)) {
-                    value.forEach(v => formData.append(key, v))
-                } else {
-                    formData.append(key, value.toString())
-                }
-            })
+            if (editData.firstName !== actor.firstName) formData.append("firstName", editData.firstName!)
+            if (editData.lastName !== actor.lastName) formData.append("lastName", editData.lastName!)
+            if (editData.middleName !== actor.middleName) formData.append("middleName", editData.middleName!)
+            if (editData.height !== actor.height) formData.append("height", String(editData.height))
+            if (editData.description !== actor.description) formData.append("description", editData.description!)
+            if (editData.videoURL !== actor.videoURL) formData.append("videoURL", editData.videoURL!)
+            if (editData.city !== actor.city?.name) formData.append("city", editData.city!)
+            if (editData.eyeColor !== actor.eyeColor?.name) formData.append("eyeColor", editData.eyeColor!)
+            if (editData.linkToFilmTools !== actor.linkToFilmTools) formData.append("linkToFilmTools", editData.linkToFilmTools!)
+            if (editData.linkToKinopoisk !== actor.linkToKinopoisk) formData.append("linkToKinopoisk", editData.linkToKinopoisk!)
+            if (editData.linkToKinoTeatr !== actor.linkToKinoTeatr) formData.append("linkToKinoTeatr", editData.linkToKinoTeatr!)
+            if (
+                editData.dateOfBirth &&
+                actor.dateOfBirth &&
+                new Date(editData.dateOfBirth).toISOString() !==
+                    new Date(actor.dateOfBirth).toISOString()
+            ) {
+                formData.append(
+                    "dateOfBirth",
+                    new Date(editData.dateOfBirth).toISOString()
+                );
+            }
+            if (JSON.stringify(languages) !== JSON.stringify(actor.languages?.map(l => l.name))) {
+                formData.append("languages", JSON.stringify(languages))
+            }
+            if (JSON.stringify(skills) !== JSON.stringify(actor.skills)) {
+                formData.append("skills", JSON.stringify(skills))
+            }
 
             const updated = await fetchActors.editActor(accessToken, formData)
 
             setActor(updated)
+            setError(null)
             setIsEdit(false)
+
         } catch (e) {
             setError(processError(e));
         }
@@ -182,6 +208,7 @@ export default function ActorPage() {
 
     if (!actor) return <Loading />    
 
+
     return (
         <div className="actor_page_wrapper">
             <div className="actor_grid">
@@ -199,21 +226,54 @@ export default function ActorPage() {
                     </PhotoProvider>
 
                     <div className="actor_actions">
-                        {actor.linkToFilmTools && 
-                            <a href={actor.linkToFilmTools}>
-                                <img src="/icons/filmtoolz_icon.png" alt="icon2" />
-                            </a>
-                        }
-                        {actor.linkToKinoTeatr && 
-                            <a href={actor.linkToKinoTeatr}>
-                                <img src="/icons/kinoteatr_icon.png" alt="icon3" />
-                            </a>
-                        }
-                        {actor.linkToKinopoisk && 
-                            <a href={actor.linkToKinopoisk}>
-                                <img src="/icons/kinopoisk_icon.png" alt="icon1" />
-                            </a>
-                        }
+                        {isEdit && editData ? (
+                            <div className="actor_parameters">
+                                <label htmlFor="">FilmToolz URL</label>
+                                <input
+                                    className="edit_input"
+                                    value={editData.linkToFilmTools || ""}
+                                    onChange={e =>
+                                        setEditData({ ...editData, linkToFilmTools: e.target.value })
+                                    }
+                                />
+
+                                <label htmlFor="">Kinopoisk URL</label>
+                                <input
+                                    className="edit_input"
+                                    value={editData.linkToKinopoisk || ""}
+                                    onChange={e =>
+                                        setEditData({ ...editData, linkToKinopoisk: e.target.value })
+                                    }
+                                />
+
+                                <label htmlFor="">KinoTeatr URL</label>
+                                <input
+                                    className="edit_input"
+                                    value={editData.linkToKinoTeatr || ""}
+                                    onChange={e =>
+                                        setEditData({ ...editData, linkToKinoTeatr: e.target.value })
+                                    }
+                                />
+                            </div>
+                        ) : (
+                            <>
+                                {actor.linkToFilmTools && 
+                                    <a href={actor.linkToFilmTools}>
+                                        <img src="/icons/filmtoolz_icon.png" alt="icon2" />
+                                    </a>
+                                }
+                                {actor.linkToKinoTeatr && 
+                                    <a href={actor.linkToKinoTeatr}>
+                                        <img src="/icons/kinoteatr_icon.png" alt="icon3" />
+                                    </a>
+                                }
+                                {actor.linkToKinopoisk && 
+                                    <a href={actor.linkToKinopoisk}>
+                                        <img src="/icons/kinopoisk_icon.png" alt="icon1" />
+                                    </a>
+                                }
+                            </>
+                        )}
                     </div>
                 </div>
 

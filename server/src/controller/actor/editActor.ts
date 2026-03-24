@@ -6,7 +6,7 @@ import { Actor } from "../../models/actor.entity"
 import { getEmployee } from "../employee/getEmployee"
 import { Employee } from "../../models/employee.entity"
 import { editActorSchema, EditActorType, GenderEnum } from "./actorTypes"
-import { saveCity, saveEyeColor, saveHairColor, saveLanguages } from "./createActor"
+import { saveCity, saveEyeColor, saveHairColor, saveLanguages, saveSkills } from "./createActor"
 
 
 function setActorField<T extends keyof Actor>(actor: Actor, field: T, value: Actor[T] | undefined) {
@@ -33,6 +33,8 @@ function setGender(actor: Actor, gender: any) {
 }
 
 export async function editActor(req: Request, res: Response, next: NextFunction) {
+    console.log(req.body);
+    
     const body: EditActorType = editActorSchema.parse(req.body)
     
     let actor: Actor = await getActor(body.id)
@@ -47,7 +49,7 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
     setActorField(actor, "videoURL", body.videoURL)
     setGender(actor, body.gender)
 
-    setActorField(actor, "skills", body.skills)
+    saveSkills(actor, body.skills)
     setActorField(actor, "height", body.height)
     setActorField(actor, "dateOfBirth", body.dateOfBirth)
 

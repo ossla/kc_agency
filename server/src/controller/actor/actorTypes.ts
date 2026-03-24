@@ -12,8 +12,8 @@ export const createActorSchema = z.object({
     city: z.string().min(1),
     eyeColor: z.string().min(1),
     height: z.preprocess((val) => Number(val), z.number()),
-    skills: z.string().min(1),
-    
+
+    skills: z.string().optional(),
     languages: z.string().optional(),
     middleName: z.string().optional(),
     videoURL: z.string().optional(),
@@ -45,7 +45,8 @@ export const editActorSchema = z.object({
     linkToFilmTools: z.string().optional(),
     linkToKinopoisk: z.string().optional(),
 
-    skills: z.array(z.string()).optional(),
+    skills: z.string().optional(),
+    languages: z.string().optional(),
     height: z.preprocess((val) => Number(val), z.number()).optional(),
     dateOfBirth: z.preprocess((val) => new Date(val as string), z.date()).optional(),
     // relations
@@ -53,7 +54,6 @@ export const editActorSchema = z.object({
     city: z.string().optional(),
     eyeColor: z.string().optional(),
     hairColor: z.string().optional(),
-    languages: z.string().optional(),
 })
 export type EditActorType = z.infer<typeof editActorSchema>
 

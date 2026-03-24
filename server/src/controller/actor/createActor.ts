@@ -187,26 +187,25 @@ export async function saveLanguages(actor: Actor, rawLanguages: string[] | strin
     actor.languages = langsArr
 }
 
-export async function saveSkills(actor: Actor, rawLanguages: string[] | string | undefined) {
-    if (!rawLanguages) {
+export async function saveSkills(actor: Actor, rawSkills: string[] | string | undefined) {
+    if (!rawSkills) {
         return;
     }
 
-    let rawLangsArr: string[]
-    if (typeof rawLanguages === 'string' && rawLanguages.length) {
+    let rawSkillsArr: string[]
+    if (typeof rawSkills === 'string' && rawSkills.length) {
         try {
-            rawLangsArr = JSON.parse(rawLanguages)
-            if (!Array.isArray(rawLangsArr)) throw new Error()
+            rawSkillsArr = JSON.parse(rawSkills)
+            if (!Array.isArray(rawSkillsArr)) throw new Error()
         } catch {
             throw ApiError.badRequest("Некорректный JSON в поле languages")
         }
 
-    } else if (Array.isArray(rawLanguages)) {
-        rawLangsArr = rawLanguages
+    } else if (Array.isArray(rawSkills)) {
+        rawSkillsArr = rawSkills
     } else {
         throw ApiError.badRequest('skills должен быть или string или string[], например ["Лыжный спорт", "игра на гитаре"]')
     }
 
-    actor.skills = rawLangsArr
-
+    actor.skills = rawSkillsArr
 }
