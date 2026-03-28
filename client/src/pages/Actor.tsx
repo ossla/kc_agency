@@ -215,6 +215,11 @@ export default function ActorPage() {
             
                 {/* Левая часть===================================== */}
                 <div className="actor_left">
+                    
+                </div>
+
+                {/* Правая часть===================================== */}
+                <div className="actor_right">
                     <PhotoProvider>
                         <PhotoView src={actor.url + "/avatar_1600.jpg"}>
                             <img
@@ -275,10 +280,7 @@ export default function ActorPage() {
                             </>
                         )}
                     </div>
-                </div>
 
-                {/* Правая часть===================================== */}
-                <div className="actor_right">
                     {error && <h1 style={{padding: '5px', backgroundColor: '#fda8a8'}}>{error}</h1>}
                     {user?.isAdmin && !isEdit && (
                         <div className="floating_block">
