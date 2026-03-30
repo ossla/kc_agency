@@ -19,47 +19,8 @@ export async function changeAvatar(req: Request, res: Response, next: NextFuncti
     res.status(200).json(true)
 }
 
-// при запросе change order нужно поменять порядок фото в поле actor.photos 
-// порядок задается индексами в массиве, элементы массива string -- наименования файлов
-// {"1.jpg", "5.jpg", "3.jpg"}
 export async function changeOrder(req: Request, res: Response, next: NextFunction) {    
-    const {currIdx, putAfterIdx, id} = req.body
-    if (currIdx === undefined || putAfterIdx === undefined) {
-        throw ApiError.badRequest("changeOrder: не найдено поле currPos или putAfterIdx")
-    }
-    if (!id) {
-        throw ApiError.badRequest("changeOrder: не найдено поле id")
-    }
-
-    let actor: Actor = await getActor(id)
-    if (!actor.photos || actor.photos.length <= 0) {
-        throw ApiError.badRequest("changeOrder: у актера нет фото")
-    }
-
-    const curr: number = Number(currIdx)
-    const after: number = Number(putAfterIdx)
-    const arrLength: number = actor.photos.length
-    if (arrLength === 1) {
-        return;
-    }
-    if (curr >= arrLength || after >= arrLength || curr < 0 || after < -1) { // after может быть -1, чтобы переставить объект на 0
-        throw ApiError.badRequest(`changeOrder: неверная позиция. currIdx = ${curr}, putAfterIdx = ${after}, последний индекс = ${arrLength - 1}`)
-    }
-    const currEl: string = actor.photos[curr]
-    if (curr < after) {
-        for (let i = curr + 1; i <= after; ++i) {
-            actor.photos[i-1] = actor.photos[i]
-        }
-        actor.photos[after] = currEl
-    } else {
-        for (let i = curr - 1; i > after; --i) {
-            actor.photos[i+1] = actor.photos[i]
-        }
-        actor.photos[after + 1] = currEl
-    }
-
-    await appDataSource.getRepository(Actor).save(actor)
-    res.json(actor)
+    res.json("покап не реализовано")
 }
 
 export async function deletePhoto(req: Request, res: Response, next: NextFunction) {
