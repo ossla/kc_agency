@@ -17,6 +17,7 @@ import { HOME } from "../routes";
 import { IEmployee } from "../api/types/employeeTypes";
 import fetchEmployees from "../api/fetchEmployees";
 import fetchRelevant from "../api/fetchRelevant";
+import ActorPhotoEditor from "../elements/ActorPhotoEditor";
 
 
 export default function ActorPage() {
@@ -37,9 +38,10 @@ export default function ActorPage() {
         loadData()
     }, []);
 
-    // для эдита
+    // edit
     const { user, accessToken } = useUser()
     const [isEdit, setIsEdit] = useState(false)
+    const [isPhotoEdit, setIsPhotoEdit] = useState(false)
     const [editData, setEditData] = useState<EditActorType | null>(null)
     const navigator = useNavigate()
     const [empls, setEmpls] = useState<IEmployee[] | null>()
@@ -560,51 +562,79 @@ export default function ActorPage() {
                         <EmployeeCard employee={actor.employee} />
                     }
 
-                    <div className="floating_block">
                         { isEdit && editData ?
-                            <div className="actor_block">
-                                <h3>Видеовизитка</h3>
-                                <input
-                                    className="edit_input"
-                                    value={editData.videoURL || ""}
-                                    onChange={e => setEditData({ ...editData, videoURL: e.target.value })}
-                                    placeholder="Видеовизитка"
-                                />
+                            <div className="floating_block">
+                                <div className="actor_block">
+                                    <h3>Видеовизитка</h3>
+                                    <input
+                                        className="edit_input"
+                                        value={editData.videoURL || ""}
+                                        onChange={e => setEditData({ ...editData, videoURL: e.target.value })}
+                                        placeholder="Видеовизитка"
+                                    />
+                                </div>
                             </div>
                             :
                             actor.videoURL && (
-                                <div className="actor_block">
-                                    <h3>Видеовизитка</h3>
-                                    <iframe
-                                        width="720"
-                                        height="405"
-                                        src={actor.videoURL}
-                                        style={{ border: "none" }}
-                                        allow="autoplay; fullscreen"
-                                    ></iframe>
+                                <div className="floating_block">
+                                    <div className="actor_block">
+                                        <h3>Видеовизитка</h3>
+                                        <iframe
+                                            width="720"
+                                            height="405"
+                                            src={actor.videoURL}
+                                            style={{ border: "none" }}
+                                            allow="autoplay; fullscreen"
+                                        ></iframe>
+                                    </div>
                                 </div>
                             )
                         }
 
+                    <div className="floating_block">
                         <div className="actor_block">
-                            <h3>Фотогалерея</h3>
-                            <PhotoProvider>
-                                <div className="actor_gallery">
-                                    {actor.photos.map((p, i) => (
-                                        <PhotoView
-                                            key={i}
-                                            src={actor.url + "/" + p + "_1600.jpg"}
-                                        >
-                                            <img
-                                                src={actor.url + "/" + p + "_400.jpg"}
-                                                className="actor_gallery_photo"
-                                                alt="gallery"
-                                            />
-                                        </PhotoView>
-                                    ))}
-                                </div>
-                            </PhotoProvider>
+                            {user?.isAdmin && !isEdit && (
+                                <button style={{marginTop: "20px"}} className="btn" onClick={() => setIsPhotoEdit(p => !p)}>Редактировать фото</button>
+                            )}
+
+                            {(isPhotoEdit && actor && accessToken) ? 
+                                (
+                                    <ActorPhotoEditor
+                                        actorId={actor.id}
+                                        initialPhotos={actor.photos}
+                                        baseUrl={actor.url}
+                                        accessToken={accessToken}
+                                        onChange={(photos) => {
+                                            setActor(prev => prev ? { ...prev, photos } : prev)
+                                        }}
+                                    /> 
+                                )
+                                : 
+                                (
+                                    <>
+                                        <h3>Фотогалерея</h3>
+                                        <PhotoProvider>
+                                            <div className="actor_gallery">
+                                                {actor.photos.map((p, i) => (
+                                                    <PhotoView
+                                                    key={i}
+                                                    src={actor.url + "/" + p + "_1600.jpg"}
+                                                    >
+                                                        <img
+                                                            src={actor.url + "/" + p + "_400.jpg"}
+                                                            className="actor_gallery_photo"
+                                                            alt="gallery"
+                                                            />
+                                                    </PhotoView>
+                                                ))}
+                                            </div>
+                                        </PhotoProvider>
+                                    </>
+                                )
+                            } {/** isPhotoEdit */}
+
                         </div>
+                    
                     </div>
                 </div>
             </div>

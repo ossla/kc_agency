@@ -415,3 +415,38 @@ h3 {
     padding: 10px;
     border-radius: 10px;
 }
+
+.photo_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 120px);
+    gap: 10px;
+}
+
+.photo_item {
+    position: relative;
+}
+
+.photo_img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    cursor: grab;
+}
+
+.photo_delete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.photo_avatar {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    border: none;
+    cursor: pointer;
+}

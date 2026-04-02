@@ -15,12 +15,14 @@ import { IEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
 import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 import { processError } from "../api/apiError"
+import Loading from "../elements/Loading"
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()
     const navigator = useNavigate()
 
-    const [error, setError] = useState<string | null>()
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     // basic data
     const [firstName, setFirstName] = useState<string>()
@@ -133,7 +135,10 @@ export default function ActorAdmin() {
     }, [])
 
     const createClick = async () => {
+        setIsLoading(true)
         try {
+            console.log("[createClick] старт создания актёра")
+
             const required_fields = [
                 { value: firstName, label: 'Имя' },
                 { value: lastName, label: 'Фамилия' },
@@ -146,24 +151,28 @@ export default function ActorAdmin() {
                 { value: city, label: 'Город' },
                 { value: avatar, label: 'Аватар' },
             ]
-    
+
             const emptyField = required_fields.find(f => !f.value)
-    
             if (emptyField) {
+                console.error("[createClick] пустое обязательное поле:", emptyField.label)
                 throw new Error(`Поле "${emptyField.label}" обязательно для заполнения`)
             }
-    
+
             if (photos.length === 0) {
+                console.error("[createClick] фотографии отсутствуют")
                 throw new Error('Поле "Фотографии" не должно быть пустым')
             }
-    
+
             if (skills.length === 0) {
+                console.error("[createClick] навыки отсутствуют")
                 throw new Error("Навыки тоже обязательное поле! Просьба указать хотя бы 1 навык")
             }            
-    
+
             setError(null)
+
             const reqFormData = new FormData()
-    
+            console.log("[createClick] формируем FormData")
+
             reqFormData.append("firstName", firstName!)
             reqFormData.append("lastName", lastName!)
             reqFormData.append("dateOfBirth", dateOfbirth.toDateString())
@@ -176,28 +185,37 @@ export default function ActorAdmin() {
             reqFormData.append("city", city!)
             reqFormData.append("languages", JSON.stringify(languages))
             reqFormData.append("avatar", avatar!)
-    
+            
+            console.log("[createClick] прикрепляем фотографии:", photos)
             Array.from(photos).forEach(file => {
                 reqFormData.append("photos", file)
+                console.log("[createClick] добавлено фото:", file)
             })
-    
-            if (middleName) reqFormData.append("middleName", middleName)
-            if (videoURL) reqFormData.append("videoURL", videoURL)
-            if (description) reqFormData.append("description", description)
-            if (education) reqFormData.append("education", education)
-            if (linkToKinoTeatr) reqFormData.append("linkToKinoTeatr", linkToKinoTeatr)
-            if (linkToFilmTools) reqFormData.append("linkToFilmTools", linkToFilmTools)
-            if (linkToKinopoisk) reqFormData.append("linkToKinopoisk", linkToKinopoisk)
-    
+
+            if (middleName) { reqFormData.append("middleName", middleName); console.log("[createClick] middleName:", middleName) }
+            if (videoURL) { reqFormData.append("videoURL", videoURL); console.log("[createClick] videoURL:", videoURL) }
+            if (description) { reqFormData.append("description", description); console.log("[createClick] description:", description) }
+            if (education) { reqFormData.append("education", education); console.log("[createClick] education:", education) }
+            if (linkToKinoTeatr) { reqFormData.append("linkToKinoTeatr", linkToKinoTeatr); console.log("[createClick] linkToKinoTeatr:", linkToKinoTeatr) }
+            if (linkToFilmTools) { reqFormData.append("linkToFilmTools", linkToFilmTools); console.log("[createClick] linkToFilmTools:", linkToFilmTools) }
+            if (linkToKinopoisk) { reqFormData.append("linkToKinopoisk", linkToKinopoisk); console.log("[createClick] linkToKinopoisk:", linkToKinopoisk) }
+
+            console.log("[createClick] проверяем accessToken")
             await fetchAuth.auth()
             if (!accessToken) {
+                console.error("[createClick] нет accessToken")
                 throw new Error("Авторизуйтесь")
             }
-    
+
+            console.log("[createClick] отправка данных на сервер")
             await fetchActors.create(accessToken, reqFormData)
+
+            console.log("[createClick] актёр успешно создан, перенаправление")
             navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
-        
+
         } catch (e: unknown) {
+            setIsLoading(false)
+            console.error("[createClick] ошибка:", e)
             setError(processError(e))
         }
     }
@@ -416,7 +434,12 @@ export default function ActorAdmin() {
                     <p className="error">{error}</p>
                 }
 
-                <button onClick={createClick}>Создать актёра</button>
+                {
+                    isLoading ?
+                        <Loading />
+                        :   
+                        <button onClick={createClick}>Создать актёра</button>
+                }
             </div>
         </div>
     )

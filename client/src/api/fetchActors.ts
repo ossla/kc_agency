@@ -1,7 +1,7 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
-import { createActorURL, deleteActorURL, editActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
+import { addPhotoToAlbumURL, changeAvatarURL, changeOrderAlbumURL, createActorURL, deleteActorURL, deletePhotoFromAlbumURL, editActorURL, filterActorsURL, getActorsURL, getMenActorsURL, getWomenActorsURL } from "./URLs";
 
 
 class fetchActors {
@@ -99,6 +99,74 @@ class fetchActors {
         console.log(response);
     }
 
+    static async addPhotos(accessToken: string, actorId: string, files: File[]): Promise<IActor> {
+
+        const formData = new FormData()
+        formData.append("id", actorId)
+
+        files.forEach(file => {
+            formData.append("photos", file)
+        })
+
+        const response = await fetch(addPhotoToAlbumURL, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+
+        const actor: IActor = await ResponseHandler<IActor>(response, toIActor)
+        return actor
+    }
+
+    static async deletePhoto(accessToken: string, actorId: string, photoId: string): Promise<void> {
+        const response = await fetch(deletePhotoFromAlbumURL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: actorId,
+                photoId
+            })
+        })
+
+        await ResponseHandler<string>(response, toString)
+    }
+
+    static async changeOrder(accessToken: string, actorId: string, photos: string[]): Promise<void> {
+        const response = await fetch(changeOrderAlbumURL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: actorId,
+                photos
+            })
+        })
+
+        await ResponseHandler<string>(response, toString)
+    }
+
+    static async changeAvatar(accessToken: string, actorId: string, file: File): Promise<void> {
+        const formData = new FormData()
+        formData.append("id", actorId)
+        formData.append("newAvatar", file)
+
+        const response = await fetch(changeAvatarURL, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+            }
+        })
+
+        await ResponseHandler<string>(response, toString)
+    }
 }
 
 export default fetchActors

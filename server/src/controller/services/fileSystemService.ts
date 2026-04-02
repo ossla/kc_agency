@@ -47,14 +47,22 @@ export async function savePhoto(photo: CustomFileType
 
 export async function removePhoto(photoName: string, dirName: string = "") {
     if (dirName === "") { dirName = returnStaticPath() }
-    console.log("[removePhoto] photoName: " + photoName)
+    console.log("[removePhoto] dirname: " + dirName)
+    
+    const dirPath = path.join(returnStaticPath(), dirName)
 
-    const filepath: string = path.join(dirName, photoName)
-    if (!fs.existsSync(filepath)) {
-        console.error("[removePhoto] Фото с таким именем нет: " + photoName)
+    const filepath1 = path.join(dirPath, photoName + "_400.jpg");
+    const filepath2 = path.join(dirPath, photoName + "_1600.jpg");
+    console.log("[removePhoto] check exist:", filepath1, " and ", filepath2)
+
+    if (!fs.existsSync(filepath1) || !fs.existsSync(filepath2)) {
+        console.error("[removePhoto] Фото с таким именем нет: " + photoName);
+        throw new ApiError(401, "photo not found");
     } else {
-        fs.rmSync(filepath)
+        fs.rmSync(filepath1)
+        fs.rmSync(filepath2)
     }
+    console.log("[removePhoto] ends. photo removed.")
 }
 
 export function makeActorDirname(body: CreateActorType): string {

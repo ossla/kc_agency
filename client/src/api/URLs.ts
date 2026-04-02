@@ -11,6 +11,10 @@ export const filterActorsURL = actorURL + "/filter"
 export const createActorURL = actorURL + "/create"
 export const deleteActorURL = actorURL + "/delete"
 export const editActorURL = actorURL + "/edit"
+export const addPhotoToAlbumURL = editActorURL + "/addToAlbum"
+export const deletePhotoFromAlbumURL = editActorURL + "/deleteFromAlbum"
+export const changeOrderAlbumURL = editActorURL + "/changeOrderAlbum"
+export const changeAvatarURL = editActorURL + "/changeAvatar"
 
 const employeeURL = "/api/employee"
 export const getEmployeeURL = employeeURL
