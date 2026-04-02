@@ -63,9 +63,9 @@ export default function Navbar() {
                 <li>
                     <Link to={ACTORS_WOMEN} onClick={handleLinkClick}>АКТРИСЫ</Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
-                </li>
+                </li> */}
                 <li>
                     <Link to={HOME} onClick={handleLinkClick}>О НАС</Link>
                 </li>

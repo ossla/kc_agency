@@ -26,5 +26,4 @@ actorRouter.get("/get/men", getShortMenActors)
 actorRouter.get("/get/women", getShortWomenActors)
 actorRouter.get("/", getShortActors)
 
-
 export default actorRouter

@@ -12,26 +12,22 @@ export default function HomePage() {
     return (
        <main className="container animate-on-load">
 
-            <section className="hero_section ">
-                <img src="/logo/logo.svg" className="hero_logo" />
-            </section>
-
-            <section className="home_navigation ">
-                {/* <div className="home_navigation_side">
-                    <Link to="#">МЕДИА</Link>
-                </div>
-                <span className="home_navigation_line"/> */}
+            {/* <section className="home_navigation ">
                 <div className="home_navigation_side">
                     <Link to={ACTORS_MEN}>АКТЁРЫ</Link>
                     <Link to={ACTORS_WOMEN}>АКТРИСЫ</Link>
                     <Link to={EMPLOYEES}>КОМАНДА</Link>
                 </div>
-            </section>
+            </section> */}
 
             <section className="about_section">
                 <h2 className="home_title">О нашем агентстве</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia eligendi voluptatum velit fuga rerum, dolores qui rem quibusdam id voluptatem reiciendis libero quisquam, nostrum voluptatibus, sit temporibus iure deleniti distinctio.
                 Nulla hic libero excepturi tenetur! Rerum aliquam maiores iusto quia explicabo expedita ipsa culpa impedit asperiores repellat, omnis soluta veritatis labore. Perferendis fuga eligendi laboriosam accusamus aspernatur deserunt a? Eos.</p>
+            </section>
+
+            <section className="hero_section ">
+                <img src="/logo/logo.svg" className="hero_logo" />
             </section>
 
             <section className="agents_section">

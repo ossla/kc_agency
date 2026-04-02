@@ -21,9 +21,8 @@
 }
 
 .hero_section {
-    border-bottom: 3px solid rgb(233, 147, 147);
     padding-bottom: 0px;
-    margin: 0 auto 40px;
+    margin: 0 auto 0;
     width: 70%;
 }
 
