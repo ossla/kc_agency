@@ -1,3 +1,3 @@
 # kc_agency
 
-in the kc-agency/config folder, .env file should exists
+Сейт для актёрского агентства https://193.247.81.198/
