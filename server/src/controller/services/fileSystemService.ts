@@ -57,7 +57,7 @@ export async function removePhoto(photoName: string, dirName: string = "") {
 
     if (!fs.existsSync(filepath1) || !fs.existsSync(filepath2)) {
         console.error("[removePhoto] Фото с таким именем нет: " + photoName);
-        throw new ApiError(401, "photo not found");
+        throw new ApiError(401, "removePhoto: photo not found");
     } else {
         fs.rmSync(filepath1)
         fs.rmSync(filepath2)

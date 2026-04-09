@@ -42,7 +42,9 @@ export async function createEmployee(req: ICustomRequest, res: Response, next: N
         res.status(201).json(employee)
 
     } catch (error: any) {
+        console.log("[createEmployee] error.")
         if (photoName != "") {
+            console.log("[createEmployee] removePhoto...")
             await removePhoto(photoName)
         }
         throw error
