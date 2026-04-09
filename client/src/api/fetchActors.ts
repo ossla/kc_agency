@@ -1,3 +1,4 @@
+import { ApiError } from "./apiError";
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler";
 import { FilterActorType, IActor, IShortActor, toIActor, toIShortActor } from "./types/actorTypes";
 import { GenderEnum } from "./types/enums";
@@ -104,6 +105,9 @@ class fetchActors {
         const formData = new FormData()
         formData.append("id", actorId)
 
+        if (files.length > 21) {
+            throw new ApiError(413, "фото многовато (>20)")
+        }
         files.forEach(file => {
             formData.append("photos", file)
         })

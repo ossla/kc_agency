@@ -74,8 +74,13 @@ export default function ActorAdmin() {
         const files = (event.target as HTMLInputElement).files
 
         if (files && files.length > 0) {
+            if (files.length > 20) {
+                setError("не нужно грузить более 20 фото")
+                return;
+            }
             const filesArray = Array.from(files)
             setPhotos(filesArray)
+            setError(null)
         }
     }
 
@@ -243,7 +248,7 @@ export default function ActorAdmin() {
                     )}
                 </>
 
-                <label htmlFor="photos">Фотогалерея* (до 40 шт., файлы jpeg, jpg)</label>
+                <label htmlFor="photos">Фотогалерея* (до 20 шт., файлы jpeg, jpg)</label>
                 <input 
                     type="file" 
                     id="photos"

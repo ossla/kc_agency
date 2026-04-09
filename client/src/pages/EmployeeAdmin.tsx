@@ -9,12 +9,14 @@ import { useNavigate } from "react-router-dom"
 import ImageCropper from "../utils/ImageCropper"
 import { HOME } from "../routes"
 import { processError } from "../api/apiError"
+import Loading from "../elements/Loading"
 
 
 export default function EmployeeAdmin() {
     const { accessToken } = useUser()
 
     const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [firstName, setFirstName] = useState<string>()
     const [lastName, setLastName] = useState<string>()
@@ -40,6 +42,7 @@ export default function EmployeeAdmin() {
     }
 
     const createClick = async () => {
+        setIsLoading(true)
         try {
             if (firstName && lastName && email && phone && avatar) {
                 const reqFormData: FormData = new FormData()
@@ -69,6 +72,8 @@ export default function EmployeeAdmin() {
             }
             
         } catch (e: unknown) {
+            setIsLoading(false)
+            console.error("[createClick] ошибка:", e)
             setError(processError(e))
         }
     }
@@ -129,7 +134,13 @@ export default function EmployeeAdmin() {
                     <p className="error">{error}</p>
                 }
 
-                <button onClick={createClick}>Создать агента</button>
+                {
+                    isLoading ?
+                        <Loading />
+                        :   
+                        <button onClick={createClick}>Создать агента</button>
+                }
+
             </div>
         </div>
     )

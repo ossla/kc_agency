@@ -116,8 +116,8 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
 
         filenames.push(uuid)
     } else {
-        if (photos.length > 40) {
-            throw ApiError.badRequest("[saveActorPhotos] Загружено более 40 фото")
+        if (photos.length > 20) {
+            throw ApiError.badRequest("[saveActorPhotos] Загружено более 20 фото")
         }
 
         for (let i = 0; i < photos.length; i++) {
