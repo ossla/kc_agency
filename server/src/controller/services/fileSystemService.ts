@@ -46,10 +46,13 @@ export async function savePhoto(photo: CustomFileType
 }
 
 export async function removePhoto(photoName: string, dirName: string = "") {
-    if (dirName === "") { dirName = returnStaticPath() }
+    let dirPath: string;
+    if (dirName === "") {
+        dirPath = returnStaticPath()
+    } else {
+        dirPath = path.join(returnStaticPath(), dirName)
+    }
     console.log("[removePhoto] dirname: " + dirName)
-    
-    const dirPath = path.join(returnStaticPath(), dirName)
 
     const filepath1 = path.join(dirPath, photoName + "_400.jpg");
     const filepath2 = path.join(dirPath, photoName + "_1600.jpg");
