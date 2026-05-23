@@ -81,6 +81,12 @@ export default function Navbar() {
                         <Link to={HOME} onClick={handleLinkClick}>О НАШЕМ АГЕНТСТВЕ</Link>
                     </div>
                 </li>
+                <li className="menu-mobile-only">
+                    <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
+                </li>
+                <li className="menu-mobile-only">
+                    <Link to={HOME} onClick={handleLinkClick}>О НАШЕМ АГЕНТСТВЕ</Link>
+                </li>
 
                 {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}
                 <li className="auth-mobile">

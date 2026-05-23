@@ -1,4 +1,3 @@
-/* анимация появления */
 .animate-on-load {
     opacity: 0;
     transform: translateY(40px);
@@ -12,129 +11,11 @@
     }
 }
 
-
-.home_page {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hero_section {
-    padding-bottom: 0px;
-    margin: 0 auto 0;
-    width: 70%;
-}
-
-.hero_logo {
-    display: block;
-    margin: 0 auto 0;
-    padding: 0;
-}
-
-.hero_text {
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.hero_text p {
-    font-size: 18px;
-    line-height: 1.6;
-    opacity: 0.9;
-}
-
-.actors_section {
-    max-width: 1200px;
-    margin: auto;
-}
-
 .home_title {
     font-size: 30px;
     text-align: center;
     margin-bottom: 30px;
 }
-
-/* форма */
-.contact_form {
-    max-width: 500px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.contact_form input,
-.contact_form textarea {
-    padding: 12px 15px;
-    border: 1px solid #ccc;
-    background: #f7f7f7;
-    border-radius: 4px;
-}
-
-.contact_form button {
-    padding: 12px 18px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
-}
-.contact_form button:hover {
-    background: #efefef;
-}
-
-.home_navigation a {
-    font-size: 1.75rem;
-    font-weight: 500;
-    color: #68645a;
-    text-decoration: none;
-    position: relative;
-    display: inline-block;
-    transition: color 0.3s ease;
-}
-
-.home_navigation a::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: #32302b;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-}
-
-.home_navigation a:hover::after {
-    width: 100%;
-}
-
-.home_navigation a:hover {
-    bottom: 2px;
-}
-
-.home_navigation {
-    width: 70%;
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 100px;
-}
-
-.home_navigation_side {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-/* 
-.home_navigation_line {
-    width: 3px;
-    background: #fc7f7f;
-    align-self: stretch;
-} */
 
 .about_section {
     display: flex;
@@ -142,9 +23,7 @@
     align-items: center;
     gap: 28px;
     max-width: 900px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto 80px;
 }
 
 .about_logo {
@@ -163,8 +42,11 @@
     line-height: 1.6;
 }
 
-.actors_section,
-.about_section,
+.actors_section {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+}
+
 .agents_section {
     margin-bottom: 80px;
 }

@@ -54,6 +54,8 @@ export default function Employee() {
         return <Loading />
     }
 
+    const hasSocialLinks = Boolean(employee.telegram || employee.vk || employee.instagram || employee.facebook)
+
     return (
         <div className="person_page_wrapper">
             <div className="person_grid">
@@ -70,28 +72,30 @@ export default function Employee() {
                         </PhotoView>
                     </PhotoProvider>
 
-                    <div className="person_actions empl_actions">
-                        {employee.telegram &&
-                            <a href={"https://t.me/" + employee.telegram}>
-                                <img src="/icons/telegram.svg" alt="icon1" />
-                            </a>
-                        }
-                        {employee.vk && 
-                            <a href={employee.vk}>
-                                <img src="/icons/vk.svg" alt="icon2" />
-                            </a>
-                        }
-                        {employee.instagram && 
-                            <a href={employee.instagram}>
-                                <img src="/icons/instagram.svg" alt="icon3" />
-                            </a>
-                        }
-                        {employee.facebook && 
-                            <a href={employee.facebook}>
-                                <img src="/icons/facebook.svg" alt="icon4" />
-                            </a>
-                        }
-                    </div>
+                    {hasSocialLinks && (
+                        <div className="person_actions empl_actions">
+                            {employee.telegram &&
+                                <a href={"https://t.me/" + employee.telegram}>
+                                    <img src="/icons/telegram.svg" alt="telegram" />
+                                </a>
+                            }
+                            {employee.vk && 
+                                <a href={employee.vk}>
+                                    <img src="/icons/vk.svg" alt="vk" />
+                                </a>
+                            }
+                            {employee.instagram && 
+                                <a href={employee.instagram}>
+                                    <img src="/icons/instagram.svg" alt="instagram" />
+                                </a>
+                            }
+                            {employee.facebook && 
+                                <a href={employee.facebook}>
+                                    <img src="/icons/facebook.svg" alt="facebook" />
+                                </a>
+                            }
+                        </div>
+                    )}
                 </div>
 
                 {/* Правая часть===================================== */}

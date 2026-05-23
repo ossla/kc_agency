@@ -93,7 +93,8 @@ select {
     border-bottom: 1px solid black;
     padding-bottom: 10px;
 }
-.languages label, p {
+.languages label,
+.languages p {
     text-align: center;
 }
 .languages ul {
