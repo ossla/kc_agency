@@ -28,12 +28,10 @@ export function EmployeesList() {
     if (employees.length === 0) return <h1>Не найдено агентов</h1>
 
     return (
-        <>
-            { employees &&
-                employees.map((empl, idx) =>
-                    <EmployeeCard employee={empl} key={idx} />
-                )
-            }
-        </>
+        <div className="employees-list">
+            {employees.map((empl, idx) =>
+                <EmployeeCard employee={empl} key={idx} />
+            )}
+        </div>
     )
 }

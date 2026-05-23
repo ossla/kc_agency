@@ -136,12 +136,46 @@
     align-self: stretch;
 } */
 
+.about_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    max-width: 900px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.about_logo {
+    width: 70%;
+    max-width: 760px;
+    flex: 0 0 auto;
+}
+
+.about_text {
+    width: 100%;
+}
+
 .about_section p {
     font-size: 18px;
+    text-align: center;
+    line-height: 1.6;
 }
 
 .actors_section,
 .about_section,
 .agents_section {
     margin-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+    .about_section {
+        gap: 24px;
+    }
+
+    .about_logo {
+        width: 90%;
+        flex-basis: auto;
+    }
 }

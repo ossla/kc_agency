@@ -168,11 +168,6 @@ export default function ActorAdmin() {
                 throw new Error('Поле "Фотографии" не должно быть пустым')
             }
 
-            if (skills.length === 0) {
-                console.error("[createClick] навыки отсутствуют")
-                throw new Error("Навыки тоже обязательное поле! Просьба указать хотя бы 1 навык")
-            }            
-
             setError(null)
 
             const reqFormData = new FormData()

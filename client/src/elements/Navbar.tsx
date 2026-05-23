@@ -17,6 +17,7 @@ function AuthEl(props: { user: IUser | null; classn: string }) {
 export default function Navbar() {
     const { user } = useUser()
     const [menuOpen, setMenuOpen] = useState(false)
+    const [aboutOpen, setAboutOpen] = useState(false)
 
     const toggleMenu = () => {
         setMenuOpen(prev => !prev)
@@ -24,6 +25,7 @@ export default function Navbar() {
 
     const handleLinkClick = () => {
         setMenuOpen(false)
+        setAboutOpen(false)
     }
 
     return (
@@ -66,8 +68,18 @@ export default function Navbar() {
                 {/* <li>
                     <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
                 </li> */}
-                <li>
-                    <Link to={HOME} onClick={handleLinkClick}>О НАС</Link>
+                <li className={`menu-dropdown ${aboutOpen ? "open" : ""}`}>
+                    <button
+                        type="button"
+                        className="menu-dropdown-toggle"
+                        onClick={() => setAboutOpen(prev => !prev)}
+                    >
+                        О НАС
+                    </button>
+                    <div className="menu-dropdown-list">
+                        <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
+                        <Link to={HOME} onClick={handleLinkClick}>О НАШЕМ АГЕНТСТВЕ</Link>
+                    </div>
                 </li>
 
                 {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}

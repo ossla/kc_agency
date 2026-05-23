@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Actor.css";
+import "../styles/Person.css";
 import { IActor } from "../api/types/actorTypes";
 import { useParams } from "react-router-dom";
 import fetchActors from "../api/fetchActors";
@@ -35,22 +35,22 @@ export default function ActorPage() {
     if (!actor) return <Loading />    
 
     return (
-        <div className="actor_page_wrapper">
-            <div className="actor_grid">
+        <div className="person_page_wrapper">
+            <div className="person_grid">
             
                 {/* Левая часть===================================== */}
-                <div className="actor_left">
+                <div className="person_left">
                     <PhotoProvider>
                         <PhotoView src={actor.url + "/avatar_1600.jpg"}>
                             <img
-                                className="actor_avatar"
+                                className="person_avatar"
                                 src={actor.url + "/avatar_400.jpg"}
                                 alt="avatar"
                             />
                         </PhotoView>
                     </PhotoProvider>
 
-                    <div className="actor_actions">
+                    <div className="person_actions">
                         {actor.linkToFilmTools && 
                             <a href={actor.linkToFilmTools}>
                                 <img src="/icons/filmtoolz_icon.png" alt="icon2" />
@@ -70,37 +70,37 @@ export default function ActorPage() {
                 </div>
 
                 {/* Правая часть===================================== */}
-                <div className="actor_right">
+                <div className="person_right">
                     <div className="floating_block">
-                    <h1 className="actor_fio">
+                    <h1 className="person_fio">
                         {actor.lastName} {actor.firstName} {actor.middleName && actor.middleName}
                     </h1>
 
-                    <div className="actor_parameters">
-                        <div className="actor_param">
+                    <div className="person_parameters">
+                        <div className="person_param">
                             <h4>Дата рождения</h4>
                             <p>{actor.dateOfBirth.getFullYear()}.{actor.dateOfBirth.getMonth() + 1}.{actor.dateOfBirth.getDate()}</p>
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Рост</h4>
                             <p>{actor.height} см</p>
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Город</h4>
                             <p>{actor.city.name}</p>
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Цвет глаз</h4>
                             <p>{actor.eyeColor.name}</p>
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Натуральный цвет волос</h4>
                             <p>{actor.hairColor.name}</p>
                         </div>
                         
                         { actor.education &&
-                            <div className="actor_param">
-                                <h4 className="actor_section_title">Образование</h4>
+                            <div className="person_param">
+                                <h4 className="person_section_title">Образование</h4>
                                 <p>{actor.education}</p>
                             </div>
                         }
@@ -110,7 +110,7 @@ export default function ActorPage() {
                     {
                         actor.description && (
                             <div className="floating_block">
-                            <div className="actor_block">
+                            <div className="person_block">
                                 <p id="quote">❝</p>
                                 <p className="description">{actor.description}</p>
                             </div>
@@ -120,7 +120,7 @@ export default function ActorPage() {
 
                     <div className="floating_block">
                         {actor.languages && (
-                            <div className="actor_block">
+                            <div className="person_block">
                                 <h3>Языки</h3>
                                 <ul>
                                     {actor.languages.map((l: ILanguage, idx) => (
@@ -133,7 +133,7 @@ export default function ActorPage() {
                         <div className="line"/>
 
                         {actor.skills && (
-                            <div className="actor_block">
+                            <div className="person_block">
                                 <h3>Навыки</h3>
                                 <ul>
                                     {actor.skills.map((s, i) => (
@@ -144,12 +144,12 @@ export default function ActorPage() {
                         )}
                     </div>
 
-                    <h3 className="actor-employee-title">Агент</h3>
+                    <h3 className="person-employee-title">Агент</h3>
                     <EmployeeCard employee={actor.employee} />
 
                     <div className="floating_block">
                         {actor.videoURL && (
-                            <div className="actor_block">
+                            <div className="person_block">
                                 <h3>Видеовизитка</h3>
                                 <iframe
                                     width="720"
@@ -161,10 +161,10 @@ export default function ActorPage() {
                             </div>
                         )}
 
-                        <div className="actor_block">
+                        <div className="person_block">
                             <h3>Фотогалерея</h3>
                             <PhotoProvider>
-                                <div className="actor_gallery">
+                                <div className="person_gallery">
                                     {actor.photos.map((p, i) => (
                                         <PhotoView
                                             key={i}
@@ -172,7 +172,7 @@ export default function ActorPage() {
                                         >
                                             <img
                                                 src={actor.url + "/" + p + "_400.jpg"}
-                                                className="actor_gallery_photo"
+                                                className="person_gallery_photo"
                                                 alt="gallery"
                                             />
                                         </PhotoView>

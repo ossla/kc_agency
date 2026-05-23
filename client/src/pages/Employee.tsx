@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 import Loading from "../elements/Loading"
-import "../styles/Actor.css"
+import "../styles/Person.css"
 import "react-photo-view/dist/react-photo-view.css"
 import fetchEmployees from "../api/fetchEmployees"
 import { IEmployee } from "../api/types/employeeTypes"
@@ -55,22 +55,22 @@ export default function Employee() {
     }
 
     return (
-        <div className="actor_page_wrapper">
-            <div className="actor_grid">
+        <div className="person_page_wrapper">
+            <div className="person_grid">
             
                 {/* Левая часть===================================== */}
-                <div className="actor_left">
+                <div className="person_left">
                     <PhotoProvider>
                         <PhotoView src={employee.avatarUrl + "_1600.jpg"}>
                             <img
-                                className="actor_avatar"
+                                className="person_avatar"
                                 src={employee.avatarUrl + "_400.jpg"}
                                 alt="avatar"
                             />
                         </PhotoView>
                     </PhotoProvider>
 
-                    <div className="actor_actions empl_actions">
+                    <div className="person_actions empl_actions">
                         {employee.telegram &&
                             <a href={"https://t.me/" + employee.telegram}>
                                 <img src="/icons/telegram.svg" alt="icon1" />
@@ -95,18 +95,18 @@ export default function Employee() {
                 </div>
 
                 {/* Правая часть===================================== */}
-                <div className="actor_right">
+                <div className="person_right">
                     <div className="floating_block">
-                    <h1 className="actor_fio">
+                    <h1 className="person_fio">
                         {employee.lastName} {employee.firstName} {employee.middleName && employee.middleName}
                     </h1>
 
-                    <div className="actor_parameters">
-                        <div className="actor_param">
+                    <div className="person_parameters">
+                        <div className="person_param">
                             <h4>Почта</h4>
                             <p>{employee.email}</p>
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Телефон</h4>
                             <p>{employee.phone}</p>
                         </div>

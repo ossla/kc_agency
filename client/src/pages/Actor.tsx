@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Actor.css";
+import "../styles/Person.css";
 import "../styles/Admin.css";
 import { EditActorType, IActor, IShortActor } from "../api/types/actorTypes";
 import { useNavigate, useParams } from "react-router-dom";
@@ -212,24 +212,24 @@ export default function ActorPage() {
 
 
     return (
-        <div className="actor_page_wrapper">
-            <div className="actor_grid">
+        <div className="person_page_wrapper">
+            <div className="person_grid">
             
                 {/* Левая часть===================================== */}
-                <div className="actor_left">
+                <div className="person_left">
                     <PhotoProvider>
                         <PhotoView src={actor.url + "/avatar_1600.jpg"}>
                             <img
-                                className="actor_avatar"
+                                className="person_avatar"
                                 src={actor.url + "/avatar_400.jpg"}
                                 alt="avatar"
                             />
                         </PhotoView>
                     </PhotoProvider>
 
-                    <div className="actor_actions">
+                    <div className="person_actions">
                         {isEdit && editData ? (
-                            <div className="actor_parameters">
+                            <div className="person_parameters">
                                 <label htmlFor="">FilmToolz URL</label>
                                 <input
                                     className="edit_input"
@@ -280,7 +280,7 @@ export default function ActorPage() {
                 </div>
 
                 {/* Правая часть===================================== */}
-                <div className="actor_right">
+                <div className="person_right">
                     {error && <h1 style={{padding: '5px', backgroundColor: '#fda8a8'}}>{error}</h1>}
                     {user?.isAdmin && !isEdit && (
                         <div className="floating_block">
@@ -301,7 +301,7 @@ export default function ActorPage() {
                     }
 
                     {isEdit && editData && 
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Пол</h4>
                             <input  id="M" type="radio" checked={editData.gender === "M"} value="M" onChange={e => setEditData({ ...editData, gender: "M" })}/>
                             <label htmlFor="M">Мужчина</label>
@@ -334,14 +334,14 @@ export default function ActorPage() {
                                 />
                             </div>
                         ) : (
-                            <h1 className="actor_fio">
+                            <h1 className="person_fio">
                                 {actor.lastName} {actor.firstName} {actor.middleName && actor.middleName}
                             </h1>
                     )}
 
                     {/** Дата рождения;  Рост;  Город;  Цвет глаз;  Натуральный цвет волос;  Образование */}
-                    <div className="actor_parameters">
-                        <div className="actor_param">
+                    <div className="person_parameters">
+                        <div className="person_param">
                             <h4>Дата рождения</h4>
                         
                             {isEdit && editData ? (
@@ -355,7 +355,7 @@ export default function ActorPage() {
                             )}
                         </div>
 
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Рост</h4>
                             {isEdit && editData ? (
                                     <input
@@ -368,7 +368,7 @@ export default function ActorPage() {
                             )}
                         </div>
 
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Город</h4>
                             {isEdit && editData ? (
                                     <input
@@ -380,7 +380,7 @@ export default function ActorPage() {
                                     <p>{actor.city.name}</p>
                             )}
                         </div>
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Цвет глаз</h4>
                             {isEdit && editData ? (
                                     <input
@@ -393,7 +393,7 @@ export default function ActorPage() {
                             )}
                         </div>
 
-                        <div className="actor_param">
+                        <div className="person_param">
                             <h4>Натуральный цвет волос</h4>
                             {isEdit && editData ? (
                                     <input
@@ -407,8 +407,8 @@ export default function ActorPage() {
                         </div>
 
                         {isEdit && editData ? (
-                                <div className="actor_param">
-                                    <h4 className="actor_section_title">Образование</h4>
+                                <div className="person_param">
+                                    <h4 className="person_section_title">Образование</h4>
                                     <input
                                         className="edit_input"
                                         value={editData.education || ""}
@@ -416,8 +416,8 @@ export default function ActorPage() {
                                     />
                                 </div>
                             ) : (
-                                actor.education && <div className="actor_param">
-                                    <h4 className="actor_section_title">Образование</h4>
+                                actor.education && <div className="person_param">
+                                    <h4 className="person_section_title">Образование</h4>
                                     <p>{actor.education}</p>
                                 </div>
                                 
@@ -428,8 +428,8 @@ export default function ActorPage() {
 
                     {/** Описание */}
                     {isEdit && editData ? (
-                            <div className="actor_param">
-                                <h4 className="actor_section_title">Описание</h4>
+                            <div className="person_param">
+                                <h4 className="person_section_title">Описание</h4>
                                 <textarea
                                     style={{padding: '10px'}}
                                     className="edit_input"
@@ -440,7 +440,7 @@ export default function ActorPage() {
                         ) : (
                             actor.description && (
                                 <div className="floating_block">
-                                <div className="actor_block">
+                                <div className="person_block">
                                     <p id="quote">❝</p>
                                     <p className="description">{actor.description}</p>
                                 </div>
@@ -488,7 +488,7 @@ export default function ActorPage() {
 
                             ) : (
                                 actor.languages && (
-                                    <div className="actor_block">
+                                    <div className="person_block">
                                         <h3>Языки</h3>
                                         <ul>
                                             {actor.languages.map((l: ILanguage, idx) => (
@@ -526,7 +526,7 @@ export default function ActorPage() {
                                 </div>
 
                             ) : (actor.skills && (
-                                <div className="actor_block">
+                                <div className="person_block">
                                     <h3>Навыки</h3>
                                     <ul>
                                         {actor.skills.map((s, i) => (
@@ -538,7 +538,7 @@ export default function ActorPage() {
                         }
                     </div>
 
-                    <h3 className="actor-employee-title">Агент</h3>
+                    <h3 className="person-employee-title">Агент</h3>
                      { isEdit && editData ?
                         <>
                             <label>Агент*</label>
@@ -564,7 +564,7 @@ export default function ActorPage() {
 
                         { isEdit && editData ?
                             <div className="floating_block">
-                                <div className="actor_block">
+                                <div className="person_block">
                                     <h3>Видеовизитка</h3>
                                     <input
                                         className="edit_input"
@@ -577,7 +577,7 @@ export default function ActorPage() {
                             :
                             actor.videoURL && (
                                 <div className="floating_block">
-                                    <div className="actor_block">
+                                    <div className="person_block">
                                         <h3>Видеовизитка</h3>
                                         <iframe
                                             width="720"
@@ -592,7 +592,7 @@ export default function ActorPage() {
                         }
 
                     <div className="floating_block">
-                        <div className="actor_block">
+                        <div className="person_block">
                             {user?.isAdmin && !isEdit && (
                                 <button style={{marginTop: "20px"}} className="btn" onClick={() => setIsPhotoEdit(p => !p)}>Редактировать фото</button>
                             )}
@@ -614,7 +614,7 @@ export default function ActorPage() {
                                     <>
                                         <h3>Фотогалерея</h3>
                                         <PhotoProvider>
-                                            <div className="actor_gallery">
+                                            <div className="person_gallery">
                                                 {actor.photos.map((p, i) => (
                                                     <PhotoView
                                                     key={i}
@@ -622,7 +622,7 @@ export default function ActorPage() {
                                                     >
                                                         <img
                                                             src={actor.url + "/" + p + "_400.jpg"}
-                                                            className="actor_gallery_photo"
+                                                            className="person_gallery_photo"
                                                             alt="gallery"
                                                             />
                                                     </PhotoView>

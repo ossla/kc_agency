@@ -8,67 +8,48 @@ interface IEmployeeCard {
 }
 
 export function EmployeeCard({ employee }: IEmployeeCard) {
+    const employeeUrl = EMPLOYEES + '/' + employee.id
+    const descriptionLimit = 180
+    const fullDescription = employee.description ?? ""
+    const hasLongDescription = fullDescription.length > descriptionLimit
+    const description = hasLongDescription
+        ? fullDescription.slice(0, descriptionLimit).trim()
+        : fullDescription
+
     return (
         <div className="employee-card-wrapper">
-        <div className="employee-card">
-            <div className='employee-main'>
-                <Link to={EMPLOYEES + '/' + employee.id}>
-                    <div className="employee-avatar">
+            <div className="employee-card">
+                <div className="employee-avatar">
+                    <Link to={employeeUrl}>
                         <img
                             src={employee.avatarUrl + "_400.jpg"}
                             alt={`${employee.firstName} ${employee.lastName}`}
                         />
-                    </div>
-                </Link>
+                    </Link>
+                </div>
 
                 <div className="employee-info">
-                    <div>
-                        <Link to={EMPLOYEES + '/' + employee.id}>
+                    <Link to={employeeUrl}>
                         <h1 className="employee-name">
                             {employee.lastName} {employee.firstName}
                         </h1>
-                        </Link>
+                    </Link>
 
-                        <div className="employee-description">
-                            {employee.description}
-                        </div>
+                    <div className="employee-description">
+                        {description}
+                        {hasLongDescription && (
+                            <>
+                                ... <Link to={employeeUrl} className="employee-more-link">больше</Link>
+                            </>
+                        )}
                     </div>
-                    <div className="employee-contacts">
-                        <h4>
-                            <span className='employee-dot'>•</span> {employee.phone}
-                        </h4>
 
-                        <h4>
-                            <span className='employee-dot'>•</span> {employee.email}
-                        </h4>
+                    <div className="employee-contacts">
+                        <h4>{employee.phone}</h4>
+                        <h4>{employee.email}</h4>
                     </div>
                 </div>
-
-            </div> {/* employee-main */}
-
-            <div className="employee-links">
-                {employee.vk &&
-                    <div className="employee-link">
-                        <a href={employee.vk} ><img src="/icons/vk.svg" alt='vk'/></a>
-                    </div>
-                }
-                {employee.telegram &&
-                    <div className="employee-link">
-                        <a href={`https://t.me/${employee.telegram}`} ><img src="/icons/telegram.svg" alt='telegram'/></a>
-                    </div>
-                }
-                {employee.instagram &&
-                    <div className="employee-link">
-                        <a href={employee.instagram} ><img src="/icons/instagram.svg" alt='vk'/></a>
-                    </div>
-                }
-                {employee.facebook &&
-                    <div className="employee-link">
-                        <a href={employee.facebook} ><img src="/icons/facebook.svg" alt='facebook'/></a>
-                    </div>
-                }
             </div>
-        </div>     
         </div>
     )
 }

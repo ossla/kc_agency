@@ -5,7 +5,7 @@ import fetchActors from "../api/fetchActors"
 import { FilterActorType, IShortActor } from "../api/types/actorTypes"
 import Loading from "../elements/Loading"
 import { GenderEnum } from "../api/types/enums"
-import "../styles/Actor.css"
+import "../styles/Person.css"
 
 interface ActorListProps {
     gender: GenderEnum;
