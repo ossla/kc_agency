@@ -16,6 +16,7 @@ import ImageCropper from "../utils/ImageCropper"
 import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
 import { processError } from "../api/apiError"
 import Loading from "../elements/Loading"
+import TagEditor from "../elements/TagEditor"
 
 export default function ActorAdmin() {
     const { accessToken } = useUser()
@@ -82,45 +83,6 @@ export default function ActorAdmin() {
             setPhotos(filesArray)
             setError(null)
         }
-    }
-
-    const handleSelectLanguage = (languageName: string) => {
-        setLanguages(prev => {
-            if (!prev.includes(languageName)) {
-                return [...prev, languageName]
-            }
-            return prev
-        })
-    }
-    const handleAddNewLanguage = (newLanguage: string) => {
-        const trimmed = newLanguage.trim()
-        if (!trimmed) return
-
-        setLanguages(prev => {
-            if (!prev.includes(trimmed)) {
-                return [...prev, trimmed]
-            }
-            return prev
-        })
-    }
-    const handleRemoveLanguage = (languageName: string) => {
-        setLanguages(prev => prev.filter(l => l !== languageName))
-    }
-
-
-    const handleAddNewSkill = (newSkill: string) => {
-        const trimmed = newSkill.trim()
-        if (!trimmed) return
-
-        setSkills(prev => {
-            if (!prev.includes(trimmed)) {
-                return [...prev, trimmed]
-            }
-            return prev
-        })
-    }
-    const handleRemoveSkill = (skillName: string) => {
-        setSkills(prev => prev.filter(l => l !== skillName))
     }
 
     useEffect(() => {
@@ -283,28 +245,12 @@ export default function ActorAdmin() {
                 <label htmlFor="height">Рост*</label>
                 <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />
 
-                <>
-                    <label htmlFor="">Навыки (введите навык и нажмите Enter)</label>
-                    <input 
-                        type="text"
-                        placeholder="Добавить навык"
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') {
-                                handleAddNewSkill(e.currentTarget.value)
-                                e.currentTarget.value = '';
-                            }
-                        }}
-                    />
-                    <p>Выбранные навыки:</p>
-                    <ul>
-                        {skills.map(skill => (
-                        <li key={skill}>
-                            {skill}
-                            <button onClick={() => handleRemoveSkill(skill)}>×</button>
-                        </li>
-                        ))}
-                    </ul>
-                </>
+                <TagEditor
+                    label="Skills"
+                    values={skills}
+                    onChange={setSkills}
+                    placeholder="Example: dance, vocals, horse riding"
+                />
 
                 {/* связи с другими таблицами (relations) */}
                 <>
@@ -371,39 +317,13 @@ export default function ActorAdmin() {
                     </datalist>
                 </>
 
-                <div id="languages" className="languages">
-                    <label htmlFor="languages">Языки (введите язык и нажмите Enter)</label>
-                    {loadedLanguages.map(lang => (
-                        <button
-                            key={lang.id}
-                            onClick={() => handleSelectLanguage(lang.name)}
-                            style={{ margin: 4, background: languages.includes(lang.name) ? 'lightblue' : 'white' }}
-                        >
-                            {lang.name}
-                        </button>
-                    ))}
-
-                    <input
-                        type="text"
-                        placeholder="Добавить новый язык"
-                        onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                            handleAddNewLanguage(e.currentTarget.value);
-                            e.currentTarget.value = '';
-                        }
-                        }}
-                    />
-
-                    <p>Выбранные языки:</p>
-                    <ul>
-                        {languages.map(lang => (
-                        <li key={lang}>
-                            {lang}
-                            <button onClick={() => handleRemoveLanguage(lang)}>×</button>
-                        </li>
-                        ))}
-                    </ul>
-                </div>
+                <TagEditor
+                    label="Languages"
+                    values={languages}
+                    onChange={setLanguages}
+                    suggestions={loadedLanguages.map(lang => lang.name)}
+                    placeholder="Add language"
+                />
 
                 {/* необязательные поля, кроме отчесчтва middleName */}
                 <>

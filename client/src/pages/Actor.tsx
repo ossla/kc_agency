@@ -18,6 +18,7 @@ import { IEmployee } from "../api/types/employeeTypes";
 import fetchEmployees from "../api/fetchEmployees";
 import fetchRelevant from "../api/fetchRelevant";
 import ActorPhotoEditor from "../elements/ActorPhotoEditor";
+import TagEditor from "../elements/TagEditor";
 
 
 export default function ActorPage() {
@@ -167,45 +168,6 @@ export default function ActorPage() {
         await fetchActors.deleteActor(accessToken, actor.id)
 
         navigator(HOME)
-    }
-
-    // языки
-    const handleSelectLanguage = (languageName: string) => {
-        setLanguages(prev => {
-            if (!prev.includes(languageName)) {
-                return [...prev, languageName]
-            }
-            return prev
-        })
-    }
-    const handleAddNewLanguage = (newLanguage: string) => {
-        const trimmed = newLanguage.trim()
-        if (!trimmed) return
-
-        setLanguages(prev => {
-            if (!prev.includes(trimmed)) {
-                return [...prev, trimmed]
-            }
-            return prev
-        })
-    }
-    const handleRemoveLanguage = (languageName: string) => {
-        setLanguages(prev => prev.filter(l => l !== languageName))
-    }
-    // навыки
-    const handleAddNewSkill = (newSkill: string) => {
-        const trimmed = newSkill.trim()
-        if (!trimmed) return
-
-        setSkills(prev => {
-            if (!prev.includes(trimmed)) {
-                return [...prev, trimmed]
-            }
-            return prev
-        })
-    }
-    const handleRemoveSkill = (skillName: string) => {
-        setSkills(prev => prev.filter(l => l !== skillName))
     }
 
     if (!actor) return <Loading />    
@@ -452,40 +414,13 @@ export default function ActorPage() {
                     <div className="floating_block">
                         {isEdit && editData ? 
                             (
-                                <div id="languages" className="languages">
-                                    <label htmlFor="languages">Языки* (введите язык и нажмите Enter)</label>
-                                    {loadedLanguages.map(lang => (
-                                        <button
-                                            key={lang.id}
-                                            onClick={() => handleSelectLanguage(lang.name)}
-                                            style={{ margin: 4, background: languages.includes(lang.name) ? 'lightblue' : 'white' }}
-                                        >
-                                            {lang.name}
-                                        </button>
-                                    ))}
-
-                                    <input
-                                        type="text"
-                                        placeholder="Добавить новый язык"
-                                        onKeyDown={e => {
-                                        if (e.key === 'Enter') {
-                                            handleAddNewLanguage(e.currentTarget.value);
-                                            e.currentTarget.value = '';
-                                        }
-                                        }}
-                                    />
-
-                                    <p>Выбранные языки:</p>
-                                    <ul>
-                                        {languages && languages.map(lang => (
-                                            <li key={lang}>
-                                                {lang}
-                                                <button onClick={() => handleRemoveLanguage(lang)}>×</button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
+                                <TagEditor
+                                    label="Языки"
+                                    values={languages}
+                                    onChange={setLanguages}
+                                    suggestions={loadedLanguages.map(lang => lang.name)}
+                                    placeholder="Добавить язык"
+                                />
                             ) : (
                                 actor.languages && (
                                     <div className="person_block">
@@ -502,29 +437,12 @@ export default function ActorPage() {
 
                         { isEdit && editData ? 
                             (
-                                <div id="languages" className="languages">
-                                    <label htmlFor="">Навыки* (введите навык и нажмите Enter)</label>
-                                    <input 
-                                        type="text"
-                                        placeholder="Добавить навык"
-                                        onKeyDown={e => {
-                                            if (e.key === 'Enter') {
-                                                handleAddNewSkill(e.currentTarget.value);
-                                                e.currentTarget.value = '';
-                                            }
-                                        }}
-                                    />
-                                    <p>Выбранные навыки:</p>
-                                    <ul>
-                                        {skills.map(skill => (
-                                        <li key={skill}>
-                                            {skill}
-                                            <button onClick={() => handleRemoveSkill(skill)}>×</button>
-                                        </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
+                                <TagEditor
+                                    label="Навыки"
+                                    values={skills}
+                                    onChange={setSkills}
+                                    placeholder="Новый навык"
+                                />
                             ) : (actor.skills && (
                                 <div className="person_block">
                                     <h3>Навыки</h3>
