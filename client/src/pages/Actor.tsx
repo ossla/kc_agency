@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../styles/Person.css";
-import "../styles/Admin.css";
-import { EditActorType, IActor, IShortActor } from "../api/types/actorTypes";
+import { EditActorType, IActor } from "../api/types/actorTypes";
 import { useNavigate, useParams } from "react-router-dom";
 import fetchActors from "../api/fetchActors";
 import Loading from "../elements/Loading";
@@ -10,7 +9,6 @@ import { ILanguage } from "../api/types/relevantTypes";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import { processError } from "../api/apiError";
-import { EmployeesList } from "./EmployeeList";
 import { EmployeeCard } from "../elements/EmployeeCard";
 import { useUser } from "../context/UserContext";
 import { HOME } from "../routes";
@@ -18,37 +16,99 @@ import { IEmployee } from "../api/types/employeeTypes";
 import fetchEmployees from "../api/fetchEmployees";
 import fetchRelevant from "../api/fetchRelevant";
 import ActorPhotoEditor from "../elements/ActorPhotoEditor";
-import TagEditor from "../elements/TagEditor";
+import ActorEditPanel from "../elements/ActorEditPanel";
 
+const getEditSnapshot = (editData: EditActorType, languages: string[], skills: string[]) => {
+    return JSON.stringify({
+        firstName: editData.firstName || "",
+        lastName: editData.lastName || "",
+        middleName: editData.middleName || "",
+        dateOfBirth: editData.dateOfBirth ? new Date(editData.dateOfBirth).toISOString() : "",
+        employeeId: editData.employeeId || "",
+        height: editData.height ?? "",
+        gender: editData.gender || "",
+        city: editData.city || "",
+        eyeColor: editData.eyeColor || "",
+        hairColor: editData.hairColor || "",
+        description: editData.description || "",
+        videoURL: editData.videoURL || "",
+        education: editData.education || "",
+        linkToFilmTools: editData.linkToFilmTools || "",
+        linkToKinopoisk: editData.linkToKinopoisk || "",
+        linkToKinoTeatr: editData.linkToKinoTeatr || "",
+        languages,
+        skills
+    });
+};
+
+const getActorEditSnapshot = (actor: IActor) => {
+    return getEditSnapshot({
+        id: actor.id,
+        firstName: actor.firstName,
+        lastName: actor.lastName,
+        dateOfBirth: actor.dateOfBirth,
+        employeeId: actor.employee.id,
+        middleName: actor.middleName,
+        height: actor.height,
+        gender: actor.gender,
+        city: actor.city?.name,
+        eyeColor: actor.eyeColor?.name,
+        hairColor: actor.hairColor?.name,
+        description: actor.description,
+        videoURL: actor.videoURL,
+        education: actor.education || "",
+        linkToFilmTools: actor.linkToFilmTools,
+        linkToKinopoisk: actor.linkToKinopoisk,
+        linkToKinoTeatr: actor.linkToKinoTeatr,
+        skills: [],
+        languages: []
+    }, actor.languages?.map(language => language.name) ?? [], actor.skills ?? []);
+};
 
 export default function ActorPage() {
+    const { id } = useParams();
+    const [actor, setActor] = useState<IActor>();
+    const [error, setError] = useState<string | null>(null);
 
-    const { id } = useParams()
-    const [actor, setActor] = useState<IActor>()
-    const [error, setError] = useState<string | null>(null)
+    const { user, accessToken } = useUser();
+    const [isEdit, setIsEdit] = useState(false);
+    const [isPhotoEdit, setIsPhotoEdit] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [editData, setEditData] = useState<EditActorType | null>(null);
+    const navigator = useNavigate();
+    const [empls, setEmpls] = useState<IEmployee[] | null>();
+    const [loadedLanguages, setLoadedLanguages] = useState<ILanguage[]>([]);
+    const [languages, setLanguages] = useState<string[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                if (!id) throw "не указан id";
-                setActor(await fetchActors.getActor(id))
+                if (!id) throw new Error("Actor id is missing");
+                setActor(await fetchActors.getActor(id));
             } catch(e: unknown) {
-                setError(processError(e))
+                setError(processError(e));
             }
         };
-        loadData()
-    }, []);
+        loadData();
+    }, [id]);
 
-    // edit
-    const { user, accessToken } = useUser()
-    const [isEdit, setIsEdit] = useState(false)
-    const [isPhotoEdit, setIsPhotoEdit] = useState(false)
-    const [editData, setEditData] = useState<EditActorType | null>(null)
-    const navigator = useNavigate()
-    const [empls, setEmpls] = useState<IEmployee[] | null>()
-    const [loadedLanguages, setLoadedLanguages] = useState<ILanguage[]>([])
-    const [languages, setLanguages] = useState<string[]>([])
-    const [skills, setSkills] = useState<string[]>([])
+    const isDirty = useMemo(() => {
+        if (!actor || !editData) return false;
+        return getEditSnapshot(editData, languages, skills) !== getActorEditSnapshot(actor);
+    }, [actor, editData, languages, skills]);
+
+    useEffect(() => {
+        if (!isDirty) return;
+
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = "";
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [isDirty]);
 
     const startEdit = async () => {
         if (!actor) return;
@@ -74,59 +134,61 @@ export default function ActorPage() {
             linkToKinoTeatr: actor.linkToKinoTeatr,
             skills: [],
             languages: []
-        })
+        });
 
-        setLanguages(actor.languages?.map(l => l.name))
-        setSkills(actor.skills)
-        setEmpls(await fetchEmployees.get())
-        setLoadedLanguages(await fetchRelevant.getLanguages())
+        setLanguages(actor.languages?.map(language => language.name) ?? []);
+        setSkills(actor.skills ?? []);
+        setEmpls(await fetchEmployees.get());
+        setLoadedLanguages(await fetchRelevant.getLanguages());
 
         setIsEdit(true);
-    }
+    };
 
     const handleSave = async () => {
-        if (!editData || !accessToken) return;
+        if (!editData || !accessToken || isSaving) return;
+        if (!actor) {
+            setError("Actor not found");
+            return;
+        }
 
         {
-            // Проверка обязательных полей на удаление в них данных
             const required_fields = [
-                { value: editData.firstName, label: 'Имя' },
-                { value: editData.lastName, label: 'Фамилия' },
-                { value: editData.dateOfBirth, label: 'Дата рождения' },
-                { value: editData.gender, label: 'Пол' },
-                { value: editData.height, label: 'Рост' },
-                { value: editData.employeeId, label: 'ID сотрудника' },
-                { value: editData.eyeColor, label: 'Цвет глаз' },
-                { value: editData.hairColor, label: 'Цвет волос' },
-                { value: editData.city, label: 'Город' },
-            ]
+                { value: editData.firstName, label: "First name" },
+                { value: editData.lastName, label: "Last name" },
+                { value: editData.dateOfBirth, label: "Date of birth" },
+                { value: editData.gender, label: "Gender" },
+                { value: editData.height, label: "Height" },
+                { value: editData.employeeId, label: "Employee ID" },
+                { value: editData.eyeColor, label: "Eye color" },
+                { value: editData.hairColor, label: "Hair color" },
+                { value: editData.city, label: "City" },
+            ];
         
-            const emptyField = required_fields.find(f => !f.value)
+            const emptyField = required_fields.find(field => !field.value);
     
             if (emptyField) {
-                setError(`Поле "${emptyField.label}" обязательно для заполнения`)
-                return
+                setError(`Field "${emptyField.label}" is required`);
+                return;
             }
         }
 
+        setIsSaving(true);
         try {
             const formData = new FormData();
 
-            if (actor) {
-                formData.append("id", actor.id)
-            } else { setError("нет актера?"); return; }
+            formData.append("id", actor.id);
 
-            if (editData.firstName !== actor.firstName) formData.append("firstName", editData.firstName!)
-            if (editData.lastName !== actor.lastName) formData.append("lastName", editData.lastName!)
-            if (editData.middleName !== actor.middleName) formData.append("middleName", editData.middleName!)
-            if (editData.height !== actor.height) formData.append("height", String(editData.height))
-            if (editData.description !== actor.description) formData.append("description", editData.description!)
-            if (editData.videoURL !== actor.videoURL) formData.append("videoURL", editData.videoURL!)
-            if (editData.city !== actor.city?.name) formData.append("city", editData.city!)
-            if (editData.eyeColor !== actor.eyeColor?.name) formData.append("eyeColor", editData.eyeColor!)
-            if (editData.linkToFilmTools !== actor.linkToFilmTools) formData.append("linkToFilmTools", editData.linkToFilmTools!)
-            if (editData.linkToKinopoisk !== actor.linkToKinopoisk) formData.append("linkToKinopoisk", editData.linkToKinopoisk!)
-            if (editData.linkToKinoTeatr !== actor.linkToKinoTeatr) formData.append("linkToKinoTeatr", editData.linkToKinoTeatr!)
+            if (editData.firstName !== actor.firstName) formData.append("firstName", editData.firstName!);
+            if (editData.lastName !== actor.lastName) formData.append("lastName", editData.lastName!);
+            if (editData.middleName !== actor.middleName) formData.append("middleName", editData.middleName!);
+            if (editData.height !== actor.height) formData.append("height", String(editData.height));
+            if (editData.description !== actor.description) formData.append("description", editData.description!);
+            if (editData.videoURL !== actor.videoURL) formData.append("videoURL", editData.videoURL!);
+            if (editData.city !== actor.city?.name) formData.append("city", editData.city!);
+            if (editData.eyeColor !== actor.eyeColor?.name) formData.append("eyeColor", editData.eyeColor!);
+            if (editData.linkToFilmTools !== actor.linkToFilmTools) formData.append("linkToFilmTools", editData.linkToFilmTools!);
+            if (editData.linkToKinopoisk !== actor.linkToKinopoisk) formData.append("linkToKinopoisk", editData.linkToKinopoisk!);
+            if (editData.linkToKinoTeatr !== actor.linkToKinoTeatr) formData.append("linkToKinoTeatr", editData.linkToKinoTeatr!);
             if (
                 editData.dateOfBirth &&
                 actor.dateOfBirth &&
@@ -138,46 +200,52 @@ export default function ActorPage() {
                     new Date(editData.dateOfBirth).toISOString()
                 );
             }
-            if (JSON.stringify(languages) !== JSON.stringify(actor.languages?.map(l => l.name))) {
-                formData.append("languages", JSON.stringify(languages))
+            if (JSON.stringify(languages) !== JSON.stringify(actor.languages?.map(language => language.name))) {
+                formData.append("languages", JSON.stringify(languages));
             }
             if (JSON.stringify(skills) !== JSON.stringify(actor.skills)) {
-                formData.append("skills", JSON.stringify(skills))
+                formData.append("skills", JSON.stringify(skills));
             }
 
-            const updated = await fetchActors.editActor(accessToken, formData)
+            const updated = await fetchActors.editActor(accessToken, formData);
 
-            setActor(updated)
-            setError(null)
-            setIsEdit(false)
-
+            setActor(updated);
+            setError(null);
+            setIsEdit(false);
+            setEditData(null);
         } catch (e) {
             setError(processError(e));
+        } finally {
+            setIsSaving(false);
         }
-    }
+    };
 
     const formatDate = (date: Date) => {
         return date.toISOString().split("T")[0];
-    }
+    };
+
+    const handleCancelEdit = () => {
+        if (isDirty && !window.confirm("отменить изменения?")) return;
+
+        setIsEdit(false);
+        setEditData(null);
+    };
 
     const handleDelete = async () => {
-        if (!actor || !accessToken) return
+        if (!actor || !accessToken) return;
 
-        if (!window.confirm('Удалить актёра?')) return
+        if (!window.confirm("Delete actor?")) return;
 
-        await fetchActors.deleteActor(accessToken, actor.id)
+        await fetchActors.deleteActor(accessToken, actor.id);
 
-        navigator(HOME)
-    }
+        navigator(HOME);
+    };
 
-    if (!actor) return <Loading />    
-
+    if (!actor) return <Loading />;
 
     return (
         <div className="person_page_wrapper">
             <div className="person_grid">
-            
-                {/* Левая часть===================================== */}
                 <div className="person_left">
                     <PhotoProvider>
                         <PhotoView src={actor.url + "/avatar_1600.jpg"}>
@@ -189,311 +257,134 @@ export default function ActorPage() {
                         </PhotoView>
                     </PhotoProvider>
 
-                    <div className="person_actions">
-                        {isEdit && editData ? (
-                            <div className="person_parameters">
-                                <label htmlFor="">FilmToolz URL</label>
-                                <input
-                                    className="edit_input"
-                                    value={editData.linkToFilmTools || ""}
-                                    onChange={e =>
-                                        setEditData({ ...editData, linkToFilmTools: e.target.value })
-                                    }
-                                />
-
-                                <label htmlFor="">Kinopoisk URL</label>
-                                <input
-                                    className="edit_input"
-                                    value={editData.linkToKinopoisk || ""}
-                                    onChange={e =>
-                                        setEditData({ ...editData, linkToKinopoisk: e.target.value })
-                                    }
-                                />
-
-                                <label htmlFor="">KinoTeatr URL</label>
-                                <input
-                                    className="edit_input"
-                                    value={editData.linkToKinoTeatr || ""}
-                                    onChange={e =>
-                                        setEditData({ ...editData, linkToKinoTeatr: e.target.value })
-                                    }
-                                />
-                            </div>
-                        ) : (
-                            <>
-                                {actor.linkToFilmTools && 
-                                    <a href={actor.linkToFilmTools}>
-                                        <img src="/icons/filmtoolz_icon.png" alt="icon2" />
-                                    </a>
-                                }
-                                {actor.linkToKinoTeatr && 
-                                    <a href={actor.linkToKinoTeatr}>
-                                        <img src="/icons/kinoteatr_icon.png" alt="icon3" />
-                                    </a>
-                                }
-                                {actor.linkToKinopoisk && 
-                                    <a href={actor.linkToKinopoisk}>
-                                        <img src="/icons/kinopoisk_icon.png" alt="icon1" />
-                                    </a>
-                                }
-                            </>
-                        )}
-                    </div>
+                    {!isEdit && (
+                        <div className="person_actions">
+                            {actor.linkToFilmTools && 
+                                <a href={actor.linkToFilmTools}>
+                                    <img src="/icons/filmtoolz_icon.png" alt="icon2" />
+                                </a>
+                            }
+                            {actor.linkToKinoTeatr && 
+                                <a href={actor.linkToKinoTeatr}>
+                                    <img src="/icons/kinoteatr_icon.png" alt="icon3" />
+                                </a>
+                            }
+                            {actor.linkToKinopoisk && 
+                                <a href={actor.linkToKinopoisk}>
+                                    <img src="/icons/kinopoisk_icon.png" alt="icon1" />
+                                </a>
+                            }
+                        </div>
+                    )}
                 </div>
 
-                {/* Правая часть===================================== */}
                 <div className="person_right">
-                    {error && <h1 style={{padding: '5px', backgroundColor: '#fda8a8'}}>{error}</h1>}
-                    {user?.isAdmin && !isEdit && (
-                        <div className="floating_block">
-                        <div style={{ marginBottom: "10px" }}>
-                            <button className="btn" onClick={startEdit}>Редактировать</button>
-                            <button className="btn" onClick={handleDelete} style={{ marginLeft: "10px" }}>
-                                Удалить
-                            </button>
-                        </div>
-                        </div>
-                    )}
-                    {isEdit && <div style={{ marginTop: "10px" }}>
-                                    <button className="btn" onClick={handleSave}>Сохранить</button>
-                                    <button className="btn" onClick={() => setIsEdit(false)} style={{ marginLeft: "10px" }}>
-                                        Отмена
-                                    </button>
-                                </div>
-                    }
+                    {error && <h1 style={{ padding: "5px", backgroundColor: "#fda8a8" }}>{error}</h1>}
 
-                    {isEdit && editData && 
-                        <div className="person_param">
-                            <h4>Пол</h4>
-                            <input  id="M" type="radio" checked={editData.gender === "M"} value="M" onChange={e => setEditData({ ...editData, gender: "M" })}/>
-                            <label htmlFor="M">Мужчина</label>
-                            <input id="W" type="radio" checked={editData.gender === "W"} value="W" onChange={e => setEditData({ ...editData, gender: "W" })}/>
-                            <label htmlFor="W">Женщина</label>
-                        </div>
-                    }
-
-                    <div className="floating_block">
-                    {/** ФИО */}
                     {isEdit && editData ? (
-                            <div>
-                                <input
-                                    className="edit_input"
-                                    value={editData.firstName || ""}
-                                    onChange={e => setEditData({ ...editData, firstName: e.target.value })}
-                                    placeholder="Имя"
-                                />
-                                <input
-                                    className="edit_input"
-                                    value={editData.lastName || ""}
-                                    onChange={e => setEditData({ ...editData, lastName: e.target.value })}
-                                    placeholder="Фамилия"
-                                />
-                                <input
-                                    className="edit_input"
-                                    value={editData.middleName || ""}
-                                    onChange={e => setEditData({ ...editData, middleName: e.target.value })}
-                                    placeholder="Отчество"
-                                />
-                            </div>
-                        ) : (
-                            <h1 className="person_fio">
-                                {actor.lastName} {actor.firstName} {actor.middleName && actor.middleName}
-                            </h1>
-                    )}
-
-                    {/** Дата рождения;  Рост;  Город;  Цвет глаз;  Натуральный цвет волос;  Образование */}
-                    <div className="person_parameters">
-                        <div className="person_param">
-                            <h4>Дата рождения</h4>
-                        
-                            {isEdit && editData ? (
-                                    <input 
-                                        className="edit_input"
-                                        type="date"
-                                        defaultValue={formatDate(editData.dateOfBirth)}
-                                        onChange={(e) => setEditData({...editData, dateOfBirth: new Date(e.target.value) })} />
-                                ) : (
-                                    <p>{actor.dateOfBirth.getFullYear()}.{actor.dateOfBirth.getMonth() + 1}.{actor.dateOfBirth.getDate()}</p>
-                            )}
-                        </div>
-
-                        <div className="person_param">
-                            <h4>Рост</h4>
-                            {isEdit && editData ? (
-                                    <input
-                                        className="edit_input"
-                                        value={editData.height || ""}
-                                        onChange={e => setEditData({ ...editData, height: Number(e.target.value) })}
-                                    />
-                                ) : (
-                                    <p>{actor.height} см</p>
-                            )}
-                        </div>
-
-                        <div className="person_param">
-                            <h4>Город</h4>
-                            {isEdit && editData ? (
-                                    <input
-                                        className="edit_input"
-                                        value={editData.city || ""}
-                                        onChange={e => setEditData({ ...editData, city: e.target.value })}
-                                    />
-                                ) : (
-                                    <p>{actor.city.name}</p>
-                            )}
-                        </div>
-                        <div className="person_param">
-                            <h4>Цвет глаз</h4>
-                            {isEdit && editData ? (
-                                    <input
-                                        className="edit_input"
-                                        value={editData.eyeColor || ""}
-                                        onChange={e => setEditData({ ...editData, eyeColor: e.target.value })}
-                                    />
-                                ) : (
-                                    <p>{actor.eyeColor.name}</p>
-                            )}
-                        </div>
-
-                        <div className="person_param">
-                            <h4>Натуральный цвет волос</h4>
-                            {isEdit && editData ? (
-                                    <input
-                                        className="edit_input"
-                                        value={editData.hairColor || ""}
-                                        onChange={e => setEditData({ ...editData, hairColor: e.target.value })}
-                                    />
-                                ) : (
-                                    <p>{actor.hairColor.name}</p>
-                            )}
-                        </div>
-
-                        {isEdit && editData ? (
-                                <div className="person_param">
-                                    <h4 className="person_section_title">Образование</h4>
-                                    <input
-                                        className="edit_input"
-                                        value={editData.education || ""}
-                                        onChange={e => setEditData({ ...editData, education: e.target.value })}
-                                    />
-                                </div>
-                            ) : (
-                                actor.education && <div className="person_param">
-                                    <h4 className="person_section_title">Образование</h4>
-                                    <p>{actor.education}</p>
-                                </div>
-                                
-                        )}
-
-                    </div>
-                    </div>
-
-                    {/** Описание */}
-                    {isEdit && editData ? (
-                            <div className="person_param">
-                                <h4 className="person_section_title">Описание</h4>
-                                <textarea
-                                    style={{padding: '10px'}}
-                                    className="edit_input"
-                                    value={editData.description || ""}
-                                    onChange={e => setEditData({ ...editData, description: e.target.value })}
-                                />
-                            </div>
-                        ) : (
-                            actor.description && (
+                        <ActorEditPanel
+                            editData={editData}
+                            setEditData={setEditData}
+                            employees={empls}
+                            loadedLanguages={loadedLanguages}
+                            languages={languages}
+                            setLanguages={setLanguages}
+                            skills={skills}
+                            setSkills={setSkills}
+                            isSaving={isSaving}
+                            onSave={handleSave}
+                            onCancel={handleCancelEdit}
+                            formatDate={formatDate}
+                        />
+                    ) : (
+                        <>
+                            {user?.isAdmin && (
                                 <div className="floating_block">
-                                <div className="person_block">
-                                    <p id="quote">❝</p>
-                                    <p className="description">{actor.description}</p>
+                                    <div style={{ marginBottom: "10px" }}>
+                                        <button className="btn" onClick={startEdit}>Редактировать</button>
+                                        <button className="btn" onClick={handleDelete} style={{ marginLeft: "10px" }}>
+                                            Удалить
+                                        </button>
+                                    </div>
                                 </div>
+                            )}
+
+                            <div className="floating_block">
+                                <h1 className="person_fio">
+                                    {actor.lastName} {actor.firstName} {actor.middleName && actor.middleName}
+                                </h1>
+
+                                <div className="person_parameters">
+                                    <div className="person_param">
+                                        <h4>Дата рождения</h4>
+                                        <p>{actor.dateOfBirth.getFullYear()}.{actor.dateOfBirth.getMonth() + 1}.{actor.dateOfBirth.getDate()}</p>
+                                    </div>
+
+                                    <div className="person_param">
+                                        <h4>Рост</h4>
+                                        <p>{actor.height} см</p>
+                                    </div>
+
+                                    <div className="person_param">
+                                        <h4>Город</h4>
+                                        <p>{actor.city.name}</p>
+                                    </div>
+                                    <div className="person_param">
+                                        <h4>Цвет глаз</h4>
+                                        <p>{actor.eyeColor.name}</p>
+                                    </div>
+
+                                    <div className="person_param">
+                                        <h4>Натуральный цвет волос</h4>
+                                        <p>{actor.hairColor.name}</p>
+                                    </div>
+
+                                    {actor.education && (
+                                        <div className="person_param">
+                                            <h4 className="person_section_title">Образование</h4>
+                                            <p>{actor.education}</p>
+                                        </div>
+                                    )}
                                 </div>
-                            )
-                    )}
+                            </div>
 
+                            {actor.description && (
+                                <div className="floating_block">
+                                    <div className="person_block">
+                                        <p id="quote">❝</p>
+                                        <p className="description">{actor.description}</p>
+                                    </div>
+                                </div>
+                            )}
 
-                    <div className="floating_block">
-                        {isEdit && editData ? 
-                            (
-                                <TagEditor
-                                    label="Языки"
-                                    values={languages}
-                                    onChange={setLanguages}
-                                    suggestions={loadedLanguages.map(lang => lang.name)}
-                                    placeholder="Добавить язык"
-                                />
-                            ) : (
-                                actor.languages && (
+                            <div className="floating_block">
+                                {actor.languages && (
                                     <div className="person_block">
                                         <h3>Языки</h3>
                                         <ul>
-                                            {actor.languages.map((l: ILanguage, idx) => (
-                                                <li key={idx}><span style={{fontSize: "30px"}}>•</span> {l.name}</li>
+                                            {actor.languages.map((language: ILanguage, idx) => (
+                                                <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {language.name}</li>
                                             ))}
                                         </ul>
                                     </div>
-                                )
-                            )
-                        }
+                                )}
 
-                        { isEdit && editData ? 
-                            (
-                                <TagEditor
-                                    label="Навыки"
-                                    values={skills}
-                                    onChange={setSkills}
-                                    placeholder="Новый навык"
-                                />
-                            ) : (actor.skills && (
-                                <div className="person_block">
-                                    <h3>Навыки</h3>
-                                    <ul>
-                                        {actor.skills.map((s, i) => (
-                                            <li key={i}><span style={{fontSize: "30px"}}>•</span> {s}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))
-                        }
-                    </div>
-
-                    <h3 className="person-employee-title">Агент</h3>
-                     { isEdit && editData ?
-                        <>
-                            <label>Агент*</label>
-                            {empls && empls.map((employee) => (
-                                <div key={employee.id} className="employee-choice">
-                                    <input
-                                        type="radio"
-                                        id={`employee-${employee.id}`}
-                                        name="employee"
-                                        value={employee.id}
-                                        checked={editData.employeeId === employee.id.toString()}
-                                        onChange={e => setEditData({...editData, employeeId: employee.id})}
-                                    />
-                                    <p>
-                                        {employee.firstName} {employee.lastName}
-                                    </p>
-                                </div>
-                            ))}
-                        </>
-                        :
-                        <EmployeeCard employee={actor.employee} />
-                    }
-
-                        { isEdit && editData ?
-                            <div className="floating_block">
-                                <div className="person_block">
-                                    <h3>Видеовизитка</h3>
-                                    <input
-                                        className="edit_input"
-                                        value={editData.videoURL || ""}
-                                        onChange={e => setEditData({ ...editData, videoURL: e.target.value })}
-                                        placeholder="Видеовизитка"
-                                    />
-                                </div>
+                                {actor.skills && (
+                                    <div className="person_block">
+                                        <h3>Навыки</h3>
+                                        <ul>
+                                            {actor.skills.map((skill, idx) => (
+                                                <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {skill}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
-                            :
-                            actor.videoURL && (
+
+                            <h3 className="person-employee-title">Агент</h3>
+                            <EmployeeCard employee={actor.employee} />
+
+                            {actor.videoURL && (
                                 <div className="floating_block">
                                     <div className="person_block">
                                         <h3>Видеовизитка</h3>
@@ -506,54 +397,55 @@ export default function ActorPage() {
                                         ></iframe>
                                     </div>
                                 </div>
-                            )
-                        }
-
-                    <div className="floating_block">
-                        <div className="person_block">
-                            {user?.isAdmin && !isEdit && (
-                                <button style={{marginTop: "20px"}} className="btn" onClick={() => setIsPhotoEdit(p => !p)}>Редактировать фото</button>
                             )}
 
-                            {(isPhotoEdit && actor && accessToken) ? 
-                                (
-                                    <ActorPhotoEditor
-                                        actorId={actor.id}
-                                        initialPhotos={actor.photos}
-                                        baseUrl={actor.url}
-                                        accessToken={accessToken}
-                                        onChange={(photos) => {
-                                            setActor(prev => prev ? { ...prev, photos } : prev)
-                                        }}
-                                    /> 
-                                )
-                                : 
-                                (
-                                    <>
-                                        <h3>Фотогалерея</h3>
-                                        <PhotoProvider>
-                                            <div className="person_gallery">
-                                                {actor.photos.map((p, i) => (
-                                                    <PhotoView
-                                                    key={i}
-                                                    src={actor.url + "/" + p + "_1600.jpg"}
-                                                    >
-                                                        <img
-                                                            src={actor.url + "/" + p + "_400.jpg"}
-                                                            className="person_gallery_photo"
-                                                            alt="gallery"
-                                                            />
-                                                    </PhotoView>
-                                                ))}
-                                            </div>
-                                        </PhotoProvider>
-                                    </>
-                                )
-                            } {/** isPhotoEdit */}
+                            <div className="floating_block">
+                                <div className="person_block">
+                                    {user?.isAdmin && (
+                                        <button
+                                            style={{ marginTop: "20px" }}
+                                            className="btn"
+                                            onClick={() => setIsPhotoEdit(current => !current)}
+                                        >
+                                            Редактировать фото
+                                        </button>
+                                    )}
 
-                        </div>
-                    
-                    </div>
+                                    {(isPhotoEdit && actor && accessToken) ? (
+                                        <ActorPhotoEditor
+                                            actorId={actor.id}
+                                            initialPhotos={actor.photos}
+                                            baseUrl={actor.url}
+                                            accessToken={accessToken}
+                                            onChange={photos => {
+                                                setActor(prev => prev ? { ...prev, photos } : prev);
+                                            }}
+                                        /> 
+                                    ) : (
+                                        <>
+                                            <h3>Фотогалерея</h3>
+                                            <PhotoProvider>
+                                                <div className="person_gallery">
+                                                    {actor.photos.map((photo, idx) => (
+                                                        <PhotoView
+                                                            key={idx}
+                                                            src={actor.url + "/" + photo + "_1600.jpg"}
+                                                        >
+                                                            <img
+                                                                src={actor.url + "/" + photo + "_400.jpg"}
+                                                                className="person_gallery_photo"
+                                                                alt="gallery"
+                                                            />
+                                                        </PhotoView>
+                                                    ))}
+                                                </div>
+                                            </PhotoProvider>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

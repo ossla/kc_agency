@@ -18,6 +18,12 @@ import { processError } from "../api/apiError"
 import Loading from "../elements/Loading"
 import TagEditor from "../elements/TagEditor"
 
+const MAX_PHOTO_SIZE_MB = 8
+const MAX_PHOTO_SIZE_BYTES = MAX_PHOTO_SIZE_MB * 1024 * 1024
+const TOTAL_PHOTOS_WARNING_MB = 60
+const TOTAL_PHOTOS_WARNING_BYTES = TOTAL_PHOTOS_WARNING_MB * 1024 * 1024
+const LARGE_PHOTOS_WARNING = "Загрузка может занять много времени, пожалуйста, подождите или загрузите фото меньшего размера"
+
 export default function ActorAdmin() {
     const { accessToken } = useUser()
     const navigator = useNavigate()
@@ -45,6 +51,7 @@ export default function ActorAdmin() {
     const [avatar, setAvatar] = useState<File>()
     const [tempAvatar, setTempAvatar] = useState<File>()
     const [photos, setPhotos] = useState<File[]>([])
+    const [photoWarning, setPhotoWarning] = useState<string | null>(null)
 
     // relations
     const [employeeId, setEmployeeId] = useState<string>()
@@ -64,23 +71,49 @@ export default function ActorAdmin() {
 
 
     const uploadAvatar = (event: React.FormEvent) => {
-        const files = (event.target as HTMLInputElement).files
+        const input = event.target as HTMLInputElement
+        const files = input.files
 
         if (files && files.length > 0) {
+            if (files[0].size > MAX_PHOTO_SIZE_BYTES) {
+                setError(`File size should be less than ${MAX_PHOTO_SIZE_MB} MB`)
+                setTempAvatar(undefined)
+                input.value = ""
+                return
+            }
+
             setTempAvatar(files[0])
+            setError(null)
         }
     }
 
     const uploadPhotos = (event: React.FormEvent) => {
-        const files = (event.target as HTMLInputElement).files
+        const input = event.target as HTMLInputElement
+        const files = input.files
 
         if (files && files.length > 0) {
             if (files.length > 20) {
                 setError("не нужно грузить более 20 фото")
+                setPhotos([])
+                setPhotoWarning(null)
+                input.value = ""
                 return;
             }
             const filesArray = Array.from(files)
+            const oversizedFile = filesArray.find(file => file.size > MAX_PHOTO_SIZE_BYTES)
+
+            if (oversizedFile) {
+                setError(`File "${oversizedFile.name}" should be less than ${MAX_PHOTO_SIZE_MB} MB`)
+                setPhotos([])
+                setPhotoWarning(null)
+                input.value = ""
+                return
+            }
+
+            const totalSize = filesArray.reduce((sum, file) => sum + file.size, 0)
+
             setPhotos(filesArray)
+            setPhotoWarning(totalSize > TOTAL_PHOTOS_WARNING_BYTES ? LARGE_PHOTOS_WARNING : null)
             setError(null)
         }
     }
@@ -102,6 +135,8 @@ export default function ActorAdmin() {
     }, [])
 
     const createClick = async () => {
+        if (isLoading) return
+
         setIsLoading(true)
         try {
             console.log("[createClick] старт создания актёра")
@@ -190,7 +225,7 @@ export default function ActorAdmin() {
 
                 <>
                     <label htmlFor="avatar">Аватар*</label>
-                    <input type="file" onChange={uploadAvatar} />
+                    <input type="file" accept=".jpg,.jpeg,image/jpeg" onChange={uploadAvatar} />
 
                     {tempAvatar && (
                     <ImageCropper
@@ -210,15 +245,17 @@ export default function ActorAdmin() {
                     type="file" 
                     id="photos"
                     placeholder="Загрузите фото"
+                    accept=".jpg,.jpeg,image/jpeg"
                     onChange={uploadPhotos}
                     multiple 
                 />
-
-                <label htmlFor="firstName">Имя*</label>
-                <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
+                {photoWarning && <p className="error">{photoWarning}</p>}
 
                 <label htmlFor="lastName">Фамилия*</label>
                 <input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Фамилия" />
+
+                <label htmlFor="firstName">Имя*</label>
+                <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
 
                 <label htmlFor="middleName">Отчество</label>
                 <input type="text" id="middleName" value={middleName} onChange={e => setMiddleName(e.target.value)} placeholder="Отчетство" />
@@ -354,12 +391,10 @@ export default function ActorAdmin() {
                     <p className="error">{error}</p>
                 }
 
-                {
-                    isLoading ?
-                        <Loading />
-                        :   
-                        <button onClick={createClick}>Создать актёра</button>
-                }
+                <button onClick={createClick} disabled={isLoading}>
+                    {isLoading ? "Сохраняем..." : "Создать актёра"}
+                </button>
+                {isLoading && <Loading />}
             </div>
         </div>
     )
