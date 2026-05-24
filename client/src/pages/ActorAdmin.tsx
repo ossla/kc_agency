@@ -283,10 +283,10 @@ export default function ActorAdmin() {
                 <input type="number" id="height" value={height} onChange={e => setHeight(e.target.value)} placeholder="Рост" />
 
                 <TagEditor
-                    label="Skills"
+                    label="Навыки"
                     values={skills}
                     onChange={setSkills}
-                    placeholder="Example: dance, vocals, horse riding"
+                    placeholder="Боевые искусства, игра на скрипке, жанглирование..."
                 />
 
                 {/* связи с другими таблицами (relations) */}
@@ -302,6 +302,7 @@ export default function ActorAdmin() {
                                 checked={employeeId === employee.id.toString()}
                                 onChange={(e) => setEmployeeId(e.target.value)}
                             />
+
                             <p>
                                 {employee.firstName} {employee.lastName}
                             </p>
@@ -355,11 +356,11 @@ export default function ActorAdmin() {
                 </>
 
                 <TagEditor
-                    label="Languages"
+                    label="Языки"
                     values={languages}
                     onChange={setLanguages}
                     suggestions={loadedLanguages.map(lang => lang.name)}
-                    placeholder="Add language"
+                    placeholder="Добавить язык"
                 />
 
                 {/* необязательные поля, кроме отчесчтва middleName */}

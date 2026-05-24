@@ -57,7 +57,7 @@ export default function ActorEditPanel({
             </div>
 
             <div className="person_param">
-                <h4>Gender</h4>
+                <h4>Пол</h4>
                 <input
                     id="M"
                     type="radio"
@@ -65,7 +65,7 @@ export default function ActorEditPanel({
                     value="M"
                     onChange={event => updateEditData({ gender: event.target.value })}
                 />
-                <label htmlFor="M">Male</label>
+                <label htmlFor="M">Мужчина</label>
                 <input
                     id="W"
                     type="radio"
@@ -73,22 +73,22 @@ export default function ActorEditPanel({
                     value="W"
                     onChange={event => updateEditData({ gender: event.target.value })}
                 />
-                <label htmlFor="W">Female</label>
+                <label htmlFor="W">Женщина</label>
             </div>
 
             <div className="floating_block">
                 <div>
                     <input
                         className="edit_input"
-                        value={editData.firstName || ""}
-                        onChange={event => updateEditData({ firstName: event.target.value })}
-                        placeholder="First name"
-                    />
-                    <input
-                        className="edit_input"
                         value={editData.lastName || ""}
                         onChange={event => updateEditData({ lastName: event.target.value })}
                         placeholder="Last name"
+                    />
+                    <input
+                        className="edit_input"
+                        value={editData.firstName || ""}
+                        onChange={event => updateEditData({ firstName: event.target.value })}
+                        placeholder="First name"
                     />
                     <input
                         className="edit_input"
@@ -100,7 +100,7 @@ export default function ActorEditPanel({
 
                 <div className="person_parameters">
                     <div className="person_param">
-                        <h4>Date of birth</h4>
+                        <h4>Дата рождения</h4>
                         <input
                             className="edit_input"
                             type="date"
@@ -110,7 +110,7 @@ export default function ActorEditPanel({
                     </div>
 
                     <div className="person_param">
-                        <h4>Height</h4>
+                        <h4>Рост</h4>
                         <input
                             className="edit_input"
                             value={editData.height || ""}
@@ -119,7 +119,7 @@ export default function ActorEditPanel({
                     </div>
 
                     <div className="person_param">
-                        <h4>City</h4>
+                        <h4>Город</h4>
                         <input
                             className="edit_input"
                             value={editData.city || ""}
@@ -128,7 +128,7 @@ export default function ActorEditPanel({
                     </div>
 
                     <div className="person_param">
-                        <h4>Eye color</h4>
+                        <h4>Цвет глаз</h4>
                         <input
                             className="edit_input"
                             value={editData.eyeColor || ""}
@@ -137,7 +137,7 @@ export default function ActorEditPanel({
                     </div>
 
                     <div className="person_param">
-                        <h4>Natural hair color</h4>
+                        <h4>Цвет волос</h4>
                         <input
                             className="edit_input"
                             value={editData.hairColor || ""}
@@ -146,7 +146,7 @@ export default function ActorEditPanel({
                     </div>
 
                     <div className="person_param">
-                        <h4 className="person_section_title">Education</h4>
+                        <h4 className="person_section_title">Образование</h4>
                         <input
                             className="edit_input"
                             value={editData.education || ""}
@@ -157,7 +157,7 @@ export default function ActorEditPanel({
             </div>
 
             <div className="person_param">
-                <h4 className="person_section_title">Description</h4>
+                <h4 className="person_section_title">Описание</h4>
                 <textarea
                     style={{ padding: "10px" }}
                     className="edit_input"
@@ -168,18 +168,18 @@ export default function ActorEditPanel({
 
             <div className="floating_block">
                 <TagEditor
-                    label="Languages"
+                    label="Языки"
                     values={languages}
                     onChange={setLanguages}
                     suggestions={loadedLanguages.map(lang => lang.name)}
-                    placeholder="Add language"
+                    placeholder="Добавить язык"
                 />
 
                 <TagEditor
-                    label="Skills"
+                    label="Навыки"
                     values={skills}
                     onChange={setSkills}
-                    placeholder="Example: dance, vocals, horse riding"
+                    placeholder="Боевые искусства, игра на скрипке, жанглирование..."
                 />
             </div>
 
@@ -208,8 +208,8 @@ export default function ActorEditPanel({
                 </div>
             </div>
 
-            <h3 className="person-employee-title">Agent</h3>
-            <label>Agent*</label>
+            <h3 className="person-employee-title">Агент</h3>
+            <label>Агент*</label>
             {employees && employees.map(employee => (
                 <div key={employee.id} className="employee-choice">
                     <input
@@ -228,12 +228,12 @@ export default function ActorEditPanel({
 
             <div className="floating_block">
                 <div className="person_block">
-                    <h3>Video</h3>
+                    <h3>Видео-визитка</h3>
                     <input
                         className="edit_input"
                         value={editData.videoURL || ""}
                         onChange={event => updateEditData({ videoURL: event.target.value })}
-                        placeholder="Video URL"
+                        placeholder="URL"
                     />
                 </div>
             </div>

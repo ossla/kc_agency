@@ -82,11 +82,11 @@ export default function EmployeeAdmin() {
         <div className="container">
             <div className="admin">
                 <h1>Админ-агент</h1>
-                <label htmlFor="firstName">Имя*</label>
-                <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
-                
                 <label htmlFor="lastName">Фамилия*</label>
                 <input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Фамилия" />
+
+                <label htmlFor="firstName">Имя*</label>
+                <input type="text" id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Имя" />
                 
                 <label htmlFor="middleName">Отчество</label>
                 <input type="text" id="middleName" value={middleName} onChange={e => setMiddleName(e.target.value)} placeholder="Отчество" />

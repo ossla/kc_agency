@@ -84,7 +84,7 @@ export default function ActorPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                if (!id) throw new Error("Actor id is missing");
+                if (!id) throw new Error("Актёр не найден");
                 setActor(await fetchActors.getActor(id));
             } catch(e: unknown) {
                 setError(processError(e));
@@ -103,7 +103,7 @@ export default function ActorPage() {
 
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault();
-            event.returnValue = "";
+            (event as { returnValue: string }).returnValue = "";
         };
 
         window.addEventListener("beforeunload", handleBeforeUnload);
