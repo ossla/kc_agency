@@ -69,7 +69,7 @@
 .brand-tagline {
     margin-top: 2px;
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 460;
     letter-spacing: 1px;
     color: #68645a;
     white-space: nowrap;
@@ -86,7 +86,7 @@
 
 .menu a,
 .menu-dropdown-toggle {
-    font-weight: 400;
+    font-weight: 420;
     color: #68645a;
     text-decoration: none;
     position: relative;
@@ -142,7 +142,7 @@
     transition: transform 0.2s ease;
     color: inherit;
     background: none;
-    font-weight: 400;
+    font-weight: 420;
     line-height: 1;
 }
 
