@@ -14,7 +14,10 @@
 .home_title {
     font-size: 30px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
+    color: #2f2a24;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .about_section {
@@ -24,8 +27,8 @@
     gap: 28px;
     width: 100vw;
     margin: 20px calc(50% - 50vw) 80px;
-    padding: 36px 16px;
-    background: #fcfaf8;
+    padding: 40px 16px 56px;
+    background: linear-gradient(180deg, #fcfaf8 0%, #f7f2ea 100%);
 }
 
 .about_logo {
@@ -37,14 +40,19 @@
 .about_text {
     width: 100%;
     max-width: 1000px;
-    padding: 30px 42px 36px;
-    border-radius: 8px;
+    padding: 36px 44px 40px;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .about_section p {
     font-size: 18px;
     text-align: center;
-    line-height: 1.6;
+    line-height: 1.7;
+    color: #4f493f;
+    margin: 0 auto;
+    max-width: 860px;
 }
 
 .actors_section {
