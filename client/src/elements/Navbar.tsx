@@ -43,7 +43,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="brand-tagline">
-                    АЛЬЯНС АКТЕРСКИХ АГЕНТОВ
+                    АГЕНТСТВО ТАЛАНТОВ
                     </div>
                 </div>
                 </Link>
