@@ -5,12 +5,11 @@
     gap: clamp(28px, 5vw, 90px);
     padding: 0.8rem 1.5rem;
     position: relative;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    background: #f8f7f3;
+    background: #fcfaf8;
     z-index: 1000;
     margin-bottom: 50px;
-
-    border-bottom: 1px solid #2C2C2C;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    border-bottom: none;
 }
 
 .nav-left {
@@ -69,9 +68,10 @@
 
 .brand-tagline {
     margin-top: 2px;
-    font-size: 0.6rem;
+    font-size: 1rem;
+    font-weight: 400;
     letter-spacing: 1px;
-    color: #999;
+    color: #68645a;
     white-space: nowrap;
 }
 
@@ -126,6 +126,30 @@
 .menu-dropdown-toggle {
     padding: 0;
     background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.menu-dropdown-toggle::after {
+    content: ">";
+    position: static;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin-left: 0.25rem;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease;
+    color: inherit;
+    background: none;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.menu-dropdown.open .menu-dropdown-toggle::after,
+.menu-dropdown:hover .menu-dropdown-toggle::after,
+.menu-dropdown:focus-within .menu-dropdown-toggle::after {
+    transform: rotate(90deg);
 }
 
 .menu-dropdown-list {

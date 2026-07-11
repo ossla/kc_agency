@@ -18,7 +18,7 @@ export default function HomePage() {
             </section> */}
 
             <section className="about_section">
-                <img src="/logo/logo.svg" className="about_logo" alt="БЕРЕГ кино" />
+                {/* <img src="/logo/logo.svg" className="about_logo" alt="БЕРЕГ кино" /> */}
                 <div className="about_text">
                     <h2 className="home_title">О нашем агентстве</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia eligendi voluptatum velit fuga rerum, dolores qui rem quibusdam id voluptatem reiciendis libero quisquam, nostrum voluptatibus, sit temporibus iure deleniti distinctio.

@@ -77,8 +77,8 @@ export default function Navbar() {
                         О НАС
                     </button>
                     <div className="menu-dropdown-list">
+                        <Link to={HOME} onClick={handleLinkClick}>АГЕНТСТВО</Link>
                         <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
-                        <Link to={HOME} onClick={handleLinkClick}>О НАШЕМ АГЕНТСТВЕ</Link>
                     </div>
                 </li>
                 <li className="menu-mobile-only">

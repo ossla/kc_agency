@@ -18,6 +18,23 @@ import fetchRelevant from "../api/fetchRelevant";
 import ActorPhotoEditor from "../elements/ActorPhotoEditor";
 import ActorEditPanel from "../elements/ActorEditPanel";
 
+const getAge = (value: Date | string | undefined) => {
+    if (!value) return null;
+
+    const birthDate = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(birthDate.getTime())) return null;
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age -= 1;
+    }
+
+    return age;
+};
+
 const getEditSnapshot = (editData: EditActorType, languages: string[], skills: string[]) => {
     return JSON.stringify({
         firstName: editData.firstName || "",
@@ -316,8 +333,13 @@ export default function ActorPage() {
 
                                 <div className="person_parameters">
                                     <div className="person_param">
-                                        <h4>Дата рождения</h4>
-                                        <p>{actor.dateOfBirth.getFullYear()}.{actor.dateOfBirth.getMonth() + 1}.{actor.dateOfBirth.getDate()}</p>
+                                        <h4>Возраст</h4>
+                                        <p>
+                                            {(() => {
+                                                const age = getAge(actor.dateOfBirth);
+                                                return age === null ? "Не указан" : `${age} лет`;
+                                            })()}
+                                        </p>
                                     </div>
 
                                     <div className="person_param">
