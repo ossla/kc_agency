@@ -30,6 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "ebat": "BUILD_PATH=/var/www/kc-client react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
