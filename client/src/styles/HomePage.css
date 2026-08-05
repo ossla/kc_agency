@@ -48,11 +48,20 @@
 
 .about_section p {
     font-size: 18px;
-    text-align: center;
+    text-align: justify;
+    text-justify: inter-word;
     line-height: 1.7;
     color: #4f493f;
     margin: 0 auto;
     max-width: 860px;
+}
+
+.about_section strong {
+    font-weight: 700;
+}
+
+.nowrap {
+    white-space: nowrap;
 }
 
 .actors_section {
@@ -63,6 +72,20 @@
 .agents_section {
     margin-bottom: 80px;
 }
+
+.mobile_links {
+    display: none;
+}
+
+.mobile_link {
+    text-decoration: none;
+    color: #2f2a24;
+    font-weight: 400;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+}
+
 
 @media (max-width: 768px) {
     .about_section {
@@ -76,5 +99,23 @@
     .about_logo {
         width: 90%;
         flex-basis: auto;
+    }
+
+    .about_section p {
+        text-align: left;
+    }
+
+    .mobile_links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 8px 18px 0;
+        margin-bottom: 70px;
+    }
+    .mobile_links .mobile_link {
+        font-size: 28px;
+        padding: 28px 0;
     }
 }
