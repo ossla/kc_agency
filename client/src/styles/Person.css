@@ -148,6 +148,14 @@ h3 {
     margin-top: 8px;
 }
 
+.avatar_buttons_container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .person_actions a {
     display: flex;
     align-items: center;

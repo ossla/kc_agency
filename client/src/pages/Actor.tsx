@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import React from "react";
 import { Link } from 'react-router-dom';
 import "../styles/Person.css";
@@ -19,6 +19,7 @@ import fetchEmployees from "../api/fetchEmployees";
 import fetchRelevant from "../api/fetchRelevant";
 import ActorPhotoEditor from "../elements/ActorPhotoEditor";
 import ActorEditPanel from "../elements/ActorEditPanel";
+import ImageCropper from "../utils/ImageCropper";
 
 const getAge = (value: Date | string | undefined) => {
     if (!value) return null;
@@ -138,6 +139,10 @@ export default function ActorPage() {
     const { user, accessToken } = useUser();
     const [isEdit, setIsEdit] = useState(false);
     const [isPhotoEdit, setIsPhotoEdit] = useState(false);
+    const [tempAvatar, setTempAvatar] = useState<File | undefined>(undefined);
+    const [avatarUploading, setAvatarUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [avatarCacheBuster, setAvatarCacheBuster] = useState<number | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [editData, setEditData] = useState<EditActorType | null>(null);
     const navigator = useNavigate();
@@ -312,11 +317,37 @@ export default function ActorPage() {
         <div className="person_page_wrapper">
             <div className="person_grid">
                 <div className="person_left">
+                    {user?.isAdmin && (
+                        <div className="avatar_buttons_container">
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={e => {
+                                    const f = e.target.files && e.target.files[0]
+                                    if (f) {
+                                        console.log('Selected avatar file:', f.name, f.size)
+                                        setTempAvatar(f)
+                                    }
+                                    if (e.target) (e.target as HTMLInputElement).value = ""
+                                }}
+                            />
+
+                            <button
+                                className="btn"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                Сменить аватар
+                            </button>
+                        </div>
+                    )}
+
                     <PhotoProvider>
                         <PhotoView src={actor.url + "/avatar_1600.jpg"}>
                             <img
                                 className="person_avatar"
-                                src={actor.url + "/avatar_400.jpg"}
+                                src={actor.url + "/avatar_400.jpg?t=" + (avatarCacheBuster ?? (actor.updatedAt ? actor.updatedAt.getTime() : Date.now()))}
                                 alt="avatar"
                             />
                         </PhotoView>
@@ -511,6 +542,8 @@ export default function ActorPage() {
                                         </button>
                                     )}
 
+                                    {/* moved avatar edit buttons to left column */}
+
                                     {(isPhotoEdit && actor && accessToken) ? (
                                         <ActorPhotoEditor
                                             actorId={actor.id}
@@ -541,6 +574,33 @@ export default function ActorPage() {
                                                 </div>
                                             </PhotoProvider>
                                         </>
+                                    )}
+                                    {tempAvatar && (
+                                        <ImageCropper
+                                            imageFile={tempAvatar}
+                                            aspect={4/5}
+                                            onCropped={async (cropped) => {
+                                                if (!accessToken) {
+                                                    setError("Нет токена доступа");
+                                                    return;
+                                                }
+
+                                                setAvatarUploading(true);
+                                                try {
+                                                    await fetchActors.changeAvatar(accessToken, actor.id, cropped);
+                                                    const updated = await fetchActors.getActor(actor.id);
+                                                    setActor(updated);
+                                                    // force image reload even if server doesn't update updatedAt
+                                                    setAvatarCacheBuster(Date.now());
+                                                    setTempAvatar(undefined);
+                                                } catch (e) {
+                                                    setError(processError(e));
+                                                } finally {
+                                                    setAvatarUploading(false);
+                                                }
+                                            }}
+                                            onCancel={() => setTempAvatar(undefined)}
+                                        />
                                     )}
                                 </div>
                             </div>

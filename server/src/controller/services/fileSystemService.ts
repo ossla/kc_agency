@@ -136,31 +136,77 @@ export async function saveActorPhotos(photos: CustomFileType, dirname: string): 
     return filenames
 }
 
-export async function changePhoto(newPhoto: CustomFileType, filename: string, directory?: string,) {
+// export async function changePhoto(newPhoto: CustomFileType, filename: string, directory?: string,) {
     
-    let filepath_400, filepath_1600;
+//     let filepath_400, filepath_1600;
 
-    if (directory) { // if actor, agent doesn't use directory, only raw files.
-        filepath_400 = path.join(returnStaticPath(), directory, filename + "_400.jpg")
-        filepath_1600 = path.join(returnStaticPath(), directory, filename + "_1600.jpg")
-    } else {
-        filepath_400 = path.join(returnStaticPath(), filename + "_400.jpg")
-        filepath_1600 = path.join(returnStaticPath(), filename + "_1600.jpg")
-    }
+//     if (directory) { // if actor, agent doesn't use directory, only raw files.
+//         filepath_400 = path.join(returnStaticPath(), directory, filename + "_400.jpg")
+//         filepath_1600 = path.join(returnStaticPath(), directory, filename + "_1600.jpg")
+//     } else {
+//         filepath_400 = path.join(returnStaticPath(), filename + "_400.jpg")
+//         filepath_1600 = path.join(returnStaticPath(), filename + "_1600.jpg")
+//     }
 
-    if (fs.existsSync(filepath_400)) {
-        fs.rmSync(filepath_400)
-        throw ApiError.badRequest(`changePhoto: Файл ${filepath_400} не существует`)
-    }
-    if (fs.existsSync(filepath_1600)) {
-        fs.rmSync(filepath_1600)
-        throw ApiError.badRequest(`changePhoto: Файл ${filepath_400} не существует`)
-    }
+//     if (fs.existsSync(filepath_400)) {
+//         fs.rmSync(filepath_400)
+//         throw ApiError.badRequest(`changePhoto: Файл ${filepath_400} не существует`)
+//     }
+//     if (fs.existsSync(filepath_1600)) {
+//         fs.rmSync(filepath_1600)
+//         throw ApiError.badRequest(`changePhoto: Файл ${filepath_400} не существует`)
+//     }
 
+//     if (Array.isArray(newPhoto)) {
+//         throw ApiError.badRequest("changePhoto: ожидался одиночный файл")
+//     }
+
+//     const dirPath = path.join(returnStaticPath(), directory)
+//     await resizeAndSave(newPhoto.data, dirPath, filename)
+// }
+
+export async function changePhoto(newPhoto: CustomFileType, filename: string, directory?: string) {
     if (Array.isArray(newPhoto)) {
-        throw ApiError.badRequest("changePhoto: ожидался одиночный файл")
+        throw ApiError.badRequest("changePhoto: ожидался одиночный файл");
     }
 
-    const dirPath = path.join(returnStaticPath(), directory)
-    await resizeAndSave(newPhoto.data, dirPath, filename)
+    const baseDir = directory ?? "";
+    const dirPath = path.join(returnStaticPath(), baseDir);
+
+    const filepath_400 = path.join(dirPath, `${filename}_400.jpg`);
+    const filepath_1600 = path.join(dirPath, `${filename}_1600.jpg`);
+
+    const backup_400 = filepath_400 + ".bak";
+    const backup_1600 = filepath_1600 + ".bak";
+
+    try {
+        if (fs.existsSync(filepath_400)) fs.renameSync(filepath_400, backup_400);
+        if (fs.existsSync(filepath_1600)) fs.renameSync(filepath_1600, backup_1600);
+    } catch (err) {
+        console.error("changePhoto: failed to move existing files to backup", err);
+    }
+
+    try {
+        await resizeAndSave(newPhoto.data, dirPath, filename);
+
+        try { if (fs.existsSync(backup_400)) fs.rmSync(backup_400); } catch(e){ console.warn("changePhoto: couldn't remove backup_400", e) }
+        try { if (fs.existsSync(backup_1600)) fs.rmSync(backup_1600); } catch(e){ console.warn("changePhoto: couldn't remove backup_1600", e) }
+
+    } catch (err) {
+        try {
+            if (fs.existsSync(backup_400)) {
+                if (fs.existsSync(filepath_400)) fs.rmSync(filepath_400);
+                fs.renameSync(backup_400, filepath_400);
+            }
+            if (fs.existsSync(backup_1600)) {
+                if (fs.existsSync(filepath_1600)) fs.rmSync(filepath_1600);
+                fs.renameSync(backup_1600, filepath_1600);
+            }
+        } catch (restoreErr) {
+            console.error("changePhoto: failed to restore backups after error", restoreErr);
+        }
+
+        if (err instanceof ApiError) throw err;
+        throw ApiError.internal("changePhoto: ошибка при сохранении фото");
+    }
 }
