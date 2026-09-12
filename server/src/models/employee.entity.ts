@@ -30,7 +30,7 @@ export class Employee {
     @Column({ type: "varchar", length: 20, nullable: false, unique: true })
     phone: string           // телефон
 
-    @Column({ type: "varchar", length: 255, nullable: true })
+    @Column({ type: "text", nullable: true })
     description?: string    // описание (на утверждении)
 
     @Column({ type: "varchar", length: 255, nullable: false })

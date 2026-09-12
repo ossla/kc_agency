@@ -43,7 +43,7 @@ h3 {
 
 .person_avatar {
     width: 100%;
-    border-radius: 8px;
+    border-radius: 0;
     object-fit: cover;
 }
 
@@ -144,6 +144,8 @@ h3 {
 .person_actions {
     display: flex;
     gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
 }
 
 .person_actions a {
@@ -163,6 +165,104 @@ h3 {
 .person_actions img:hover {
     opacity: 1;
     transform: scale(1.1);
+}
+
+/* compact agent block under avatar */
+.person_agent_compact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+/* spacing under the compact agent block */
+.person_agent_compact {
+    margin-bottom: 18px;
+}
+
+/* spacing under the full employee block if present */
+.person_employee_block {
+    margin-bottom: 20px;
+}
+
+.agent_compact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.agent_photo_link,
+.agent_name_link,
+.agent_heading_link {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+.agent_photo_link:hover,
+.agent_name_link:hover,
+.agent_heading_link:hover {
+    text-decoration: none;
+}
+
+.agent_contact_text {
+    margin: 0;
+    font-size: 15px;
+    color: #3b3513;
+    font-weight: 400;
+}
+
+.agent_photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 0;
+    object-fit: cover;
+    margin-left: 0;
+}
+
+.person_agent_title {
+    margin: 0;
+    font-size: 18px;
+    color: #3b3513;
+}
+
+.agent_contacts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.person_agent_compact.floating_block {
+    padding: 10px 12px;
+}
+
+.agent_name {
+    font-size: 16px;
+    margin: 0 0 4px 0;
+    color: #272424;
+    font-weight: 500;
+}
+
+.person_agent_compact .agent_contacts h4 {
+    margin: 0;
+    font-size: 15px;
+    color: #3b3513;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .agent_compact {
+        flex-direction: column;
+        align-items: center;
+    }
+    .agent_contacts {
+        align-items: center;
+        text-align: center;
+    }
 }
  
 .description {

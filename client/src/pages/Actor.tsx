@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import React from "react";
+import { Link } from 'react-router-dom';
 import "../styles/Person.css";
 import { EditActorType, IActor } from "../api/types/actorTypes";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,7 +13,7 @@ import "react-photo-view/dist/react-photo-view.css";
 import { processError } from "../api/apiError";
 import { EmployeeCard } from "../elements/EmployeeCard";
 import { useUser } from "../context/UserContext";
-import { HOME } from "../routes";
+import { HOME, EMPLOYEES } from "../routes";
 import { IEmployee } from "../api/types/employeeTypes";
 import fetchEmployees from "../api/fetchEmployees";
 import fetchRelevant from "../api/fetchRelevant";
@@ -33,6 +35,17 @@ const getAge = (value: Date | string | undefined) => {
     }
 
     return age;
+};
+
+const formatAgeString = (age: number) => {
+    const rem100 = age % 100;
+    if (rem100 >= 11 && rem100 <= 14) return `${age} лет`;
+
+    const rem10 = age % 10;
+    if (rem10 === 1) return `${age} год`;
+    if (rem10 >= 2 && rem10 <= 4) return `${age} года`;
+
+    return `${age} лет`;
 };
 
 const getEditSnapshot = (editData: EditActorType, languages: string[], skills: string[]) => {
@@ -80,6 +93,41 @@ const getActorEditSnapshot = (actor: IActor) => {
         skills: [],
         languages: []
     }, actor.languages?.map(language => language.name) ?? [], actor.skills ?? []);
+};
+
+const linkify = (text: string | null | undefined): React.ReactNode => {
+    if (!text) return null;
+
+    const urlRegex = /(?:(?:https?:\/\/)?(?:www\.)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:\/\S*)?)/g;
+    const emailRegex = /([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
+    const combined = new RegExp(emailRegex.source + '|' + urlRegex.source, 'g');
+
+    const parts: Array<string | React.ReactNode> = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = combined.exec(text)) !== null) {
+        const idx = match.index;
+        if (idx > lastIndex) parts.push(text.slice(lastIndex, idx));
+
+        const matched = match[0];
+        if (/@/.test(matched)) {
+            parts.push(
+                <a key={idx} href={`mailto:${matched}`}>{matched}</a>
+            );
+        } else {
+            const href = /^https?:\/\//.test(matched) ? matched : `http://${matched}`;
+            parts.push(
+                <a key={idx} href={href} target="_blank" rel="noopener noreferrer">{matched}</a>
+            );
+        }
+
+        lastIndex = idx + matched.length;
+    }
+
+    if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+
+    return parts;
 };
 
 export default function ActorPage() {
@@ -275,23 +323,54 @@ export default function ActorPage() {
                     </PhotoProvider>
 
                     {!isEdit && (
-                        <div className="person_actions">
-                            {actor.linkToFilmTools && 
-                                <a href={actor.linkToFilmTools}>
-                                    <img src="/icons/filmtoolz_icon.png" alt="icon2" />
-                                </a>
-                            }
-                            {actor.linkToKinoTeatr && 
-                                <a href={actor.linkToKinoTeatr}>
-                                    <img src="/icons/kinoteatr_icon.png" alt="icon3" />
-                                </a>
-                            }
-                            {actor.linkToKinopoisk && 
-                                <a href={actor.linkToKinopoisk}>
-                                    <img src="/icons/kinopoisk_icon.png" alt="icon1" />
-                                </a>
-                            }
-                        </div>
+                        <>
+                            <div className="person_actions">
+                                {actor.linkToFilmTools && 
+                                    <a href={actor.linkToFilmTools}>
+                                        <img src="/icons/filmtoolz_icon.png" alt="icon2" />
+                                    </a>
+                                }
+                                {actor.linkToKinoTeatr && 
+                                    <a href={actor.linkToKinoTeatr}>
+                                        <img src="/icons/kinoteatr_icon.png" alt="icon3" />
+                                    </a>
+                                }
+                                {actor.linkToKinopoisk && 
+                                    <a href={actor.linkToKinopoisk}>
+                                        <img src="/icons/kinopoisk_icon.png" alt="icon1" />
+                                    </a>
+                                }
+                            </div>
+
+                            {actor.employee && (
+                                <div className="person_agent_compact floating_block">
+                                    <h3 className="person_agent_title">
+                                        <Link to={EMPLOYEES + '/' + actor.employee.id} className="agent_heading_link">Агент</Link>
+                                    </h3>
+
+                                    <div className="agent_compact">
+                                        {actor.employee.avatarUrl && (
+                                            <Link to={EMPLOYEES + '/' + actor.employee.id} className="agent_photo_link">
+                                                <img
+                                                    className="agent_photo"
+                                                    src={actor.employee.avatarUrl + "_400.jpg"}
+                                                    alt="agent"
+                                                />
+                                            </Link>
+                                        )}
+
+                                        <div className="agent_contacts">
+                                            <Link to={EMPLOYEES + '/' + actor.employee.id} className="agent_name_link">
+                                                <h4 className="agent_name">{actor.employee.lastName} {actor.employee.firstName}{actor.employee.middleName ? ` ${actor.employee.middleName}` : ''}</h4>
+                                            </Link>
+
+                                            {actor.employee.phone && <h4 className="agent_contact_text">{actor.employee.phone}</h4>}
+                                            {actor.employee.email && <h4 className="agent_contact_text">{actor.employee.email}</h4>}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
 
@@ -337,7 +416,7 @@ export default function ActorPage() {
                                         <p>
                                             {(() => {
                                                 const age = getAge(actor.dateOfBirth);
-                                                return age === null ? "Не указан" : `${age} лет`;
+                                                return age === null ? "Не указан" : formatAgeString(age);
                                             })()}
                                         </p>
                                     </div>
@@ -374,37 +453,36 @@ export default function ActorPage() {
                                 <div className="floating_block">
                                     <div className="person_block">
                                         <p id="quote">❝</p>
-                                        <p className="description">{actor.description}</p>
+                                        <p className="description">{linkify(actor.description)}</p>
                                     </div>
                                 </div>
                             )}
 
-                            <div className="floating_block">
-                                {actor.languages && (
-                                    <div className="person_block">
-                                        <h3>Языки</h3>
-                                        <ul>
-                                            {actor.languages.map((language: ILanguage, idx) => (
-                                                <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {language.name}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
+                            {((actor.languages && actor.languages.length > 0) || (actor.skills && actor.skills.length > 0)) && (
+                                <div className="floating_block">
+                                    {actor.languages && actor.languages.length > 0 && (
+                                        <div className="person_block">
+                                            <h3>Языки</h3>
+                                            <ul>
+                                                {actor.languages.map((language: ILanguage, idx) => (
+                                                    <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {language.name}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
 
-                                {actor.skills && (
-                                    <div className="person_block">
-                                        <h3>Навыки</h3>
-                                        <ul>
-                                            {actor.skills.map((skill, idx) => (
-                                                <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {skill}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-
-                            <h3 className="person-employee-title">Агент</h3>
-                            <EmployeeCard employee={actor.employee} />
+                                    {actor.skills && actor.skills.length > 0 && (
+                                        <div className="person_block">
+                                            <h3>Навыки</h3>
+                                            <ul>
+                                                {actor.skills.map((skill, idx) => (
+                                                    <li key={idx}><span style={{ fontSize: "30px" }}>•</span> {skill}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {actor.videoURL && (
                                 <div className="floating_block">

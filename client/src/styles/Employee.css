@@ -77,6 +77,11 @@
     white-space: pre-wrap;
 }
 
+.employee-description a {
+    color: #1f6feb;
+    text-decoration: underline;
+}
+
 .employee-more-link {
     color: #777777;
     font-weight: 300;

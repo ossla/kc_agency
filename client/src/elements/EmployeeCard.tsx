@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { IEmployee } from '../api/types/employeeTypes'
 import "../styles/Employee.css"
 import { EMPLOYEES } from '../routes'
+import React from 'react'
 
 interface IEmployeeCard {
     employee: IEmployee
@@ -15,6 +16,43 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
     const description = hasLongDescription
         ? fullDescription.slice(0, descriptionLimit).trim()
         : fullDescription
+
+    const linkify = (text: string | null | undefined) => {
+        if (!text) return null
+
+        const urlRegex = /(?:(?:https?:\/\/)?(?:www\.)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:\/\S*)?)/g
+            const emailRegex = /([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g
+            const combined = new RegExp(emailRegex.source + '|' + urlRegex.source, 'g')
+
+        const parts: Array<string | React.ReactNode> = []
+        let lastIndex = 0
+        let match: RegExpExecArray | null
+
+        while ((match = combined.exec(text)) !== null) {
+            const idx = match.index
+            if (idx > lastIndex) {
+                parts.push(text.slice(lastIndex, idx))
+            }
+
+            const matched = match[0]
+            if (/@/.test(matched)) {
+                parts.push(
+                    <a key={idx} href={`mailto:${matched}`}>{matched}</a>
+                )
+            } else {
+                const href = /^https?:\/\//.test(matched) ? matched : `http://${matched}`
+                parts.push(
+                    <a key={idx} href={href} target="_blank" rel="noopener noreferrer">{matched}</a>
+                )
+            }
+
+            lastIndex = idx + matched.length
+        }
+
+        if (lastIndex < text.length) parts.push(text.slice(lastIndex))
+
+        return parts
+    }
 
     return (
         <div className="employee-card-wrapper">
@@ -36,7 +74,7 @@ export function EmployeeCard({ employee }: IEmployeeCard) {
                     </Link>
 
                     <div className="employee-description">
-                        {description}
+                        {linkify(description)}
                         {hasLongDescription && (
                             <>
                                 ... <Link to={employeeUrl} className="employee-more-link">больше</Link>

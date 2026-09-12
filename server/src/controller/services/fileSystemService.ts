@@ -42,7 +42,6 @@ export async function savePhoto(photo: CustomFileType
         throw ApiError.badRequest("savePhoto: загрузите фото")
     }
     console.log("[savePhoto] end")
-
 }
 
 export async function removePhoto(photoName: string, dirName: string = "") {
