@@ -386,9 +386,10 @@ h3 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-    margin-top: 50px;
+    margin-top: 20px;
     padding: 0 20px;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .page_cards a {
