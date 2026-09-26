@@ -43,7 +43,7 @@ export function errorMiddleware(
             message: err.message
         })
     } else {
-        console.error("[error]: Непредвиденная ошибка")
+        console.error("[error]: Непредвиденная ошибка", err)
         res.status(500).json({message: "Непредвиденная ошибка"})
     }
 }

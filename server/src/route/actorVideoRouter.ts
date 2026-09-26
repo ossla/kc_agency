@@ -43,7 +43,11 @@ router.post("/:id", fileUpload({
         }
         const { stdout } = await probe(require("ffprobe-static").path, [
             "-v", "error", "-protocol_whitelist", "file", "-show_streams", "-show_format", "-of", "json", file.tempFilePath,
-        ], { timeout: 30000, maxBuffer: 1024 * 1024 }).catch(() => {
+        ], { timeout: 30000, maxBuffer: 1024 * 1024 }).catch(error => {
+            console.error("[actor-video] ffprobe failed", error)
+            if (typeof error.code === "string" || error.killed || error.signal) {
+                throw ApiError.internal("Video validation service is unavailable. Check server logs.")
+            }
             throw ApiError.badRequest("Cannot read video. Use MP4 with H.264 and AAC.")
         })
         const metadata = JSON.parse(stdout)
@@ -72,6 +76,9 @@ router.post("/:id", fileUpload({
         newPath = undefined
         await removeLocal(oldURL)
         res.json({ videoURL })
+    } catch (error) {
+        console.error("[actor-video] upload failed", error)
+        throw error
     } finally {
         if (newPath) await fs.unlink(newPath).catch(() => {})
         await Promise.all(files.map(file => fs.unlink(file.tempFilePath).catch(() => {})))

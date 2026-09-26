@@ -65,11 +65,24 @@ export function ActorVideoEditor({ actorId, src, token, onChange }: {
         xhr.onload = () => {
             setProgress(null);
             if (xhr.status >= 200 && xhr.status < 300) {
-                onChange(JSON.parse(xhr.responseText).videoURL);
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    if (typeof data.videoURL !== "string") throw new Error("Invalid response");
+                    onChange(data.videoURL);
+                } catch {
+                    setError(`HTTP ${xhr.status}: сервер вернул неожиданный ответ. Обновите страницу перед повторной загрузкой.`);
+                }
             } else {
-                setError(xhr.status === 413 ? "Видео превышает лимит сервера." :
-                    xhr.status === 401 || xhr.status === 403 ? "Авторизуйтесь как администратор." :
-                    "Не удалось сохранить видео. Нужен MP4 с видео H.264 и звуком AAC.");
+                let message = "Не удалось сохранить изменения видео.";
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    if (typeof data?.message === "string") message = data.message;
+                } catch { /* A proxy can return an HTML error page instead of JSON. */ }
+                if (xhr.status === 413) message = "Видео превышает лимит сервера или прокси.";
+                if (xhr.status === 401 || xhr.status === 403) message = "Авторизуйтесь как администратор.";
+                if (xhr.status === 502) message = "Прокси не получил корректный ответ от сервера приложения.";
+                if (xhr.status === 504) message = "Прокси не дождался ответа сервера. Обновите страницу перед повторной загрузкой.";
+                setError(`HTTP ${xhr.status}: ${message}`);
             }
         };
         xhr.onerror = () => { setProgress(null); setError("Ошибка соединения. Проверьте страницу перед повторной загрузкой."); };
