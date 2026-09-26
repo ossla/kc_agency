@@ -15,8 +15,8 @@ relevantRouter.get("/eye/:id", getEyeColor)
 relevantRouter.post("/eye/delete", removeEyeColor)
 
 relevantRouter.get("/hair", getHairColors)
-relevantRouter.get("/eye/:id", getHairColor)
-relevantRouter.post("/eye/delete", removeHairColor)
+relevantRouter.get("/hair/:id", getHairColor)
+relevantRouter.post("/hair/delete", removeHairColor)
 
 relevantRouter.get("/language", getLanguages)
 relevantRouter.get("/language/:id", getLanguage)

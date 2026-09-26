@@ -12,7 +12,7 @@ import { authMiddleware } from "../middleware/authMiddleware"
 const actorRouter: Express = express()
 
 // actorRouter.post("/create", authMiddleware, checkMiddleware, createActor)
-actorRouter.post("/create", createActor)
+actorRouter.post("/create", authMiddleware, checkMiddleware, createActor)
 actorRouter.delete("/delete/:id", authMiddleware, checkMiddleware, removeActor)
 actorRouter.post("/edit", authMiddleware, checkMiddleware, editActor)
 actorRouter.post("/edit/changeAvatar", authMiddleware, checkMiddleware, changeAvatar)
