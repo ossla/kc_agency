@@ -13,7 +13,7 @@ import fetchRelevant from "../api/fetchRelevant"
 import fetchEmployees from "../api/fetchEmployees"
 import { IEmployee } from "../api/types/employeeTypes"
 import ImageCropper from "../utils/ImageCropper"
-import { ACTORS_MEN, ACTORS_WOMEN } from "../routes"
+import { ACTORS } from "../routes"
 import { processError } from "../api/apiError"
 import Loading from "../elements/Loading"
 import TagEditor from "../elements/TagEditor"
@@ -38,7 +38,6 @@ export default function ActorAdmin() {
     const [gender, setGender] = useState<GenderEnum>()
 
     const [height, setHeight] = useState<string>()
-    const [videoURL, setVideoURL] = useState<string>()
     const [description, setDescription] = useState<string>()
     const [education, setEducation] = useState<string>()
     const [middleName, setMiddleName] = useState<string>()
@@ -190,7 +189,6 @@ export default function ActorAdmin() {
             })
 
             if (middleName) { reqFormData.append("middleName", middleName); console.log("[createClick] middleName:", middleName) }
-            if (videoURL) { reqFormData.append("videoURL", videoURL); console.log("[createClick] videoURL:", videoURL) }
             if (description) { reqFormData.append("description", description); console.log("[createClick] description:", description) }
             if (education) { reqFormData.append("education", education); console.log("[createClick] education:", education) }
             if (linkToKinoTeatr) { reqFormData.append("linkToKinoTeatr", linkToKinoTeatr); console.log("[createClick] linkToKinoTeatr:", linkToKinoTeatr) }
@@ -205,10 +203,10 @@ export default function ActorAdmin() {
             }
 
             console.log("[createClick] отправка данных на сервер")
-            await fetchActors.create(accessToken, reqFormData)
+            const createdActor = await fetchActors.create(accessToken, reqFormData)
 
             console.log("[createClick] актёр успешно создан, перенаправление")
-            navigator(gender === GenderEnum.man ? ACTORS_MEN : ACTORS_WOMEN)
+            navigator(`${ACTORS}/${createdActor.id}`)
 
         } catch (e: unknown) {
             setIsLoading(false)
@@ -364,12 +362,6 @@ export default function ActorAdmin() {
                 />
 
                 {/* необязательные поля, кроме отчесчтва middleName */}
-                <>
-                    <label htmlFor="videoURL">Ссылка embed на видео RUTUBE</label>
-                    <img src="/instructions/videoURL_1.png" style={{width: "300px"}}/>
-                    <img src="/instructions/videoURL_2.png" style={{width: "500px"}}/>
-                    <input type="text" id="videoURL" value={videoURL} onChange={e => setVideoURL(e.target.value)} placeholder="Ссылка на видео" />
-                </>
 
                 <label htmlFor="description">Описание / доп. данные</label>
                 <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Описание" />

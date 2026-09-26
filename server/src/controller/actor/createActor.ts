@@ -97,7 +97,7 @@ async function fillActor(actor: Actor, body: CreateActorType) {
 
     // необязательные
     actor.middleName = body.middleName ?? null
-    actor.videoURL = body.videoURL ?? null
+    actor.videoURL = ""
     actor.description = body.description ?? null
     actor.education = body.education ?? null
     actor.linkToKinoTeatr = body.linkToKinoTeatr ?? null

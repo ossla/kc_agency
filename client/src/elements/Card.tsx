@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ActorVideo } from "./ActorVideo";
 import { Link } from "react-router-dom";
 import { IShortActor } from "../api/types/actorTypes";
 import { ACTORS, EMPLOYEES } from "../routes";
@@ -55,14 +56,7 @@ export default function Card(props: ICardProps) {
                 className="video_modal_content"
                 onClick={(e) => e.stopPropagation()}
             >
-                <iframe
-                    width="720"
-                    height="405"
-                    src={props.actor.videoURL}
-                    style={{border: "none"}}
-                    allow="clipboard-write; autoplay"
-                    allowFullScreen
-                ></iframe>
+                <ActorVideo src={props.actor.videoURL!} />
                 <button className="video_modal_close" onClick={closeVideo}>
                 ×
                 </button>

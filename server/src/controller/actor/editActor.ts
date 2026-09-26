@@ -46,7 +46,6 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
     setActorField(actor, "linkToFilmTools", body.linkToFilmTools)
     setActorField(actor, "linkToKinoTeatr", body.linkToKinoTeatr)
     setActorField(actor, "linkToKinopoisk", body.linkToKinopoisk)
-    setActorField(actor, "videoURL", body.videoURL)
     setGender(actor, body.gender)
 
     saveSkills(actor, body.skills)
@@ -59,6 +58,8 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
     await saveHairColor(actor, body.hairColor)
     await saveLanguages(actor, body.languages)
 
+    // Video has its own endpoint and may change while the profile is being edited.
+    delete actor.videoURL
     await appDataSource.getRepository(Actor).save(actor)
-    res.json(actor)
+    res.json(await getActor(actor.id))
 }

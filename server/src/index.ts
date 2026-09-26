@@ -1,13 +1,14 @@
 import express from "express"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
-import path from "path"
 import cors from "cors"
 import bodyParser from "body-parser"
 import fileUpload from "express-fileupload"
 
 import { appDataSource } from "./data-source"
 import router from "./route/router"
+import actorVideoRouter from "./route/actorVideoRouter"
+import { uploadStatic } from "./middleware/uploadStatic"
 import { errorMiddleware } from "./middleware/errorMiddleware"
 import "./error/zodErrorsLocalization"
 
@@ -28,10 +29,11 @@ app.use(cors({
 }))
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use("/api/actor-video", actorVideoRouter)
 app.use(fileUpload())
 
 // файлы
-app.use('/uploads', express.static(path.join(__dirname, "..", "uploads")))
+app.use('/uploads', uploadStatic)
 
 // API
 app.use("/api", router)
@@ -45,9 +47,10 @@ async function start() {
     await appDataSource.initialize()
     console.log("Data Source initialized")
 
-    app.listen(Number(PORT), HOST, () => {
+    const server = app.listen(Number(PORT), HOST, () => {
         console.log(`[server]: ${HOST}:${PORT}`)
     })
+    server.requestTimeout = 0
 }
 
 start()

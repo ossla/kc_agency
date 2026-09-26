@@ -1,0 +1,6 @@
+.actor-video { width: 100%; min-width: 0; }
+.actor-video video, .actor-video iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; }
+.actor-video .plyr { width: 100%; max-width: 100%; }
+.actor-video-editor { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0; }
+.actor-video-editor [role="alert"] { color: #b42318; width: 100%; }
+.video_modal_content:has(.actor-video) { width: min(900px, 90vw); }

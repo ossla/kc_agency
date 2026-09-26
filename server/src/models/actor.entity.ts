@@ -64,7 +64,7 @@ export class Actor {
     photos!: string[]            // фотогалерея (помимо аватара)
 
     @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
-    skills!: string[]           // навыки
+    skills?: string[]           // навыки
 
     @ManyToOne(() => Employee, employee => employee.actors, {
         onDelete: "SET NULL",

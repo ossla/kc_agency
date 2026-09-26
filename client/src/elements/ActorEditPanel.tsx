@@ -226,17 +226,6 @@ export default function ActorEditPanel({
                 </div>
             ))}
 
-            <div className="floating_block">
-                <div className="person_block">
-                    <h3>Видео-визитка</h3>
-                    <input
-                        className="edit_input"
-                        value={editData.videoURL || ""}
-                        onChange={event => updateEditData({ videoURL: event.target.value })}
-                        placeholder="URL"
-                    />
-                </div>
-            </div>
         </>
     )
 }
