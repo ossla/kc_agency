@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import React from "react";
-import { ActorVideo, ActorVideoEditor } from "../elements/ActorVideo";
+import { ActorVideos } from "../elements/ActorVideo";
 import { Link } from 'react-router-dom';
 import "../styles/Person.css";
 import { EditActorType, IActor } from "../api/types/actorTypes";
@@ -516,15 +516,16 @@ export default function ActorPage() {
                                 </div>
                             )}
 
-                            {(actor.videoURL || user?.isAdmin) && (
+                            {(actor.videos.length > 0 || user?.isAdmin) && (
                                 <div className="floating_block">
                                     <div className="person_block">
-                                        <h3>Видеовизитка</h3>
-                                        {actor.videoURL && <ActorVideo src={actor.videoURL} />}
-                                        {user?.isAdmin && accessToken && <ActorVideoEditor
-                                            actorId={actor.id} src={actor.videoURL} token={accessToken}
-                                            onChange={videoURL => setActor(current => current ? { ...current, videoURL } : current)}
-                                        />}
+                                        <h3>Видео</h3>
+                                        <ActorVideos videos={actor.videos} actorId={actor.id}
+                                            token={user?.isAdmin ? accessToken || undefined : undefined}
+                                            onChange={videos => setActor(current => current ? {
+                                                ...current, videos, videoURL: videos[0]?.url || "",
+                                            } : current)}
+                                        />
                                     </div>
                                 </div>
                             )}

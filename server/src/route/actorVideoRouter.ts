@@ -10,6 +10,7 @@ import { authMiddleware } from "../middleware/authMiddleware"
 import { checkMiddleware } from "../middleware/checkMiddleware"
 import { appDataSource } from "../data-source"
 import { Actor } from "../models/actor.entity"
+import { ActorVideo, actorVideos } from "../models/actorVideo"
 import ApiError from "../error/apiError"
 import { returnStaticPath } from "../controller/services/fileSystemService"
 
@@ -26,7 +27,7 @@ async function removeLocal(url?: string) {
         .catch(error => { if (error.code !== "ENOENT") console.error("Video cleanup failed", error) })
 }
 
-router.post("/:id", fileUpload({
+router.post(["/:id", "/:id/:videoId"], fileUpload({
     useTempFiles: true,
     tempFileDir: path.join(os.tmpdir(), "kc-agency-video"),
     limits: { fileSize: maxBytes, files: 1, fields: 0 },
@@ -58,24 +59,36 @@ router.post("/:id", fileUpload({
             throw ApiError.badRequest("Use MP4 with H.264 video and AAC audio")
         }
         let oldURL: string | undefined
-        let videoURL = ""
+        let videos: ActorVideo[] = []
+        let uploadedId = ""
         await appDataSource.transaction(async manager => {
             const actor = await manager.createQueryBuilder(Actor, "actor")
                 .setLock("pessimistic_write").where("actor.id = :id", { id: req.params.id }).getOne()
             if (!actor) throw ApiError.badRequest("Actor not found")
+            videos = [...actorVideos(actor)]
+            const index = req.params.videoId ? videos.findIndex(video => video.id === req.params.videoId) : -1
+            if (req.params.videoId && index === -1) throw new ApiError(404, "Video not found")
             if (!/^[\w-]+$/.test(actor.directory)) throw ApiError.badRequest("Invalid actor directory")
             const filename = `video-${randomUUID()}.mp4`
             const directory = path.join(returnStaticPath(), actor.directory)
             await fs.mkdir(directory, { recursive: true })
             newPath = path.join(directory, filename)
             await file.mv(newPath)
-            videoURL = `/uploads/${actor.directory}/${filename}`
-            oldURL = actor.videoURL
-            await manager.update(Actor, actor.id, { videoURL })
+            const video = {
+                id: index >= 0 ? videos[index].id : randomUUID(),
+                url: `/uploads/${actor.directory}/${filename}`,
+                name: path.basename(file.name).slice(0, 200),
+            }
+            uploadedId = video.id
+            if (index >= 0) {
+                oldURL = videos[index].url
+                videos[index] = video
+            } else videos.push(video)
+            await manager.update(Actor, actor.id, { videos, videoURL: videos[0]?.url || "" })
         })
         newPath = undefined
         await removeLocal(oldURL)
-        res.json({ videoURL })
+        res.json({ videos, videoURL: videos[0]?.url || "", uploadedId })
     } catch (error) {
         console.error("[actor-video] upload failed", error)
         throw error
@@ -85,17 +98,22 @@ router.post("/:id", fileUpload({
     }
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id/:videoId", async (req, res) => {
     let oldURL: string | undefined
+    let videos: ActorVideo[] = []
     await appDataSource.transaction(async manager => {
         const actor = await manager.createQueryBuilder(Actor, "actor")
             .setLock("pessimistic_write").where("actor.id = :id", { id: req.params.id }).getOne()
         if (!actor) throw ApiError.badRequest("Actor not found")
-        oldURL = actor.videoURL
-        await manager.update(Actor, actor.id, { videoURL: "" })
+        videos = [...actorVideos(actor)]
+        const index = videos.findIndex(video => video.id === req.params.videoId)
+        if (index === -1) throw new ApiError(404, "Video not found")
+        oldURL = videos[index].url
+        videos.splice(index, 1)
+        await manager.update(Actor, actor.id, { videos, videoURL: videos[0]?.url || "" })
     })
     await removeLocal(oldURL)
-    res.json({ videoURL: "" })
+    res.json({ videos, videoURL: videos[0]?.url || "" })
 })
 
 export default router

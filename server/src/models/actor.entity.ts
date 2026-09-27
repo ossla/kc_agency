@@ -1,4 +1,5 @@
 import { Employee } from "./employee.entity"
+import { ActorVideo } from "./actorVideo"
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -59,6 +60,9 @@ export class Actor {
 
     @Column({ type: "text", default: "", nullable: true })
     videoURL?: string          // видеовизитка (url)
+
+    @Column({ type: "jsonb", default: () => "'[]'::jsonb" })
+    videos!: ActorVideo[]
 
     @Column("text", { array: true, default: () => "ARRAY[]::text[]" })
     photos!: string[]            // фотогалерея (помимо аватара)

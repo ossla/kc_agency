@@ -12,33 +12,53 @@ test.beforeAll(() => {
 });
 
 for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
-    test(`upload, playback, seek, replace, delete ${viewport.width}`, async ({ page }, testInfo) => {
+    test(`multiple uploads, playback, seek, replace, delete ${viewport.width}`, async ({ page }, testInfo) => {
         await page.setViewportSize(viewport);
         const errors: string[] = [];
         page.on('pageerror', error => errors.push(error.message));
-        let videoURL = '';
+        let videos: { id: string; url: string; name: string }[] = [];
+        let sequence = 0;
+        let failUpload = false;
         await page.route('**/api/**', route => {
             const url = new URL(route.request().url()).pathname;
             let data: unknown = [];
             if (url === '/api/auth') data = { accessToken: 'test', user: { id: 1, name: 'Admin', email: 'test@example.org', isAdmin: true } };
             else if (url === '/api/actor-video/config') data = { maxBytes: 2147483648 };
-            else if (url === '/api/actor-video/test') {
-                videoURL = route.request().method() === 'DELETE' ? '' : src;
-                data = { videoURL };
+            else if (url.startsWith('/api/actor-video/test')) {
+                if (failUpload) return route.fulfill({ status: 500, json: { message: 'Test upload failure' } });
+                const target = url.split('/')[4];
+                let uploadedId: string | undefined;
+                if (route.request().method() === 'DELETE') videos = videos.filter(video => video.id !== target);
+                else {
+                    uploadedId = target || String(++sequence);
+                    const entry = { id: uploadedId, url: src + `?version=${++sequence}`, name: `Видео ${sequence}.mp4` };
+                    if (target) videos = videos.map(video => video.id === target ? entry : video);
+                    else videos.push(entry);
+                }
+                data = { videos, videoURL: videos[0]?.url || '', uploadedId };
             } else if (url === '/api/actor/test') data = {
                 id: 'test', firstName: 'Test', lastName: 'Actor', gender: 'M', dateOfBirth: '1990-01-01',
                 height: 180, directory: 'test', employee: { id: 'agent', firstName: 'Agent', lastName: 'Test' },
                 city: { name: 'Moscow' }, eyeColor: { name: 'Blue' }, hairColor: { name: 'Black' },
-                photos: [], skills: [], languages: [], videoURL,
+                photos: [], skills: [], languages: [], videos, videoURL: videos[0]?.url || '',
             };
             return route.fulfill({ json: data });
         });
-        await page.route('**' + src, route => route.fulfill({ contentType: 'video/mp4', body: fs.readFileSync(fixture) }));
+        await page.route('**' + src + '*', route => route.fulfill({ contentType: 'video/mp4', body: fs.readFileSync(fixture) }));
         await page.goto('/actors/test');
-        await expect(page.getByRole('button', { name: 'Загрузить видео' })).toBeEnabled();
+        await expect(page.getByRole('button', { name: 'Добавить видео' })).toBeEnabled();
         const input = page.locator('.actor-video-editor input[type=file]');
         await input.setInputFiles(fixture);
+        const selection = page.getByRole('combobox', { name: 'Выбрать видео' });
+        await expect(selection.locator('option')).toHaveCount(1);
+        const firstId = videos[0].id;
+        const firstURL = videos[0].url;
+        await input.setInputFiles(fixture);
+        await expect(selection.locator('option')).toHaveCount(2);
+        await expect(selection).toHaveValue(videos[1].id);
+        await selection.selectOption(firstId);
         const video = page.locator('.actor-video video');
+        await expect(video).toHaveAttribute('src', firstURL);
         await expect(video).toBeVisible();
         await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.readyState)).toBeGreaterThan(1);
         await video.evaluate((el: HTMLVideoElement) => { el.muted = true; return el.play(); });
@@ -59,17 +79,33 @@ for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844
         expect(box!.width).toBeGreaterThan(100);
         expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width + 1);
         await page.locator('.actor-video').scrollIntoViewIfNeeded();
-        await page.locator('.actor-video').screenshot({ path: testInfo.outputPath('player.png') });
+        await page.locator('.actor-videos').screenshot({ path: testInfo.outputPath('player.png') });
         await expect(page.locator('.plyr__controls')).toBeVisible();
         const controlsBox = await page.locator('.plyr__controls').boundingBox();
         const playerBox = await page.locator('.actor-video').boundingBox();
         expect(controlsBox!.y + controlsBox!.height).toBeLessThanOrEqual(playerBox!.y + playerBox!.height + 1);
+        failUpload = true;
         await input.setInputFiles(fixture);
-        await expect(page.getByRole('button', { name: 'Заменить видео' })).toBeEnabled();
+        await expect(page.getByRole('alert')).toContainText('HTTP 500');
+        await expect(selection.locator('option')).toHaveCount(2);
+        await expect(video).toHaveAttribute('src', firstURL);
+        failUpload = false;
+        const chooser = page.waitForEvent('filechooser');
+        await page.getByRole('button', { name: 'Заменить выбранное' }).click();
+        await (await chooser).setFiles(fixture);
+        await expect(page.getByRole('button', { name: 'Заменить выбранное' })).toBeEnabled();
+        await expect(video).not.toHaveAttribute('src', firstURL);
+        await expect(selection.locator('option')).toHaveCount(2);
         page.once('dialog', dialog => dialog.accept());
-        await page.getByRole('button', { name: 'Удалить видео' }).click();
+        await page.getByRole('button', { name: 'Удалить выбранное' }).click();
+        await expect(selection.locator('option')).toHaveCount(1);
+        await expect(video).toHaveAttribute('src', videos[0].url);
+        await page.reload();
+        await expect(selection.locator('option')).toHaveCount(1);
+        page.once('dialog', dialog => dialog.accept());
+        await page.getByRole('button', { name: 'Удалить выбранное' }).click();
         await expect(video).toHaveCount(0);
-        await expect(page.getByRole('button', { name: 'Загрузить видео' })).toBeEnabled();
+        await expect(page.getByRole('button', { name: 'Добавить видео' })).toBeEnabled();
         expect(errors).toEqual([]);
     });
 }
@@ -80,7 +116,10 @@ for (const local of [true, false]) {
         const videoURL = local ? src : 'https://example.org/embed/legacy';
         await page.route('https://example.org/**', route => route.fulfill({ contentType: 'text/html', body: '<p>Legacy embed</p>' }));
         await page.route('**/api/**', route => route.fulfill({ json: new URL(route.request().url()).pathname === '/api/actor/get/men'
-            ? [{ id: 'test', firstName: 'Test', lastName: 'Actor', directory: 'test', videoURL }] : [] }));
+            ? [{ id: 'test', firstName: 'Test', lastName: 'Actor', directory: 'test', videoURL,
+                videos: local ? [{ id: 'local', url: src, name: 'Local' },
+                    { id: 'legacy', url: 'https://example.org/embed/legacy', name: 'Legacy' }] : [],
+            }] : [] }));
         await page.route('**' + src, route => route.fulfill({ contentType: 'video/mp4', body: fs.readFileSync(fixture) }));
         await page.goto('/actors/men');
         await page.locator('.card_video_icon').click();
@@ -90,6 +129,11 @@ for (const local of [true, false]) {
         const box = await media.boundingBox();
         expect(box!.x).toBeGreaterThanOrEqual(0);
         expect(box!.x + box!.width).toBeLessThanOrEqual(390);
+        if (local) {
+            await page.getByRole('combobox', { name: 'Выбрать видео' }).selectOption('legacy');
+            await expect(page.locator('.video_modal video')).toHaveCount(0);
+            await expect(page.locator('.video_modal iframe')).toHaveAttribute('src', 'https://example.org/embed/legacy');
+        }
         await page.locator('.video_modal_close').click();
         await expect(media).toHaveCount(0);
     });

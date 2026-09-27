@@ -93,7 +93,7 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
     
     const actorRepo = appDataSource.getRepository(Actor)
     const qb = actorRepo.createQueryBuilder("actor")
-        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
+        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL", "actor.videos"])
         .leftJoin("actor.languages", "language")
 
     filterSearch(qb, body.search)

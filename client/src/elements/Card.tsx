@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActorVideo } from "./ActorVideo";
+import { ActorVideos } from "./ActorVideo";
 import { Link } from "react-router-dom";
 import { IShortActor } from "../api/types/actorTypes";
 import { ACTORS, EMPLOYEES } from "../routes";
@@ -37,7 +37,7 @@ export default function Card(props: ICardProps) {
                 {props.actor.firstName} {props.actor.lastName}
                 </h1>
 
-                { props.showVideo && props.actor.videoURL && 
+                { props.showVideo && props.actor.videos.length > 0 &&
                     <img
                         className="card_video_icon"
                         src="/icons/video-icon.png"
@@ -56,7 +56,7 @@ export default function Card(props: ICardProps) {
                 className="video_modal_content"
                 onClick={(e) => e.stopPropagation()}
             >
-                <ActorVideo src={props.actor.videoURL!} />
+                <ActorVideos videos={props.actor.videos} />
                 <button className="video_modal_close" onClick={closeVideo}>
                 ×
                 </button>

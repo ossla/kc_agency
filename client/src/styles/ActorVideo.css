@@ -1,4 +1,12 @@
 .actor-video { width: 100%; min-width: 0; }
+.actor-videos { width: 100%; min-width: 0; }
+.actor-video-selection { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.actor-video-selection select { flex: 1; min-width: 0; width: 100%; padding: 8px; border: 1px solid #999; background: #fff; color: #222; border-radius: 4px; font-size: 14px; text-overflow: ellipsis; }
+.actor-video-selection span { flex-shrink: 0; font-size: 14px; }
+.video_modal_content .actor-video-selection span { color: #fff; }
+.video_modal_content:has(.actor-videos) { max-height: 90dvh; overflow-y: auto; padding: 18px; }
+.video_modal_content:has(.actor-videos) .video_modal_close { top: 0; right: 0; z-index: 2; }
+.actor-video-editor .btn { max-width: 100%; height: auto; min-height: 32px; padding: 4px 10px; white-space: normal; }
 .actor-video video, .actor-video iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; }
 .actor-video .plyr { width: 100%; max-width: 100%; }
 .actor-video-editor { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0; }

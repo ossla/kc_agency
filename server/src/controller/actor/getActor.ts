@@ -36,7 +36,7 @@ export async function getAllFullActors(req: Request, res: Response, next: NextFu
 export async function getShortActors(req: Request, res: Response, next: NextFunction) {
     const actors = await appDataSource.getRepository(Actor)
         .createQueryBuilder("actor")
-        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
+        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL", "actor.videos"])
         .orderBy("LOWER(actor.lastName)", "ASC")
         .getMany()
 
@@ -46,7 +46,7 @@ export async function getShortActors(req: Request, res: Response, next: NextFunc
 async function getShortByGender(res: Response, gender: GenderEnum, next: NextFunction) {
     const actors = await appDataSource.getRepository(Actor)
         .createQueryBuilder("actor")
-        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL"])
+        .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL", "actor.videos"])
         .where("actor.gender = :gender", { gender })
         .getMany()
 

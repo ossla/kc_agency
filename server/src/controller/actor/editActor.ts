@@ -60,6 +60,7 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
 
     // Video has its own endpoint and may change while the profile is being edited.
     delete actor.videoURL
+    delete actor.videos
     await appDataSource.getRepository(Actor).save(actor)
     res.json(await getActor(actor.id))
 }

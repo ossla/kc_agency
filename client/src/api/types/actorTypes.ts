@@ -74,7 +74,19 @@ export interface FilterActorType {
 
 
 // ================================ RESPONSE ================================
+export interface IActorVideo {
+    id: string;
+    url: string;
+    name: string;
+}
+
+export function getActorVideos(raw: { videos?: IActorVideo[]; videoURL?: string }): IActorVideo[] {
+    if (raw.videos?.length) return raw.videos;
+    return raw.videoURL ? [{ id: "legacy", url: raw.videoURL, name: "Видео 1" }] : [];
+}
+
 export interface IActor {
+    videos: IActorVideo[];
     id: string;
     firstName: string;
     lastName: string;
@@ -123,6 +135,7 @@ export function toIActor(raw: any): IActor {
         updatedAt: new Date(raw.updatedAt),
         
         videoURL: raw.videoURL ?? undefined,
+        videos: getActorVideos(raw),
         description: raw.description ?? undefined,
         middleName: raw.middleName ?? undefined,
         education: raw.education ?? undefined,
@@ -133,6 +146,7 @@ export function toIActor(raw: any): IActor {
 }
 
 export interface IShortActor {
+    videos: IActorVideo[],
     id: string,
     firstName: string,
     lastName: string,
@@ -148,6 +162,7 @@ export function toIShortActor(raw: any): IShortActor{
         lastName: raw.lastName,
         directory: raw.directory,
         avatarUrl: `/uploads/${raw.directory}/avatar`,
+        videos: getActorVideos(raw),
         videoURL: raw.videoURL ?? undefined
     }
 }

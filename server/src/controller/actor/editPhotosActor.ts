@@ -36,7 +36,7 @@ export async function deletePhoto(req: Request, res: Response, next: NextFunctio
 
     actor.photos.splice(index, 1)
 
-    await appDataSource.getRepository(Actor).save(actor)
+    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
     res.status(200).json(true)
 }
 
@@ -56,12 +56,12 @@ export async function addPhoto(req: Request, res: Response, next: NextFunction) 
 
     console.log("[addPhoto] new concated photos: " + actor.photos)
 
-    await appDataSource.getRepository(Actor).save(actor)
+    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
     console.log("[addPhoto] actor saved")
 
     console.log("[addPhoto] ends. no errors occured");
 
-    res.status(200).json(actor)
+    res.status(200).json(await getActor(actor.id))
 }
 
 export async function changeOrder(req: Request, res: Response, next: NextFunction) {
@@ -82,7 +82,7 @@ export async function changeOrder(req: Request, res: Response, next: NextFunctio
 
     actor.photos = photos
 
-    await appDataSource.getRepository(Actor).save(actor)
+    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
 
     res.status(200).json(true)
 }
