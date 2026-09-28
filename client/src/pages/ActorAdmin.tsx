@@ -24,7 +24,10 @@ const TOTAL_PHOTOS_WARNING_MB = 60
 const TOTAL_PHOTOS_WARNING_BYTES = TOTAL_PHOTOS_WARNING_MB * 1024 * 1024
 const LARGE_PHOTOS_WARNING = "Загрузка может занять много времени, пожалуйста, подождите или загрузите фото меньшего размера"
 
-function SelectedPhoto({ file, disabled, onRemove }: { file: File; disabled: boolean; onRemove: () => void }) {
+function SelectedPhoto({ file, index, total, disabled, onRemove, onMove }: {
+    file: File; index: number; total: number; disabled: boolean;
+    onRemove: () => void; onMove: (direction: number) => void;
+}) {
     const [preview, setPreview] = useState("")
     useEffect(() => {
         const url = URL.createObjectURL(file)
@@ -39,6 +42,13 @@ function SelectedPhoto({ file, disabled, onRemove }: { file: File; disabled: boo
             <span aria-hidden="true">×</span>
         </button>
         <span className="actor-selected-photo-name" title={file.name}>{file.name}</span>
+        <div className="actor-selected-photo-order">
+            <button type="button" disabled={disabled || index === 0} onClick={() => onMove(-1)}
+                aria-label={`Переместить раньше ${file.name}`} title="Переместить раньше">←</button>
+            <span>{index + 1}</span>
+            <button type="button" disabled={disabled || index === total - 1} onClick={() => onMove(1)}
+                aria-label={`Переместить позже ${file.name}`} title="Переместить позже">→</button>
+        </div>
     </li>
 }
 
@@ -110,9 +120,8 @@ export default function ActorAdmin() {
         const files = input.files
 
         if (files && files.length > 0) {
-            if (files.length > 20) {
+            if (photos.length + files.length > 20) {
                 setError("не нужно грузить более 20 фото")
-                setPhotos([])
                 input.value = ""
                 return;
             }
@@ -121,12 +130,11 @@ export default function ActorAdmin() {
 
             if (oversizedFile) {
                 setError(`File "${oversizedFile.name}" should be less than ${MAX_PHOTO_SIZE_MB} MB`)
-                setPhotos([])
                 input.value = ""
                 return
             }
 
-            setPhotos(filesArray)
+            setPhotos(current => [...current, ...filesArray])
             input.value = ""
             setError(null)
         }
@@ -269,6 +277,15 @@ export default function ActorAdmin() {
                     <ul className="actor-selected-photo-grid" aria-label="Выбранные фотографии">
                         {photos.map((file, index) => <SelectedPhoto key={`${file.name}-${file.lastModified}-${index}`}
                             file={file} disabled={isLoading}
+                            index={index} total={photos.length}
+                            onMove={direction => setPhotos(current => {
+                                const target = index + direction
+                                if (target < 0 || target >= current.length) return current
+                                const reordered = [...current]
+                                const [photo] = reordered.splice(index, 1)
+                                reordered.splice(target, 0, photo)
+                                return reordered
+                            })}
                             onRemove={() => setPhotos(current => current.filter((_, photoIndex) => photoIndex !== index))} />)}
                     </ul>
                 </div>}

@@ -25,43 +25,42 @@ export async function deletePhoto(req: Request, res: Response, next: NextFunctio
         throw ApiError.badRequest("deletePhoto: не найдено поле id или photoId")
     }
 
-    const actor: Actor = await getActor(id)
-    const index = actor.photos.indexOf(photoId)
-
-    if (index === -1) {
-        throw ApiError.badRequest("photo not found")
-    }
-
-    await removePhoto(photoId, actor.directory)
-
-    actor.photos.splice(index, 1)
-
-    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
+    let directory = ""
+    await appDataSource.transaction(async manager => {
+        const actor = await manager.createQueryBuilder(Actor, "actor").setLock("pessimistic_write")
+            .where("actor.id = :id", { id }).getOne()
+        if (!actor || !actor.photos.includes(photoId)) throw ApiError.badRequest("Фото не найдено. Обновите страницу")
+        directory = actor.directory
+        await manager.update(Actor, actor.id, { photos: actor.photos.filter(photo => photo !== photoId) })
+    })
+    // Never delete the files before their removal from the database is committed.
+    await removePhoto(photoId, directory).catch(error => console.error("Photo cleanup failed", error))
     res.status(200).json(true)
 }
 
 export async function addPhoto(req: Request, res: Response, next: NextFunction) { 
-    console.log("[addPhoto] starts.");
     const { id } = req.body
     if (!id) throw ApiError.badRequest("addPhoto: не найдено поле id")
 
     const photos: CustomFileType = req.files?.photos
     if (!photos) throw ApiError.badRequest('Нужно добавить хотя бы одно фото')
 
-    const actor: Actor = await getActor(id)
-    const newPhotos: string[] = await saveActorPhotos(photos, actor.directory)
-    console.log("[addPhoto] old photos: " + actor.photos)
-    console.log("[addPhoto] new photos: " + newPhotos)
-    actor.photos = actor.photos.concat(newPhotos)
-
-    console.log("[addPhoto] new concated photos: " + actor.photos)
-
-    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
-    console.log("[addPhoto] actor saved")
-
-    console.log("[addPhoto] ends. no errors occured");
-
-    res.status(200).json(await getActor(actor.id))
+    let directory = ""
+    let newPhotos: string[] = []
+    try {
+        await appDataSource.transaction(async manager => {
+            const actor = await manager.createQueryBuilder(Actor, "actor").setLock("pessimistic_write")
+                .where("actor.id = :id", { id }).getOne()
+            if (!actor) throw ApiError.badRequest("Актёр не найден")
+            directory = actor.directory
+            newPhotos = await saveActorPhotos(photos, directory)
+            await manager.update(Actor, actor.id, { photos: actor.photos.concat(newPhotos) })
+        })
+    } catch (error) {
+        await Promise.all(newPhotos.map(photo => removePhoto(photo, directory).catch(console.error)))
+        throw error
+    }
+    res.status(200).json(await getActor(id))
 }
 
 export async function changeOrder(req: Request, res: Response, next: NextFunction) {
@@ -71,18 +70,18 @@ export async function changeOrder(req: Request, res: Response, next: NextFunctio
         throw ApiError.badRequest("changeOrder: не найдено поле id или photos")
     }
 
-    const actor: Actor = await getActor(id)
+    await appDataSource.transaction(async manager => {
+        const actor = await manager.createQueryBuilder(Actor, "actor").setLock("pessimistic_write")
+            .where("actor.id = :id", { id }).getOne()
+        if (!actor) throw ApiError.badRequest("Актёр не найден")
 
-    // проверка на те же фото, что и были
-    const oldSet = new Set(actor.photos)
-    const newSet = new Set(photos)
-    if (oldSet.size !== newSet.size || ![...oldSet].every(p => newSet.has(p))) {
-        throw ApiError.badRequest("changeOrder: массив фото не совпадает с текущим")
-    }
-
-    actor.photos = photos
-
-    await appDataSource.getRepository(Actor).update(actor.id, { photos: actor.photos })
+        const oldSet = new Set(actor.photos)
+        const newSet = new Set(photos)
+        if (photos.length !== actor.photos.length || newSet.size !== photos.length || oldSet.size !== newSet.size || ![...oldSet].every(p => newSet.has(p))) {
+            throw ApiError.badRequest("changeOrder: массив фото не совпадает с текущим")
+        }
+        await manager.update(Actor, actor.id, { photos })
+    })
 
     res.status(200).json(true)
 }

@@ -1,0 +1,13 @@
+.actor-photo-editor { min-width: 0; width: 100%; }
+.actor-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 14px; }
+.actor-photo-item { position: relative; min-width: 0; }
+.actor-photo-item img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+.actor-photo-controls { display: flex; justify-content: space-between; gap: 4px; margin-top: 6px; }
+.actor-photo-editor .actor-photo-controls button, .actor-photo-editor .actor-photo-delete { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; margin: 0; border: 1px solid #aaa; border-radius: 4px; background: white; color: #222; font-size: 22px; }
+.actor-photo-editor .actor-photo-delete { position: absolute; top: 6px; right: 6px; color: #b42318; }
+.actor-photo-drag { touch-action: none; cursor: grab; }
+.actor-photo-editor button:disabled { opacity: .45; cursor: default; }
+.actor-photo-editor button:focus-visible { outline: 2px solid #18776d; outline-offset: 2px; }
+.actor-photo-number { display: block; text-align: center; font-size: 14px; margin-top: 4px; }
+.actor-photo-status { min-height: 24px; margin: 8px 0; font-size: 14px; }
+.actor-photo-error { color: #b42318; overflow-wrap: anywhere; margin: 8px 0; }

@@ -293,4 +293,10 @@ select {
 .admin .actor-selected-photo-remove:hover { background: #fee4e2; }
 .admin .actor-selected-photo-remove:focus-visible { outline: 2px solid #b42318; outline-offset: 2px; }
 .admin .actor-selected-photo-remove:disabled { opacity: 0.5; cursor: default; }
+.actor-selected-photo-order { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 6px; }
+.actor-selected-photo-order span { font-size: 14px; font-variant-numeric: tabular-nums; }
+.admin .actor-selected-photo-order button { display: grid; place-items: center; width: 32px; height: 32px; margin: 0; padding: 0; border-radius: 4px; border: 1px solid #aaa; background: #fff; color: #222; font-size: 20px; }
+.admin .actor-selected-photo-order button:hover { background: #eee; }
+.admin .actor-selected-photo-order button:disabled { opacity: 0.35; cursor: default; }
+.admin .actor-selected-photo-order button:focus-visible { outline: 2px solid #18776d; outline-offset: 2px; }
 @media (max-width: 600px) { .actor-selected-photos { width: 100%; } }

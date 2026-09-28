@@ -105,7 +105,7 @@ class fetchActors {
         const formData = new FormData()
         formData.append("id", actorId)
 
-        if (files.length > 21) {
+        if (files.length > 20) {
             throw new ApiError(413, "фото многовато (>20)")
         }
         files.forEach(file => {

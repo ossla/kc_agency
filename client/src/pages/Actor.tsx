@@ -140,6 +140,7 @@ export default function ActorPage() {
     const { user, accessToken } = useUser();
     const [isEdit, setIsEdit] = useState(false);
     const [isPhotoEdit, setIsPhotoEdit] = useState(false);
+    const [photosSaving, setPhotosSaving] = useState(false);
     const [tempAvatar, setTempAvatar] = useState<File | undefined>(undefined);
     const [avatarUploading, setAvatarUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -410,6 +411,10 @@ export default function ActorPage() {
                     {error && <h1 style={{ padding: "5px", backgroundColor: "#fda8a8" }}>{error}</h1>}
 
                     {isEdit && editData ? (
+                        <>
+                        {user?.isAdmin && accessToken && <ActorPhotoEditor actorId={actor.id}
+                            initialPhotos={actor.photos} baseUrl={actor.url} accessToken={accessToken}
+                            onBusy={setPhotosSaving} onChange={photos => setActor(prev => prev ? { ...prev, photos } : prev)} />}
                         <ActorEditPanel
                             editData={editData}
                             setEditData={setEditData}
@@ -419,18 +424,19 @@ export default function ActorPage() {
                             setLanguages={setLanguages}
                             skills={skills}
                             setSkills={setSkills}
-                            isSaving={isSaving}
+                            isSaving={isSaving || photosSaving}
                             onSave={handleSave}
                             onCancel={handleCancelEdit}
                             formatDate={formatDate}
                         />
+                        </>
                     ) : (
                         <>
                             {user?.isAdmin && (
                                 <div className="floating_block">
                                     <div style={{ marginBottom: "10px" }}>
-                                        <button className="btn" onClick={startEdit}>Редактировать</button>
-                                        <button className="btn" onClick={handleDelete} style={{ marginLeft: "10px" }}>
+                                        <button className="btn" disabled={photosSaving} onClick={startEdit}>Редактировать</button>
+                                        <button className="btn" disabled={photosSaving} onClick={handleDelete} style={{ marginLeft: "10px" }}>
                                             Удалить
                                         </button>
                                     </div>
@@ -536,20 +542,22 @@ export default function ActorPage() {
                                         <button
                                             style={{ marginTop: "20px" }}
                                             className="btn"
+                                            disabled={photosSaving}
                                             onClick={() => setIsPhotoEdit(current => !current)}
                                         >
-                                            Редактировать фото
+                                            {isPhotoEdit ? "Закрыть редактор фото" : "Редактировать фото"}
                                         </button>
                                     )}
 
                                     {/* moved avatar edit buttons to left column */}
 
-                                    {(isPhotoEdit && actor && accessToken) ? (
+                                    {(isPhotoEdit && user?.isAdmin && accessToken) ? (
                                         <ActorPhotoEditor
                                             actorId={actor.id}
                                             initialPhotos={actor.photos}
                                             baseUrl={actor.url}
                                             accessToken={accessToken}
+                                            onBusy={setPhotosSaving}
                                             onChange={photos => {
                                                 setActor(prev => prev ? { ...prev, photos } : prev);
                                             }}

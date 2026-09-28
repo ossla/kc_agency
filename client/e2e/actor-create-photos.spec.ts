@@ -23,12 +23,22 @@ for (const width of [1440, 390]) {
         await page.goto('/actor_admin_panel');
         const picker = page.locator('#photos');
         const previews = page.getByRole('list', { name: 'Выбранные фотографии' });
-        await picker.setInputFiles(files);
+        await picker.setInputFiles(files[2]);
+        await picker.setInputFiles([files[0], files[1]]);
         await expect(previews.getByRole('img')).toHaveCount(3);
+        await expect.poll(() => previews.getByRole('img').evaluateAll(images => images.map(image => image.getAttribute('alt'))))
+            .toEqual(['portrait-3.jpg', 'portrait-1.jpg', 'portrait-2.jpg']);
         await page.getByRole('button', { name: 'Удалить фото portrait-2.jpg', exact: true }).click();
         await expect(previews.getByRole('img')).toHaveCount(2);
         await expect(previews.getByAltText('portrait-2.jpg')).toHaveCount(0);
         await expect(page.getByRole('status')).toHaveText('Выбрано фото: 2 / 20');
+        await page.getByRole('button', { name: 'Переместить раньше portrait-1.jpg', exact: true }).click();
+        await expect.poll(() => previews.getByRole('img').evaluateAll(images => images.map(image => image.getAttribute('alt'))))
+            .toEqual(['portrait-1.jpg', 'portrait-3.jpg']);
+        await expect(page.getByRole('button', { name: 'Переместить раньше portrait-1.jpg', exact: true })).toBeDisabled();
+        await expect(page.getByRole('button', { name: 'Переместить позже portrait-3.jpg', exact: true })).toBeDisabled();
+        await picker.setInputFiles(Array.from({ length: 19 }, (_, index) => ({ ...files[0], name: `extra-${index}.jpg` })));
+        await expect(previews.getByRole('img')).toHaveCount(2);
         for (const image of await previews.getByRole('img').all()) {
             await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
         }
