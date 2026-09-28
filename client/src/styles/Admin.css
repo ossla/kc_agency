@@ -280,3 +280,17 @@ select {
   line-height: 1.2;
   text-align: left;
 }
+
+.actor-admin-container { width: 100%; }
+.admin.actor-admin { width: min(1000px, 100%); min-width: 0; }
+.actor-selected-photos { width: 60%; margin-top: 12px; }
+.actor-selected-photos > p { font-size: 14px; margin-bottom: 8px; }
+.actor-selected-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+.actor-selected-photo { position: relative; min-width: 0; }
+.actor-selected-photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; background: #eee; }
+.actor-selected-photo-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; margin-top: 4px; }
+.admin .actor-selected-photo-remove { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 32px; height: 32px; margin: 0; padding: 0; border-radius: 4px; background: #fff; color: #b42318; border: 1px solid #ddd; font-size: 24px; line-height: 1; }
+.admin .actor-selected-photo-remove:hover { background: #fee4e2; }
+.admin .actor-selected-photo-remove:focus-visible { outline: 2px solid #b42318; outline-offset: 2px; }
+.admin .actor-selected-photo-remove:disabled { opacity: 0.5; cursor: default; }
+@media (max-width: 600px) { .actor-selected-photos { width: 100%; } }

@@ -24,6 +24,24 @@ const TOTAL_PHOTOS_WARNING_MB = 60
 const TOTAL_PHOTOS_WARNING_BYTES = TOTAL_PHOTOS_WARNING_MB * 1024 * 1024
 const LARGE_PHOTOS_WARNING = "Загрузка может занять много времени, пожалуйста, подождите или загрузите фото меньшего размера"
 
+function SelectedPhoto({ file, disabled, onRemove }: { file: File; disabled: boolean; onRemove: () => void }) {
+    const [preview, setPreview] = useState("")
+    useEffect(() => {
+        const url = URL.createObjectURL(file)
+        setPreview(url)
+        return () => URL.revokeObjectURL(url)
+    }, [file])
+
+    return <li className="actor-selected-photo">
+        <img src={preview || undefined} alt={file.name} />
+        <button type="button" className="actor-selected-photo-remove" disabled={disabled}
+            onClick={onRemove} aria-label={`Удалить фото ${file.name}`} title={`Удалить фото ${file.name}`}>
+            <span aria-hidden="true">×</span>
+        </button>
+        <span className="actor-selected-photo-name" title={file.name}>{file.name}</span>
+    </li>
+}
+
 export default function ActorAdmin() {
     const { accessToken } = useUser()
     const navigator = useNavigate()
@@ -50,7 +68,8 @@ export default function ActorAdmin() {
     const [avatar, setAvatar] = useState<File>()
     const [tempAvatar, setTempAvatar] = useState<File>()
     const [photos, setPhotos] = useState<File[]>([])
-    const [photoWarning, setPhotoWarning] = useState<string | null>(null)
+    const photoWarning = photos.reduce((sum, file) => sum + file.size, 0) > TOTAL_PHOTOS_WARNING_BYTES
+        ? LARGE_PHOTOS_WARNING : null
 
     // relations
     const [employeeId, setEmployeeId] = useState<string>()
@@ -94,7 +113,6 @@ export default function ActorAdmin() {
             if (files.length > 20) {
                 setError("не нужно грузить более 20 фото")
                 setPhotos([])
-                setPhotoWarning(null)
                 input.value = ""
                 return;
             }
@@ -104,15 +122,12 @@ export default function ActorAdmin() {
             if (oversizedFile) {
                 setError(`File "${oversizedFile.name}" should be less than ${MAX_PHOTO_SIZE_MB} MB`)
                 setPhotos([])
-                setPhotoWarning(null)
                 input.value = ""
                 return
             }
 
-            const totalSize = filesArray.reduce((sum, file) => sum + file.size, 0)
-
             setPhotos(filesArray)
-            setPhotoWarning(totalSize > TOTAL_PHOTOS_WARNING_BYTES ? LARGE_PHOTOS_WARNING : null)
+            input.value = ""
             setError(null)
         }
     }
@@ -217,8 +232,8 @@ export default function ActorAdmin() {
 
 
     return (
-        <div className="container">
-            <div className="admin">
+        <div className="container actor-admin-container">
+            <div className="admin actor-admin">
                 <h1>Создание актёра</h1>
 
                 <>
@@ -245,9 +260,18 @@ export default function ActorAdmin() {
                     placeholder="Загрузите фото"
                     accept=".jpg,.jpeg,image/jpeg"
                     onChange={uploadPhotos}
+                    disabled={isLoading}
                     multiple 
                 />
                 {photoWarning && <p className="error">{photoWarning}</p>}
+                {photos.length > 0 && <div className="actor-selected-photos">
+                    <p role="status">Выбрано фото: {photos.length} / 20</p>
+                    <ul className="actor-selected-photo-grid" aria-label="Выбранные фотографии">
+                        {photos.map((file, index) => <SelectedPhoto key={`${file.name}-${file.lastModified}-${index}`}
+                            file={file} disabled={isLoading}
+                            onRemove={() => setPhotos(current => current.filter((_, photoIndex) => photoIndex !== index))} />)}
+                    </ul>
+                </div>}
 
                 <label htmlFor="lastName">Фамилия*</label>
                 <input type="text" id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Фамилия" />
