@@ -1,7 +1,6 @@
 import { ResponseHandler, ResponseHandlerMap } from "./ResponseHandler"
 import { IEmployee, toIEmployee } from "./types/employeeTypes"
-import { GenderEnum } from "./types/enums"
-import { createEmployeeURL, getEmployeeURL } from "./URLs"
+import { createEmployeeURL, getEmployeeURL, editEmployeeURL } from "./URLs"
 
 class fetchEmployees {
     // ================== CREATE ==================
@@ -18,6 +17,14 @@ class fetchEmployees {
         return employee
     }
     // ================== EDIT ==================
+    static async edit(accessToken: string, data: FormData): Promise<IEmployee> {
+        const response = await fetch(editEmployeeURL, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${accessToken}` },
+            body: data,
+        })
+        return ResponseHandler<IEmployee>(response, toIEmployee)
+    }
     // ================== DELETE ==================
     // ================== GET ==================
     static async get(): Promise<IEmployee[]> {

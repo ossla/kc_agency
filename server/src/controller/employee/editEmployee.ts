@@ -1,69 +1,62 @@
-import { Request, Response, NextFunction } from "express"
-
+import { Request, Response } from "express"
+import { randomUUID } from "crypto"
+import { promises as fs } from "fs"
+import path from "path"
+import sharp from "sharp"
 import { appDataSource } from "../../data-source"
 import { getEmployee } from "./getEmployee"
 import { Employee } from "../../models/employee.entity"
-import { changePhoto, CustomFileType } from "../services/fileSystemService"
+import { savePhoto, returnStaticPath } from "../services/fileSystemService"
+import { editEmployeeSchema } from "./employeeTypes"
 import ApiError from "../../error/apiError"
 
-
-interface IName {
-    first?: string,
-    last?: string,
-    middle?: string
-}
-function setName(employee: Employee, name: IName) {
-    if (name.first) {
-        employee.firstName = name.first
-    }
-    if (name.last) {
-        employee.lastName = name.last
-    }
-    if (name.middle) {
-        employee.middleName = name.middle
-    }
+async function cleanPhoto(name: string) {
+    if (!/^[\w-]+$/.test(name)) return
+    await Promise.all([400, 1600].map(size =>
+        fs.unlink(path.join(returnStaticPath(), `${name}_${size}.jpg`)).catch(error => {
+            if (error.code !== "ENOENT") console.error("[editEmployee] photo cleanup failed", error)
+        }),
+    ))
 }
 
-function setEmployeeStringField<T extends keyof Employee>(employee: Employee, field: T, value: Employee[T] | undefined) {    
-    if (value !== undefined) {
-        employee[field] = value
+export async function editEmployee(req: Request, res: Response) {
+    const { id, ...changes } = editEmployeeSchema.parse(req.body)
+    const avatar = req.files?.newAvatar
+    if (Array.isArray(avatar)) throw ApiError.badRequest("Выберите только одно фото")
+    if (avatar && (avatar.truncated || avatar.size > 20 * 1024 ** 2)) {
+        throw ApiError.badRequest("Выберите одно фото размером до 20 МБ")
     }
-}
-
-export async function editEmployee(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.body
-    if (!id) {
-        throw ApiError.badRequest("укажите корректный id")
+    let newPhoto: string | undefined
+    let oldPhoto: string | undefined
+    try {
+        if (avatar) {
+            const metadata = await sharp(avatar.data).metadata().catch(() => {
+                throw ApiError.badRequest("Не удалось прочитать фото. Выберите JPG, PNG или WebP")
+            })
+            if (!["jpeg", "png", "webp"].includes(metadata.format)) {
+                throw ApiError.badRequest("Выберите фото в формате JPG, PNG или WebP")
+            }
+            newPhoto = randomUUID()
+            await savePhoto(avatar, newPhoto)
+        }
+        await appDataSource.transaction(async manager => {
+            const employee = await manager.createQueryBuilder(Employee, "employee")
+                .setLock("pessimistic_write").where("employee.id = :id", { id }).getOne()
+            if (!employee) throw new ApiError(404, "Агент не найден")
+            if (newPhoto) oldPhoto = employee.photo
+            if (newPhoto || Object.keys(changes).length) {
+                await manager.update(Employee, id, { ...changes, ...(newPhoto ? { photo: newPhoto } : {}) })
+            }
+        })
+        // Keep the new file after commit; only then remove the previous avatar.
+        newPhoto = undefined
+        if (oldPhoto) await cleanPhoto(oldPhoto)
+        res.json(await getEmployee(id))
+    } catch (error) {
+        if (newPhoto) await cleanPhoto(newPhoto)
+        if ((error as { code?: string }).code === "23505") {
+            throw new ApiError(409, "Агент с таким email или телефоном уже существует")
+        }
+        throw error
     }
-    const {
-        firstName,
-        lastName,
-        middleName,
-        email,
-        phone,
-        description,
-        telegram,
-        instagram,
-        facebook,
-        vk,
-    } = req.body
-
-
-    let employee: Employee = await getEmployee(id)
-    setName(employee, {first: firstName, last: lastName, middle: middleName})
-    setEmployeeStringField(employee, "email", email)
-    setEmployeeStringField(employee, "phone", phone)
-    setEmployeeStringField(employee, "description", description)
-    setEmployeeStringField(employee, "telegram", telegram)
-    setEmployeeStringField(employee, "instagram", instagram)
-    setEmployeeStringField(employee, "facebook", facebook)
-    setEmployeeStringField(employee, "vk", vk)
-
-    const newAvatar: CustomFileType = req.files?.newAvatar
-    if (newAvatar) {
-        await changePhoto(newAvatar, employee.photo)
-    }
-
-    await appDataSource.getRepository(Employee).save(employee)
-    res.json(employee)
 }

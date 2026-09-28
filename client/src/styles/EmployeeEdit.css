@@ -1,0 +1,15 @@
+.employee-edit { min-width: 0; }
+.employee-edit h2 { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+.employee-edit fieldset { min-width: 0; }
+.employee-edit-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.employee-edit label { display: flex; flex-direction: column; gap: 6px; font-size: 16px; min-width: 0; }
+.employee-edit input, .employee-edit textarea { width: 100%; min-width: 0; padding: 8px; border: 1px solid #999; border-radius: 4px; background: #fff; color: #222; font-size: 16px; }
+.employee-edit input:focus-visible, .employee-edit textarea:focus-visible, .employee-edit button:focus-visible { outline: 2px solid #18776d; outline-offset: 2px; }
+.employee-edit textarea { resize: vertical; }
+.employee-edit-wide { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; }
+.employee-edit-preview { display: block; width: 160px; aspect-ratio: 4 / 5; object-fit: cover; margin-top: 16px; }
+.employee-edit-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.employee-edit-actions .btn { max-width: 100%; min-height: 36px; margin: 0; border-radius: 4px; }
+.employee-edit-error { color: #b42318; margin-top: 16px; overflow-wrap: anywhere; }
+.employee-edit :disabled { opacity: 0.65; cursor: default; }
+@media (max-width: 600px) { .employee-edit-fields { grid-template-columns: minmax(0, 1fr); } }

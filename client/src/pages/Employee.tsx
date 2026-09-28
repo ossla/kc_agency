@@ -11,42 +11,60 @@ import { PhotoProvider, PhotoView } from "react-photo-view"
 import { IShortActor } from "../api/types/actorTypes"
 import fetchActors from "../api/fetchActors"
 import Card from "../elements/Card"
+import { useUser } from "../context/UserContext"
+import EmployeeEditPanel from "../elements/EmployeeEditPanel"
 
 
 export default function Employee() {
     const { id } = useParams()
+    const { user, accessToken } = useUser()
+    const [isEditing, setIsEditing] = useState(false)
     const [employee, setEmployee] = useState<IEmployee>()
     const [error, setError] = useState<string | null>(null)
     const [actors, setActors] = useState<IShortActor[]>([])
     const [actorsLoading, setActorsLoading] = useState<boolean>(true)
 
     useEffect(() => {
+        let cancelled = false
+        setEmployee(undefined)
+        setError(null)
+        setActors([])
+        setActorsLoading(true)
+        setIsEditing(false)
         const f = async () => {
             try {
                 if (typeof id !== "string") throw Error("элемент находится не там, где нужно. попытка получить id из url")
                 const data: IEmployee = await fetchEmployees.getEmployee(id + "")
+                if (cancelled) return
                 setError(null)
                 setEmployee(data)
             } catch (e: unknown) {
+                if (cancelled) return
                 setError(processError(e))
+                return
             }
 
             try {
                 const data: IShortActor[] = await fetchActors.filterActor({employeeId: id})
+                if (cancelled) return
                 setError(null)
                 setActorsLoading(false)
                 setActors(data)
 
             } catch (e: unknown) {
+                if (cancelled) return
                 setError(processError(e))
+            } finally {
+                if (!cancelled) setActorsLoading(false)
             }
         }
 
         f()
-    }, [])
+        return () => { cancelled = true }
+    }, [id])
 
     
-    if (error) {
+    if (error && !employee) {
         return <h1>{error}</h1>
     }
 
@@ -55,6 +73,7 @@ export default function Employee() {
     }
 
     const hasSocialLinks = Boolean(employee.telegram || employee.vk || employee.instagram || employee.facebook)
+    const showEditor = Boolean(isEditing && user?.isAdmin && accessToken)
 
     return (
         <div className="person_page_wrapper">
@@ -100,6 +119,14 @@ export default function Employee() {
 
                 {/* Правая часть===================================== */}
                 <div className="person_right">
+                    {error && <p role="alert">{error}</p>}
+                    {user?.isAdmin && accessToken && (isEditing ?
+                        <EmployeeEditPanel key={employee.id} employee={employee} token={accessToken}
+                            onSave={updated => { setEmployee(updated); setIsEditing(false) }}
+                            onCancel={() => setIsEditing(false)} /> :
+                        <button className="btn" onClick={() => setIsEditing(true)}>Редактировать агента</button>
+                    )}
+                    {!showEditor && <>
                     <div className="floating_block">
                     <h1 className="person_fio">
                         {employee.lastName} {employee.firstName} {employee.middleName && employee.middleName}
@@ -126,6 +153,7 @@ export default function Employee() {
                         )
                     }
 
+                    </>}
                     <div className="floating_block">
                         <h3>Актёры</h3>
                         {   actorsLoading 
