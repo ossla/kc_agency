@@ -12,6 +12,7 @@ import { RefreshToken } from "./models/refreshToken.entity"
 import { Favorite } from "./models/favorite.entity"
 import { HairColor } from "./models/hairColor.entity"
 import { ActorVideos1790440000000 } from "./migrations/1790440000000-ActorVideos"
+import { ActorOrder1790800000000 } from "./migrations/1790800000000-ActorOrder"
 
 
 dotenv.config()
@@ -30,7 +31,7 @@ export const appDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [Employee, Actor, User, RefreshToken, EyeColor, HairColor, City, Language, Favorite],
-    migrations: [ActorVideos1790440000000],
+    migrations: [ActorVideos1790440000000, ActorOrder1790800000000],
     migrationsRun: true,
     subscribers: [],
 })

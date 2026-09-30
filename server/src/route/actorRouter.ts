@@ -7,6 +7,7 @@ import { filterActor } from "../controller/actor/filterActor"
 import { editActor } from "../controller/actor/editActor"
 import { addPhoto, changeAvatar, changeOrder, deletePhoto } from "../controller/actor/editPhotosActor"
 import { authMiddleware } from "../middleware/authMiddleware"
+import { reorderActors } from "../controller/actor/reorderActors"
 
 
 const actorRouter: Express = express()
@@ -21,6 +22,7 @@ actorRouter.post("/edit/deleteFromAlbum", authMiddleware, checkMiddleware, delet
 actorRouter.post("/edit/addToAlbum", authMiddleware, checkMiddleware, addPhoto)
 
 actorRouter.post("/filter", filterActor)
+actorRouter.post("/order", authMiddleware, checkMiddleware, reorderActors)
 actorRouter.get("/:id", getOneActor)
 actorRouter.get("/get/men", getShortMenActors)
 actorRouter.get("/get/women", getShortWomenActors)

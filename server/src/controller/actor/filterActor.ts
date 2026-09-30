@@ -115,6 +115,7 @@ export async function filterActor(req: Request, res: Response, next: NextFunctio
         filterByEyeColors(qb, body.eyeIds)
     }
 
-    const actors = await qb.getMany()
+    const actors = await qb.orderBy("actor.sortOrder", "ASC")
+        .addOrderBy("LOWER(actor.lastName)", "ASC").addOrderBy("actor.id", "ASC").getMany()
     res.json(actors)
 }

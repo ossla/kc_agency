@@ -37,7 +37,8 @@ export async function getShortActors(req: Request, res: Response, next: NextFunc
     const actors = await appDataSource.getRepository(Actor)
         .createQueryBuilder("actor")
         .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL", "actor.videos"])
-        .orderBy("LOWER(actor.lastName)", "ASC")
+        .orderBy("actor.sortOrder", "ASC")
+        .addOrderBy("LOWER(actor.lastName)", "ASC").addOrderBy("actor.id", "ASC")
         .getMany()
 
     res.json(actors);
@@ -48,15 +49,17 @@ async function getShortByGender(res: Response, gender: GenderEnum, next: NextFun
         .createQueryBuilder("actor")
         .select(["actor.id", "actor.firstName", "actor.lastName", "actor.directory", "actor.videoURL", "actor.videos"])
         .where("actor.gender = :gender", { gender })
+        .orderBy("actor.sortOrder", "ASC")
+        .addOrderBy("LOWER(actor.lastName)", "ASC").addOrderBy("actor.id", "ASC")
         .getMany()
 
     res.json(actors);
 }
 
 export async function getShortMenActors(req: Request, res: Response, next: NextFunction) {
-    getShortByGender(res, GenderEnum.Man, next)
+    await getShortByGender(res, GenderEnum.Man, next)
 }
 
 export async function getShortWomenActors(req: Request, res: Response, next: NextFunction) {
-    getShortByGender(res, GenderEnum.Woman, next)
+    await getShortByGender(res, GenderEnum.Woman, next)
 }

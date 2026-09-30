@@ -22,6 +22,9 @@ export class Actor {
     @PrimaryGeneratedColumn("uuid")
     id!: string
 
+    @Column({ type: "int", default: 2147483647 })
+    sortOrder!: number
+
     @Column({ type: "varchar", length: 40, nullable: false })
     firstName!: string           // имя
 

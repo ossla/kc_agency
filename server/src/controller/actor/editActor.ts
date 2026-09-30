@@ -62,6 +62,7 @@ export async function editActor(req: Request, res: Response, next: NextFunction)
     delete actor.videoURL
     delete actor.videos
     delete actor.photos
+    delete actor.sortOrder
     await appDataSource.getRepository(Actor).save(actor)
     res.json(await getActor(actor.id))
 }

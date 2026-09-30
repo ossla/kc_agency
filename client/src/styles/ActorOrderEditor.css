@@ -1,0 +1,11 @@
+.actor-order { padding-top: 24px; padding-bottom: 32px; }
+.actor-order h1 { font-size: 24px; }
+.actor-order-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.actor-order ol { list-style: none; }
+.actor-order li { display: grid; grid-template-columns: 48px minmax(0, 1fr) 64px 36px 36px; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid #aaa; }
+.actor-order li img { object-fit: cover; height: 64px; }
+.actor-order li span { overflow-wrap: anywhere; }
+.actor-order li button, .actor-order select { height: 36px; border: 1px solid #999; background: white; border-radius: 4px; }
+.actor-order :disabled { opacity: .5; cursor: default; }
+.actor-order [role=alert] { color: #b42318; }
+.actor-order :focus-visible { outline: 2px solid #18776d; }
