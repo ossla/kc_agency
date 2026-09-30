@@ -16,3 +16,4 @@ export const ACTOR_ADMIN="/actor_admin_panel"
 export const WRITER="/screenwriters"
 
 export const HOME = "/"
+export const ABOUT = "/about"

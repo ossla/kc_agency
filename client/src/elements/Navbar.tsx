@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ACTORS_MEN, ACTORS_WOMEN, EMPLOYEES, HOME } from "../routes"
+import { ABOUT, ACTORS_MEN, ACTORS_WOMEN, EMPLOYEES, HOME } from "../routes"
 import "../styles/Navbar.css"
 import { useUser } from "../context/UserContext"
 import { IUser } from "../api/types/userTypes"
@@ -77,7 +77,7 @@ export default function Navbar() {
                         О НАС
                     </button>
                     <div className="menu-dropdown-list">
-                        <Link to={HOME} onClick={handleLinkClick}>АГЕНТСТВО</Link>
+                        <Link to={ABOUT} onClick={handleLinkClick}>АГЕНТСТВО</Link>
                         <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
                     </div>
                 </li>
@@ -85,7 +85,7 @@ export default function Navbar() {
                     <Link to={EMPLOYEES} onClick={handleLinkClick}>КОМАНДА</Link>
                 </li>
                 <li className="menu-mobile-only">
-                    <Link to={HOME} onClick={handleLinkClick}>АГЕНТСТВО</Link>
+                    <Link to={ABOUT} onClick={handleLinkClick}>АГЕНТСТВО</Link>
                 </li>
 
                 {/* АВТОРИЗАЦИЯ ВНУТРИ БУРГЕРА */}

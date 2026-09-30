@@ -1,4 +1,10 @@
-.actors_wheel_container {
+.actors-wheel { min-height: 410px; }
+.actors-wheel .swiper-slide { width: 260px; max-width: 80vw; }
+.actors-wheel-card { display: block; color: #2f2a24; }
+.actors-wheel-card img { display: block; width: 100%; height: auto; aspect-ratio: 13 / 18; object-fit: cover; }
+.actors-wheel-card span { display: block; padding: 10px 0; font-size: 16px; line-height: 1.4; overflow-wrap: anywhere; }
+.actors-wheel-card:focus-visible { outline: 2px solid #18776d; outline-offset: -2px; }
+.actors-wheel {
     width: 100%;
     overflow-x: hidden;
 }

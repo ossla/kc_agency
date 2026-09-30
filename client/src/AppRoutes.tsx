@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 
 import NotFound from "./elements/NotFound"
-import { ACTOR, ACTOR_ADMIN, ACTORS_MEN, ACTORS_WOMEN, EMPLOYEE, EMPLOYEE_ADMIN, EMPLOYEES, HOME, LOGIN, PROFILE, REGISTRATION } from "./routes"
+import { ABOUT, ACTOR, ACTOR_ADMIN, ACTORS_MEN, ACTORS_WOMEN, EMPLOYEE, EMPLOYEE_ADMIN, EMPLOYEES, HOME, LOGIN, PROFILE, REGISTRATION } from "./routes"
 import ActorsList from "./pages/ActorsList"
 import Actor from "./pages/Actor"
 import Login from "./pages/Login"
@@ -32,7 +32,8 @@ export default function AppRoutes() {
             <Route path={EMPLOYEE_ADMIN} element={ < EmployeeAdmin /> } />
             <Route path={ACTOR_ADMIN} element={ < ActorAdmin /> } />
             
-            <Route path="/" element={<HomePage />} />
+            <Route path={HOME} element={null} />
+            <Route path={ABOUT} element={<HomePage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     )
